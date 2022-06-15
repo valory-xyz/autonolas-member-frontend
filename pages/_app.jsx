@@ -1,3 +1,4 @@
+/* eslint-disable jest/require-hook */
 import App from 'next/app';
 import Head from 'next/head';
 import { createWrapper } from 'next-redux-wrapper';
@@ -8,7 +9,6 @@ import { Web3ReactProvider } from '@web3-react/core';
 
 import GlobalStyle from 'components/GlobalStyles';
 import Layout from 'components/Layout';
-import MetamaskProvider from 'components/Login/Helpers/MetamaskProvider';
 import initStore from '../store';
 
 require('../styles/antd.less');
@@ -31,48 +31,16 @@ class MyApp extends App {
       <>
         <GlobalStyle />
         <Head>
-          <title>El Collectooorr</title>
-          <meta name="title" content="El Collectooorr" />
-          <meta
-            name="description"
-            content="Deposit ETH and El Collectooorr intelligently waits for and collects Art Blocks drops on your behalf."
-          />
+          <title>Investor App</title>
+          <meta name="title" content="Investor App" />
 
-          <meta property="og:type" content="website" />
-          <meta property="og:url" content="https://www.elcollectooorr.art/" />
-          <meta property="og:title" content="El Collectooorr" />
-          <meta
-            property="og:description"
-            content="Deposit ETH and El Collectooorr intelligently waits for and collects Art Blocks drops on your behalf."
-          />
-          <meta
-            property="og:image"
-            content="https://www.elcollectooorr.art/images/1CollectAndChill/metadata-background.png"
-          />
-
-          <meta property="twitter:card" content="summary_large_image" />
-          <meta
-            property="twitter:url"
-            content="https://www.elcollectooorr.art/"
-          />
-          <meta property="twitter:title" content="El Collectooorr" />
-          <meta
-            property="twitter:description"
-            content="Deposit ETH and El Collectooorr intelligently waits for and collects Art Blocks drops on your behalf."
-          />
-          <meta
-            property="twitter:image"
-            content="https://www.elcollectooorr.art/images/1CollectAndChill/metadata-background.png"
-          />
           <link href="/fonts/stylesheet.css" rel="stylesheet" />
           <link rel="icon" type="images/png" href="/favicon.ico" />
         </Head>
         <Web3ReactProvider getLibrary={getLibrary}>
-          <MetamaskProvider>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </MetamaskProvider>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
         </Web3ReactProvider>
       </>
     );

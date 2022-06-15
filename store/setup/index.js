@@ -4,10 +4,6 @@ const initialState = {
   account: null,
   errorMessage: null,
   balance: null,
-  /**
-   * boolean to indicate if the account was loaded
-   */
-  isLoaded: false,
 };
 
 export default (state = initialState, action) => {
@@ -16,10 +12,6 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case apiTypes.GET_API: {
       return { ...state, data };
-    }
-
-    case syncTypes.SET_LOADED: {
-      return { ...state, ...action.data };
     }
 
     case syncTypes.SET_ACCOUNT: {

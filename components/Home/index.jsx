@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Row, Col } from 'antd/lib';
-import { BasketContainer } from './styles';
+import { MiddleContent } from './styles';
 
 const Basket = ({ account, balance }) => {
   useEffect(() => {
@@ -10,15 +10,13 @@ const Basket = ({ account, balance }) => {
   });
 
   return (
-    <>
-      <BasketContainer>
-        <Row>
-          <Col lg={24} md={24}>
-            Mohan
-          </Col>
-        </Row>
-      </BasketContainer>
-    </>
+    <MiddleContent>
+      <Row>
+        <Col lg={24} md={24}>
+          Mohan
+        </Col>
+      </Row>
+    </MiddleContent>
   );
 };
 

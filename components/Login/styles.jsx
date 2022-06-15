@@ -22,7 +22,7 @@ export const DetailsContainer = styled.div`
   }
 `;
 
-export const MetamaskContainer = styled.div`
+export const WalletContainer = styled.div`
   display: flex;
   align-items: center;
   font-size: 18px;
@@ -53,13 +53,8 @@ export const MetamaskContainer = styled.div`
   }
 
   ${MEDIA_QUERY.tabletL} {
-    flex-direction: column;
-    align-items: flex-start;
     > div {
       line-height: 1.5;
-      &.dash {
-        display: none;
-      }
     }
   }
 

@@ -1,10 +1,5 @@
 import { syncTypes } from './_types';
 
-export const setLoaded = (isLoaded) => ({
-  type: syncTypes.SET_LOADED,
-  data: { isLoaded },
-});
-
 export const setUserAccount = (account) => ({
   type: syncTypes.SET_ACCOUNT,
   data: { account },

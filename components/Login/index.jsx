@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { ethers } from 'ethers';
 import round from 'lodash/round';
 import get from 'lodash/get';
 import isNil from 'lodash/isNil';
-import { CHAIN_ID, CONSTANTS, METAMASK_ERROR_MSG } from 'util/constants';
+import { CHAIN_ID } from 'util/constants';
 import Warning from 'common-util/SVGs/warning';
 import { getBalance } from 'common-util/functions';
 import { CustomButton } from 'common-util/Button';
@@ -13,21 +12,21 @@ import {
   setUserAccount as setUserAccountFn,
   setUserBalance as setUserBalanceFn,
   setErrorMessage as setErrorMessageFn,
-  setLoaded as setLoadedFn,
 } from 'store/setup/actions';
-import { Container, DetailsContainer, MetamaskContainer } from './styles';
+import { isString } from 'lodash';
+import { Container, DetailsContainer, WalletContainer } from './styles';
+import { provider } from './Helpers';
 
 const Login = ({
-  isLoaded,
   account,
   balance,
   errorMessage,
   setUserAccount,
   setUserBalance,
   setErrorMessage,
-  setLoaded,
 }) => {
   const [isNetworkSupported, setIsNetworkSupported] = useState(true);
+
   const setBalance = async (accountPassed) => {
     try {
       const result = await getBalance(accountPassed);
@@ -39,88 +38,72 @@ const Login = ({
 
   useEffect(async () => {
     if (account) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const { chainId } = await provider.getNetwork();
-      const isValid = CHAIN_ID.includes(Number(chainId));
+      const isValid = CHAIN_ID.includes(Number(provider.chainId));
       setIsNetworkSupported(isValid);
+      setBalance(account);
     }
   }, [account]);
 
-  const handleLogin = () => {
-    if (window.ethereum && window.ethereum.isMetaMask) {
-      // remove `disconnect` from localStorage
-      localStorage.setItem(CONSTANTS.IS_CONNECTED, 'true');
-
-      window.ethereum
-        .request({ method: CONSTANTS.ETH_REQUESTACCOUNTS })
-        .then((result) => {
-          // setting only the 1st account
-          setUserAccount(result[0]);
-          setBalance(result[0]);
-        })
-        .catch((e) => {
-          const code = get(e, 'code');
-          if (code === -32002) {
-            setErrorMessage('Wallet connection pending');
-          } else if (code === 4001 || code === -32602) {
-            /**
-             * 4001: user denied access to metamask, so no need to set error!
-             * -32602: user disconnected from connected sites option in metamask!
-             */
-            setErrorMessage(null);
-          } else {
-            setErrorMessage(e.message);
-          }
-        });
-    } else {
-      setErrorMessage(METAMASK_ERROR_MSG);
+  const handleLogin = async () => {
+    try {
+      const accounts = await provider.enable();
+      setUserAccount(accounts[0]);
+    } catch (error) {
+      if (!get(error, 'message') === 'User closed modal') {
+        setErrorMessage(isString(error) ? error : JSON.stringify(error));
+      }
     }
   };
 
-  // set `disconnect` to localStorage for reference
-  const handleDisconnect = () => {
-    localStorage.setItem(CONSTANTS.IS_CONNECTED, 'false');
-    setLoaded(false);
-    setUserAccount(null);
-    setUserBalance(null);
+  const handleDisconnect = async () => {
+    try {
+      await provider.disconnect();
+      setUserAccount(null);
+      setUserBalance(null);
+    } catch (error) {
+      window.console.log({
+        message: 'Something went wrong while disconnecting the wallet',
+        error,
+      });
+    }
   };
 
   /**
-   * if already loaded (ie. logged in before and present in localStorage),
-   * set account and balance of the user as we don't store the user details.
+   * "Wallect Connect" on login, places a key in the localStorage as
+   * `walletconnect` & on disconnect it is removed from the localStorage.
+   *  Hence, if it is present, call `handleLogin` & set account and balance.
    */
   useEffect(() => {
-    if (isLoaded && !account) {
+    if (localStorage.getItem('walletconnect')) {
       handleLogin();
     }
-  }, [isLoaded]);
+  }, []);
 
-  /**
-   * listener for account, chain changes
-   */
-  const handleAccountChange = (newAccount) => {
-    setUserAccount(newAccount);
-    setBalance(newAccount.toString());
-    setErrorMessage(null);
-    window.location.reload();
-  };
+  if (typeof window !== 'undefined' && provider.connected) {
+    // Subscribe to accounts change
+    provider.on('accountsChanged', (accounts) => {
+      setUserAccount(accounts[0]);
+    });
 
-  // reload the page to on chain change to avoid errors
-  const handleChainChange = () => {
-    window.location.reload();
-  };
+    // Subscribe to chainId change
+    provider.on('chainChanged', (chainId) => {
+      const isValid = CHAIN_ID.includes(chainId);
+      setIsNetworkSupported(isValid);
+    });
 
-  if (typeof window !== 'undefined' && window.ethereum) {
-    window.ethereum.on('accountsChanged', handleAccountChange);
-    window.ethereum.on('chainChanged', handleChainChange);
+    // Subscribe to session disconnection
+    provider.on('disconnect', () => {
+      setUserAccount(null);
+      setUserBalance(null);
+    });
   }
 
   if (errorMessage) {
     return (
       <Container>
-        <MetamaskContainer data-testid="login-error">
+        <WalletContainer data-testid="login-error">
           {errorMessage}
-        </MetamaskContainer>
+        </WalletContainer>
       </Container>
     );
   }
@@ -128,12 +111,8 @@ const Login = ({
   if (!account) {
     return (
       <Container>
-        <CustomButton
-          variant="green"
-          onClick={handleLogin}
-          data-testid="connect-metamask"
-        >
-          Connect MetaMask
+        <CustomButton variant="green" onClick={handleLogin}>
+          Connect Wallet
         </CustomButton>
       </Container>
     );
@@ -142,7 +121,7 @@ const Login = ({
   return (
     <Container>
       <DetailsContainer>
-        <MetamaskContainer>
+        <WalletContainer>
           {!isNetworkSupported && (
             <div className="unsupported-network">
               <Warning />
@@ -155,21 +134,19 @@ const Login = ({
           <CustomButton variant="red" onClick={handleDisconnect}>
             Disconnect
           </CustomButton>
-        </MetamaskContainer>
+        </WalletContainer>
       </DetailsContainer>
     </Container>
   );
 };
 
 Login.propTypes = {
-  isLoaded: PropTypes.bool.isRequired,
   account: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   balance: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   errorMessage: PropTypes.string,
   setUserAccount: PropTypes.func.isRequired,
   setUserBalance: PropTypes.func.isRequired,
   setErrorMessage: PropTypes.func.isRequired,
-  setLoaded: PropTypes.func.isRequired,
 };
 
 Login.defaultProps = {
@@ -179,11 +156,8 @@ Login.defaultProps = {
 };
 
 const mapStateToProps = (state) => {
-  const {
-    isLoaded, account, balance, errorMessage,
-  } = get(state, 'setup', {});
+  const { account, balance, errorMessage } = get(state, 'setup', {});
   return {
-    isLoaded,
     account,
     balance,
     errorMessage,
@@ -194,7 +168,6 @@ const mapDispatchToProps = {
   setUserAccount: setUserAccountFn,
   setUserBalance: setUserBalanceFn,
   setErrorMessage: setErrorMessageFn,
-  setLoaded: setLoadedFn,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
