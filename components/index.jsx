@@ -1,5 +1,5 @@
-import Basket from './Home';
+import Home from './Home';
 
-const Home = () => <><Basket /></>;
+const Component = () => <><Home /></>;
 
-export default Home;
+export default Component;

@@ -1,38 +1,60 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Row, Col } from 'antd/lib';
+import { get, isNumber } from 'lodash';
+import { CustomButton } from 'common-util/Button';
+// import { getBalanceDetails } from './utils';
 import { MiddleContent } from './styles';
 
-const Basket = ({ account, balance }) => {
-  useEffect(() => {
-    window.console.log(account, balance);
-  });
+const Home = ({ account }) => {
+  if (!account) return null;
+  const [tokens, setTokens] = useState({});
+
+  useEffect(async () => {
+    // const l = await getBalanceDetails(account);
+    // console.log({ l });
+
+    setTokens({});
+  }, [account]);
+
+  const handleClaim = () => {
+    window.console.log('CLAIM');
+  };
+
+  const buOlas = get(tokens, 'veBalance');
 
   return (
     <MiddleContent>
-      <Row>
-        <Col lg={24} md={24}>
-          Mohan
-        </Col>
-      </Row>
+      <div className="section left-section">
+        <div className="info">
+          <span className="token-name">buOLAS:</span>
+          &nbsp;
+          <span className="balance">{isNumber(buOlas) ? buOlas : 'NA'}</span>
+        </div>
+
+        <CustomButton
+          variant={!buOlas ? 'disabled' : 'green'}
+          disabled={!buOlas}
+          onClick={handleClaim}
+        >
+          Claim buOLAS
+        </CustomButton>
+      </div>
     </MiddleContent>
   );
 };
 
-Basket.propTypes = {
+Home.propTypes = {
   account: PropTypes.string,
-  balance: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
-Basket.defaultProps = {
+Home.defaultProps = {
   account: null,
-  balance: null,
 };
 
 const mapStateToProps = (state) => {
-  const { account, balance } = state.setup;
-  return { account, balance };
+  const { account } = state.setup;
+  return { account };
 };
 
-export default connect(mapStateToProps, {})(Basket);
+export default connect(mapStateToProps, {})(Home);
