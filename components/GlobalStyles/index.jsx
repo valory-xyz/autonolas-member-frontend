@@ -1,5 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
-import { MEDIA_QUERY } from 'util/theme';
+import { MEDIA_QUERY, COLOR } from 'util/theme';
 
 // const GlobalStyles = styled.div`
 const GlobalStyle = createGlobalStyle`
@@ -19,6 +19,12 @@ const GlobalStyle = createGlobalStyle`
   /* common */
   .mb-8 {
     margin-bottom: 0.5rem;
+  }
+
+  .walletconnect-modal__base {
+    .walletconnect-modal__mobile__toggle a {
+      color: ${COLOR.WALLECT_CONNECT_BLUE} !important;
+    }
   }
 
   .show-only-sm {

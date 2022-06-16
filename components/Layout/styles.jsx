@@ -24,14 +24,6 @@ export const CustomLayout = styled(Layout)`
   .ant-layout-footer {
     text-align: center;
   }
-  a {
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    color: ${COLOR.GREEN_2};
-    &:hover {
-      text-decoration: underline;
-    }
-  }
   .ant-result-title {
     color: ${COLOR.WHITE};
   }

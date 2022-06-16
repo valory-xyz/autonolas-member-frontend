@@ -17,28 +17,10 @@ export const commonStyle = {
 
 const getStyle = (k) => {
   switch (k) {
-    case 'red':
+    case 'transparent':
       return {
-        borderColor: COLOR.RED,
-        backgroundColor: COLOR.RED,
-      };
-
-    case 'blue':
-      return {
-        borderColor: COLOR.BLUE,
-        backgroundColor: COLOR.BLUE,
-      };
-
-    case 'blue-border':
-      return {
-        borderColor: COLOR.BLUE,
+        borderColor: COLOR.WHITE,
         backgroundColor: 'transparent',
-      };
-
-    case 'purple':
-      return {
-        borderColor: COLOR.PURPLE,
-        backgroundColor: COLOR.PURPLE,
       };
 
     case 'green':
@@ -84,3 +66,5 @@ CustomButton.defaultProps = {
 };
 
 export default CustomButton;
+
+//

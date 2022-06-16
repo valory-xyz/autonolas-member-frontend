@@ -19,13 +19,6 @@ export const MiddleContent = styled.div`
     padding: 1rem;
     border-radius: 20px;
   }
-  a {
-    color: ${COLOR.GREY_1} !important;
-    svg {
-      margin-left: 4px;
-      margin-bottom: -2px;
-    }
-  }
 
   ${MEDIA_QUERY.desktop} {
     .ant-card:nth-child(even) {

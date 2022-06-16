@@ -1,25 +1,17 @@
 export const COLOR = {
   PRIMARY: '#00FC82',
-  SECONDARY: '#00F422',
   GREY_1: '#C4C4C4',
-  GREY_2: '#9A9A9A',
   WHITE: '#FFFFFF',
   BLACK: '#000000',
   BORDER_GREY: '#323232',
-  TABLE_BLACK: '#1B1B1B',
 
   // homepage
   RED: '#FC0E38',
-  BLUE: '#1324FB',
-  PURPLE: '#6A26FB',
-  GREEN_1: '#2AFD8A',
   GREEN_2: '#42FF00',
-  GREEN_3: '#00FFD1',
-  YELLOW_1: '#FAFF00',
-  ORANGE_1: '#FF4D00',
 
   // antd
   ANTD_ORANGE: '#FAAD14',
+  WALLECT_CONNECT_BLUE: '#1890ff',
 };
 
 export const BREAK_POINT = {

@@ -1,1 +1,1 @@
-export * from './vaultContract';
+export * from './saleContract';

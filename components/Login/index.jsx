@@ -131,7 +131,7 @@ const Login = ({
           <div>{isNil(balance) ? '--' : `${round(balance, 2)} ETH`}</div>
           <div className="dash" />
           <div className="address">{account ? `${account}` : 'NA'}</div>
-          <CustomButton variant="red" onClick={handleDisconnect}>
+          <CustomButton variant="transparent" onClick={handleDisconnect}>
             Disconnect
           </CustomButton>
         </WalletContainer>
