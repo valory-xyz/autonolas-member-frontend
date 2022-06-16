@@ -80,7 +80,6 @@ export const Container = styled.div`
   margin-top: 2rem;
   margin-bottom: 2rem;
   font-size: 20px;
-  font-family: "spacegrotesk__regular";
 `;
 
 export const SubFooter = styled.div`

@@ -14,7 +14,6 @@ const GlobalStyle = createGlobalStyle`
     height: 100%;
     overscroll-behavior: none;
     margin: 0;
-    font-family: texgyreheros__regular, sans-serif;
   }
   /* common */
   .mb-8 {

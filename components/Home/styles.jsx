@@ -4,7 +4,6 @@ import { COLOR, MEDIA_QUERY } from 'util/theme';
 const regularFontStyles = css`
   color: ${COLOR.GREY_1};
   font-size: 16px;
-  font-family: "spacegrotesk__regular";
   font-weight: 300;
 `;
 

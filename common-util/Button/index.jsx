@@ -3,12 +3,8 @@ import PropTypes from 'prop-types';
 import { COLOR } from 'util/theme';
 
 export const commonStyle = {
-  color: COLOR.WHITE,
-  borderRadius: '20px',
-  fontSize: '14px',
+  // color: COLOR.WHITE,
   padding: '6px 32px',
-  textTransform: 'uppercase',
-  fontFamily: 'spacegrotesk__bold',
 };
 
 /**
@@ -25,8 +21,8 @@ const getStyle = (k) => {
 
     case 'green':
       return {
-        borderColor: COLOR.GREEN_2,
-        backgroundColor: COLOR.GREEN_2,
+        borderColor: COLOR.PRIMARY,
+        backgroundColor: COLOR.PRIMARY,
         color: COLOR.BLACK,
       };
 

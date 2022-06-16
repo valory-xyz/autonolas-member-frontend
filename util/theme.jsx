@@ -4,12 +4,9 @@ export const COLOR = {
   WHITE: '#FFFFFF',
   BLACK: '#000000',
   BORDER_GREY: '#323232',
-
-  // homepage
   RED: '#FC0E38',
-  GREEN_2: '#42FF00',
 
-  // antd
+  // others
   ANTD_ORANGE: '#FAAD14',
   WALLECT_CONNECT_BLUE: '#1890ff',
 };
