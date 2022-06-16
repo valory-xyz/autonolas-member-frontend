@@ -62,12 +62,6 @@ const NavigationBar = ({ children }) => {
           <div className="socials">
             {getLink({
               href: 'https://twitter.com/autonolas',
-              children: 'SUPPORTED BY AUTONOLAS',
-              className: 'autonolas-twitter',
-            })}
-
-            {getLink({
-              href: 'https://twitter.com/autonolas',
               children: <Twitter />,
             })}
 

@@ -22,17 +22,6 @@ export const COLOR = {
   ANTD_ORANGE: '#FAAD14',
 };
 
-export const FONT_SIZE = {
-  30: '30px',
-  28: '28px',
-  26: '26px',
-  24: '24px',
-  22: '22px',
-  20: '20px',
-  18: '18px',
-  16: '16px',
-};
-
 export const BREAK_POINT = {
   xxxs: '340px',
   xxs: '375px',
