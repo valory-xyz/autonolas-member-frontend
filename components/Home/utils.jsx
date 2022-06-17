@@ -2,15 +2,13 @@ import {
   getOlaContract, getBuOlaContract, getVeOlaContract, getSaleContract, getAgentContract,
 } from 'common-util/Contracts';
 
-export const getBuOlasDetails = (address) => new Promise((resolve, reject) => {
+export const getBuOlasDetails = () => new Promise((resolve, reject) => {
   const contract = getBuOlaContract();
-  console.log({ contract, account: address });
 
   contract.methods
     .owner()
     .call()
     .then((response) => {
-      console.log({ response });
       resolve(response);
     })
     .catch((e) => {
@@ -19,15 +17,13 @@ export const getBuOlasDetails = (address) => new Promise((resolve, reject) => {
     });
 });
 
-export const getVeOlasDetails = (address) => new Promise((resolve, reject) => {
+export const getVeOlasDetails = () => new Promise((resolve, reject) => {
   const contract = getVeOlaContract();
-  console.log({ contract, account: address });
 
   contract.methods
     .name()
     .call()
     .then((response) => {
-      console.log({ response });
       resolve(response);
     })
     .catch((e) => {
@@ -36,15 +32,13 @@ export const getVeOlasDetails = (address) => new Promise((resolve, reject) => {
     });
 });
 
-export const getOlasDetails = (address) => new Promise((resolve, reject) => {
+export const getOlasDetails = () => new Promise((resolve, reject) => {
   const contract = getOlaContract();
-  console.log({ contract, account: address });
 
   contract.methods
     .inflationRemainder()
     .call()
     .then((response) => {
-      console.log({ response });
       resolve(response);
     })
     .catch((e) => {
@@ -55,13 +49,11 @@ export const getOlasDetails = (address) => new Promise((resolve, reject) => {
 
 export const getBalanceDetails = (address) => new Promise((resolve, reject) => {
   const contract = getSaleContract();
-  console.log({ contract, account: address });
 
   contract.methods
-    .olasToken()
+    .claimableBalances(address)
     .call()
     .then((response) => {
-      console.log({ response });
       resolve(response);
     })
     .catch((e) => {

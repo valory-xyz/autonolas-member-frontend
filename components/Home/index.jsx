@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { get, isNumber } from 'lodash';
+import { get } from 'lodash';
 import { CustomButton } from 'common-util/Button';
 import {
   // getOlasDetails,
   // getBuOlasDetails,
-  getVeOlasDetails,
-  // getBalanceDetails,
+  // getVeOlasDetails,
+  getBalanceDetails,
   // getAgents,
 } from './utils';
 
@@ -18,8 +18,8 @@ const Home = ({ account }) => {
   const [tokens, setTokens] = useState({});
 
   useEffect(async () => {
-    // const l = await getBalanceDetails(account);
-    // console.log({ l });
+    const balances = await getBalanceDetails(account);
+    setTokens(balances);
 
     // const agents = await getAgents(account);
     // console.log({ agents });
@@ -30,32 +30,40 @@ const Home = ({ account }) => {
     // const buOlas = await getBuOlasDetails(account);
     // console.log({ buOlas });
 
-    const veOlas = await getVeOlasDetails(account);
-    console.log({ veOlas });
-
-    setTokens({});
+    // const veOlas = await getVeOlasDetails(account);
+    // console.log({ veOlas });
   }, [account]);
 
   const handleClaim = () => {
     window.console.log('CLAIM');
   };
 
-  const getToken = ({ tokenName, token }) => (
-    <>
-      <div className="info">
-        <span className="token-name">{`${tokenName}:`}</span>
-        <span className="balance">{isNumber(token) ? token : 'NA'}</span>
-      </div>
+  const getToken = ({ tokenName, token }) => {
+    /**
+     * disabled, iff token
+     * 1. no account (not logged-in)
+     * 2. no token
+     * 3. token is empty (0 or '0')
+     */
+    const isDisabled = !account || !token || token === '0' || token === 0;
 
-      <CustomButton
-        variant={!token ? 'disabled' : 'green'}
-        disabled={!token}
-        onClick={handleClaim}
-      >
-        {`Claim ${tokenName}`}
-      </CustomButton>
-    </>
-  );
+    return (
+      <>
+        <div className="info">
+          <span className="token-name">{`${tokenName}:`}</span>
+          <span className="balance">{token || 'NA'}</span>
+        </div>
+
+        <CustomButton
+          variant={!token ? 'disabled' : 'green'}
+          disabled={isDisabled}
+          onClick={handleClaim}
+        >
+          {`Claim ${tokenName}`}
+        </CustomButton>
+      </>
+    );
+  };
 
   const veOlas = get(tokens, 'veBalance');
   const buOlas = get(tokens, 'buBalance');

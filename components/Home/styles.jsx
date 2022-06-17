@@ -6,7 +6,7 @@ export const MiddleContent = styled.div`
   align-items: center;
   justify-content: space-between;
   margin: 3rem auto 0 auto;
-  max-width: 500px;
+  max-width: 800px;
   border: 1px solid ${COLOR.ANTD_ORANGE};
   padding: 2rem;
   border-radius: 1rem;
@@ -22,10 +22,7 @@ export const MiddleContent = styled.div`
     }
   }
 
-  ${MEDIA_QUERY.desktop} {
-  }
-
-  ${MEDIA_QUERY.mobileL} {
+  ${MEDIA_QUERY.tablet} {
     flex-direction: column;
     gap: 2rem;
   }
