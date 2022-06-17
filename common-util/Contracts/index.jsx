@@ -15,10 +15,6 @@ import {
   // sale
   CONTRACT_ADDRESS,
   CONTRACT_ABI,
-
-  // TODO: agent (remove)
-  AGENT_REGISTRY_ABI,
-  AGENT_REGISTRY_ADDRESS,
 } from 'common-util/AbiAndAddresses';
 
 export const getBuOlaContract = () => {
@@ -42,16 +38,5 @@ export const getOlaContract = () => {
 export const getSaleContract = () => {
   const web3 = new Web3(window.web3.currentProvider);
   const contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
-  return contract;
-};
-
-// TODO: remove
-export const getAgentContract = () => {
-  window.ethereum.enable();
-  const web3 = new Web3(window.web3.currentProvider);
-  const contract = new web3.eth.Contract(
-    AGENT_REGISTRY_ABI,
-    AGENT_REGISTRY_ADDRESS,
-  );
   return contract;
 };

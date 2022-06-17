@@ -8,7 +8,6 @@ import {
   // getBuOlasDetails,
   // getVeOlasDetails,
   getBalanceDetails,
-  // getAgents,
 } from './utils';
 
 import { MiddleContent } from './styles';
@@ -20,9 +19,6 @@ const Home = ({ account }) => {
   useEffect(async () => {
     const balances = await getBalanceDetails(account);
     setTokens(balances);
-
-    // const agents = await getAgents(account);
-    // console.log({ agents });
 
     // const olas = await getOlasDetails(account);
     // console.log({ olas });
