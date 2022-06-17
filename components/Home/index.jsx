@@ -11,6 +11,7 @@ import { MiddleContent } from './styles';
 const Home = ({ account }) => {
   if (!account) return null;
   const [tokens, setTokens] = useState({});
+  const [isClaimLoading, setClaimLoading] = useState(false);
 
   const getTokens = async () => {
     try {
@@ -26,11 +27,14 @@ const Home = ({ account }) => {
   }, [account]);
 
   const handleClaim = async () => {
+    setClaimLoading(true);
     try {
       await claimBalances(account);
-      await getTokens(); // re-fetch tokens
+      setTimeout(getTokens, 5000); /* re-fetch tokens after 5 seconds */
     } catch (error) {
       console.error(error);
+    } finally {
+      setClaimLoading(false);
     }
   };
 
@@ -67,6 +71,7 @@ const Home = ({ account }) => {
         variant={isDisabled ? 'disabled' : 'green'}
         disabled={isDisabled}
         onClick={handleClaim}
+        loading={isClaimLoading}
       >
         Claim
       </CustomButton>

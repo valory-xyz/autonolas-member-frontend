@@ -77,18 +77,16 @@ export const claimBalances = (account) => new Promise((resolve, reject) => {
       resolve(response);
 
       notification.success({
-        message: 'Transaction Successful',
-        description: (
-          <>
-            Transaction Hash:&nbsp;
-            {response.transactionHash || ''}
-          </>
-        ),
+        description: 'Transaction Successful',
         style: { border: `1px solid ${COLOR.PRIMARY}` },
       });
     })
     .catch((e) => {
       console.error(e);
       reject(e);
+      notification.error({
+        description: 'Some error occured',
+        style: { border: `1px solid ${COLOR.RED}` },
+      });
     });
 });
