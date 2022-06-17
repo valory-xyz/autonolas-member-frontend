@@ -16,27 +16,29 @@ import {
   CONTRACT_ADDRESS,
   CONTRACT_ABI,
 } from 'common-util/AbiAndAddresses';
+// import provider
+import { provider } from 'components/Login/Helpers/index';
 
 export const getBuOlaContract = () => {
-  const web3 = new Web3(window.web3.currentProvider);
+  const web3 = new Web3(provider);
   const contract = new web3.eth.Contract(BUOLAS_ABI, BUOLAS_ADDRESS);
   return contract;
 };
 
 export const getVeOlaContract = () => {
-  const web3 = new Web3(window.web3.currentProvider);
+  const web3 = new Web3(provider);
   const contract = new web3.eth.Contract(VEOLAS_ABI, VEOLAS_ADDRESS);
   return contract;
 };
 
 export const getOlaContract = () => {
-  const web3 = new Web3(window.web3.currentProvider);
+  const web3 = new Web3(provider);
   const contract = new web3.eth.Contract(OLAS_ABI, OLAS_ADDRESS);
   return contract;
 };
 
 export const getSaleContract = () => {
-  const web3 = new Web3(window.web3.currentProvider);
+  const web3 = new Web3(provider);
   const contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
   return contract;
 };
