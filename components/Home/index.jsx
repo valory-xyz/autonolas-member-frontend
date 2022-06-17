@@ -3,7 +3,14 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { get, isNumber } from 'lodash';
 import { CustomButton } from 'common-util/Button';
-// import { getBalanceDetails } from './utils';
+import {
+  // getOlasDetails,
+  // getBuOlasDetails,
+  getVeOlasDetails,
+  // getBalanceDetails,
+  // getAgents,
+} from './utils';
+
 import { MiddleContent } from './styles';
 
 const Home = ({ account }) => {
@@ -14,6 +21,18 @@ const Home = ({ account }) => {
     // const l = await getBalanceDetails(account);
     // console.log({ l });
 
+    // const agents = await getAgents(account);
+    // console.log({ agents });
+
+    // const olas = await getOlasDetails(account);
+    // console.log({ olas });
+
+    // const buOlas = await getBuOlasDetails(account);
+    // console.log({ buOlas });
+
+    const veOlas = await getVeOlasDetails(account);
+    console.log({ veOlas });
+
     setTokens({});
   }, [account]);
 
@@ -21,24 +40,33 @@ const Home = ({ account }) => {
     window.console.log('CLAIM');
   };
 
-  const buOlas = get(tokens, 'veBalance');
+  const getToken = ({ tokenName, token }) => (
+    <>
+      <div className="info">
+        <span className="token-name">{`${tokenName}:`}</span>
+        <span className="balance">{isNumber(token) ? token : 'NA'}</span>
+      </div>
+
+      <CustomButton
+        variant={!token ? 'disabled' : 'green'}
+        disabled={!token}
+        onClick={handleClaim}
+      >
+        {`Claim ${tokenName}`}
+      </CustomButton>
+    </>
+  );
+
+  const veOlas = get(tokens, 'veBalance');
+  const buOlas = get(tokens, 'buBalance');
 
   return (
     <MiddleContent>
       <div className="section left-section">
-        <div className="info">
-          <span className="token-name">buOLAS:</span>
-          &nbsp;
-          <span className="balance">{isNumber(buOlas) ? buOlas : 'NA'}</span>
-        </div>
-
-        <CustomButton
-          variant={!buOlas ? 'disabled' : 'green'}
-          disabled={!buOlas}
-          onClick={handleClaim}
-        >
-          Claim buOLAS
-        </CustomButton>
+        {getToken({ tokenName: 'veOlas', token: veOlas })}
+      </div>
+      <div className="section right-section">
+        {getToken({ tokenName: 'buOLAS', token: buOlas })}
       </div>
     </MiddleContent>
   );

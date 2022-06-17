@@ -19,7 +19,7 @@ export const CustomLayout = styled(Layout)`
   }
   .site-layout-background {
     padding: 2rem 0;
-    min-height: calc(100vh - 134px);
+    min-height: calc(100vh - 16.5rem);
   }
   .ant-layout-footer {
     text-align: center;
@@ -38,6 +38,7 @@ export const CustomLayout = styled(Layout)`
     .site-layout-background {
       ${MEDIA_QUERY.tablet} {
         padding: 1rem 0;
+        min-height: calc(100vh - 20rem);
       }
     }
     .site-layout {
@@ -78,7 +79,6 @@ export const HeaderContainer = styled.div`
 // FOOTER
 export const Container = styled.div`
   margin-top: 2rem;
-  margin-bottom: 2rem;
   font-size: 20px;
 `;
 
@@ -87,7 +87,7 @@ export const SubFooter = styled.div`
   align-items: flex-start;
   justify-content: center;
   margin-top: 0.5rem;
-  padding: 3rem 1rem;
+  padding: 2rem 1rem;
   border: 1px solid ${COLOR.GREY_1};
   border-radius: 0px 0px 20px 20px;
   border-top-color: transparent;
@@ -119,10 +119,9 @@ export const SubFooter = styled.div`
 
   ${MEDIA_QUERY.tablet} {
     position: relative;
-    top: -3rem;
     flex-direction: column;
     font-size: 16px;
-    padding: 4rem 0.75rem 1.5rem 0.75rem;
+    padding: 2rem 0.75rem 1.5rem 0.75rem;
 
     .sub-footer-text {
       text-align: left;
