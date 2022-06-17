@@ -13,8 +13,8 @@ import {
   OLAS_ADDRESS,
 
   // sale
-  CONTRACT_ADDRESS,
-  CONTRACT_ABI,
+  SALE_CONTRACT_ADDRESS,
+  SALE_CONTRACT_ABI,
 } from 'common-util/AbiAndAddresses';
 // import provider
 import { provider } from 'components/Login/Helpers/index';
@@ -39,6 +39,6 @@ export const getOlaContract = () => {
 
 export const getSaleContract = () => {
   const web3 = new Web3(provider);
-  const contract = new web3.eth.Contract(CONTRACT_ABI, CONTRACT_ADDRESS);
+  const contract = new web3.eth.Contract(SALE_CONTRACT_ABI, SALE_CONTRACT_ADDRESS);
   return contract;
 };
