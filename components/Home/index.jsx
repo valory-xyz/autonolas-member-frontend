@@ -1,14 +1,10 @@
 import { useEffect, useState } from 'react';
+import Web3 from 'web3';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import { CustomButton } from 'common-util/Button';
-import {
-  // getOlasDetails,
-  // getBuOlasDetails,
-  // getVeOlasDetails,
-  getBalanceDetails,
-} from './utils';
+import { getBalanceDetails, claimBalances } from './utils';
 
 import { MiddleContent } from './styles';
 
@@ -16,62 +12,64 @@ const Home = ({ account }) => {
   if (!account) return null;
   const [tokens, setTokens] = useState({});
 
+  const getTokens = async () => {
+    try {
+      const balances = await getBalanceDetails(account);
+      setTokens(balances);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(async () => {
-    const balances = await getBalanceDetails(account);
-    setTokens(balances);
-
-    // const olas = await getOlasDetails(account);
-    // console.log({ olas });
-
-    // const buOlas = await getBuOlasDetails(account);
-    // console.log({ buOlas });
-
-    // const veOlas = await getVeOlasDetails(account);
-    // console.log({ veOlas });
+    getTokens();
   }, [account]);
 
-  const handleClaim = () => {
-    window.console.log('CLAIM');
+  const handleClaim = async () => {
+    try {
+      await claimBalances(account);
+      await getTokens(); // re-fetch tokens
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const getToken = ({ tokenName, token }) => {
-    /**
-     * disabled, iff token
-     * 1. no account (not logged-in)
-     * 2. no token
-     * 3. token is empty (0 or '0')
-     */
-    const isDisabled = !account || !token || token === '0' || token === 0;
-
+    const value = token ? Web3.utils.fromWei(token, 'ether') : 'NA';
     return (
-      <>
+      <div className={`section ${tokenName}-section`}>
         <div className="info">
           <span className="token-name">{`${tokenName}:`}</span>
-          <span className="balance">{token || 'NA'}</span>
+          <span className="balance">{value}</span>
         </div>
-
-        <CustomButton
-          variant={!token ? 'disabled' : 'green'}
-          disabled={isDisabled}
-          onClick={handleClaim}
-        >
-          {`Claim ${tokenName}`}
-        </CustomButton>
-      </>
+      </div>
     );
   };
 
   const veOlas = get(tokens, 'veBalance');
   const buOlas = get(tokens, 'buBalance');
 
+  /**
+   * disabled, iff token
+   * 1. no account (not logged-in)
+   * 2. token is empty (maybe 0)
+   */
+  const isDisabled = !account || !veOlas || !buOlas || veOlas === '0' || buOlas === '0';
+
   return (
     <MiddleContent>
-      <div className="section left-section">
+      <div className="sections">
         {getToken({ tokenName: 'veOlas', token: veOlas })}
-      </div>
-      <div className="section right-section">
         {getToken({ tokenName: 'buOLAS', token: buOlas })}
       </div>
+
+      <CustomButton
+        variant={isDisabled ? 'disabled' : 'green'}
+        disabled={isDisabled}
+        onClick={handleClaim}
+      >
+        Claim
+      </CustomButton>
     </MiddleContent>
   );
 };

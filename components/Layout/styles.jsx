@@ -73,6 +73,7 @@ export const HeaderContainer = styled.div`
   ${MEDIA_QUERY.mobileM} {
     flex-direction: column;
     gap: 1rem;
+    padding: 1rem;
   }
 `;
 

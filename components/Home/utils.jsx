@@ -1,9 +1,11 @@
+import { notification } from 'antd/lib';
 import {
   getOlaContract,
   getBuOlaContract,
   getVeOlaContract,
   getSaleContract,
 } from 'common-util/Contracts';
+import { COLOR } from 'util/theme';
 
 export const getBuOlasDetails = () => new Promise((resolve, reject) => {
   const contract = getBuOlaContract();
@@ -58,6 +60,32 @@ export const getBalanceDetails = (address) => new Promise((resolve, reject) => {
     .call()
     .then((response) => {
       resolve(response);
+    })
+    .catch((e) => {
+      console.error(e);
+      reject(e);
+    });
+});
+
+export const claimBalances = (account) => new Promise((resolve, reject) => {
+  const contract = getSaleContract();
+
+  contract.methods
+    .claim()
+    .send({ from: account })
+    .then((response) => {
+      resolve(response);
+
+      notification.success({
+        message: 'Transaction Successful',
+        description: (
+          <>
+            Transaction Hash:&nbsp;
+            {response.transactionHash || ''}
+          </>
+        ),
+        style: { border: `1px solid ${COLOR.PRIMARY}` },
+      });
     })
     .catch((e) => {
       console.error(e);
