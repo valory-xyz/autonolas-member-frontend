@@ -30,7 +30,7 @@ const Home = ({ account }) => {
     setClaimLoading(true);
     try {
       await claimBalances(account);
-      setTimeout(getTokens, 5000); /* re-fetch tokens after 5 seconds */
+      setTimeout(getTokens, 2000); /* re-fetch tokens after 2 seconds */
     } catch (error) {
       console.error(error);
     } finally {
