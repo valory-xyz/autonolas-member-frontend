@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import round from 'lodash/round';
 import get from 'lodash/get';
+import isString from 'lodash/isString';
 import isNil from 'lodash/isNil';
 import { CHAIN_ID } from 'util/constants';
 import Warning from 'common-util/SVGs/warning';
@@ -13,9 +14,9 @@ import {
   setUserBalance as setUserBalanceFn,
   setErrorMessage as setErrorMessageFn,
 } from 'store/setup/actions';
-import { isString } from 'lodash';
-import { Container, DetailsContainer, WalletContainer } from './styles';
+import { useWeb3React } from '@web3-react/core';
 import { provider } from './Helpers';
+import { Container, DetailsContainer, WalletContainer } from './styles';
 
 const Login = ({
   account,
@@ -25,7 +26,13 @@ const Login = ({
   setUserBalance,
   setErrorMessage,
 }) => {
+  const {
+    active, library, connector, activate, deactivate,
+  } = useWeb3React();
   const [isNetworkSupported, setIsNetworkSupported] = useState(true);
+  // const { activate, account: aa } = useActiveWeb3React();
+
+  // console.log(aa)
 
   const setBalance = async (accountPassed) => {
     try {
@@ -52,6 +59,15 @@ const Login = ({
       if (!get(error, 'message') === 'User closed modal') {
         setErrorMessage(isString(error) ? error : JSON.stringify(error));
       }
+
+      // We need to reset walletconnect if users have closed the modal
+      console.log({ error, cc: provider.connector });
+      // provider = null;
+      // provider.connector = null;
+      // provider.qrcodeModal.close();
+      await provider.disconnect();
+      // console.log(provider.connector);
+      // resetWalletConnector(provider);
     }
   };
 

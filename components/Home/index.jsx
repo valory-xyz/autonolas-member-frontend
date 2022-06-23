@@ -39,11 +39,16 @@ const Home = ({ account }) => {
   };
 
   const getToken = ({ tokenName, token }) => {
-    const value = token ? Web3.utils.fromWei(token, 'ether') : 'NA';
+    const value = token ? Web3.utils.fromWei(token.toString(), 'ether') : 'NA';
+
+    // const dd = new Web3.utils.BN(
+    //   Web3.utils.toWei(token.toString(), 'ether'),
+    // );
+    console.log({ value, dd: null });
     return (
       <div className={`section ${tokenName}-section`}>
         <div className="info">
-          <span className="token-name">{`${tokenName}:`}</span>
+          <span className="token-name">{`Claimable ${tokenName}:`}</span>
           <span className="balance">{value}</span>
         </div>
       </div>

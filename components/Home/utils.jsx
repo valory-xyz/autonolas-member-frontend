@@ -14,6 +14,7 @@ export const getBuOlasDetails = () => new Promise((resolve, reject) => {
     .owner()
     .call()
     .then((response) => {
+      console.log({ response });
       resolve(response);
     })
     .catch((e) => {
@@ -44,6 +45,7 @@ export const getOlasDetails = () => new Promise((resolve, reject) => {
     .inflationRemainder()
     .call()
     .then((response) => {
+      console.log({ response });
       resolve(response);
     })
     .catch((e) => {
@@ -59,6 +61,7 @@ export const getBalanceDetails = (address) => new Promise((resolve, reject) => {
     .claimableBalances(address)
     .call()
     .then((response) => {
+      console.log({ response });
       resolve(response);
     })
     .catch((e) => {

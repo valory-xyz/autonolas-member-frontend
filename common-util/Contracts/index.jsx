@@ -16,7 +16,6 @@ import {
   SALE_CONTRACT_ADDRESS,
   SALE_CONTRACT_ABI,
 } from 'common-util/AbiAndAddresses';
-// import provider
 import { provider } from 'components/Login/Helpers/index';
 
 export const getBuOlaContract = () => {
