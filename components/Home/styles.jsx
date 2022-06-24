@@ -7,7 +7,7 @@ export const MiddleContent = styled.div`
   justify-content: space-between;
   flex-direction: column;
   margin: 3rem auto 0 auto;
-  max-width: 480px;
+  max-width: 620px;
   border: 1px solid ${COLOR.ANTD_ORANGE};
   padding: 2rem;
   border-radius: 1rem;

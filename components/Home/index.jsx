@@ -30,7 +30,7 @@ const Home = ({ account }) => {
     setClaimLoading(true);
     try {
       await claimBalances(account);
-      setTimeout(getTokens, 2000); /* re-fetch tokens after 2 seconds */
+      setTimeout(getTokens, 3000); /* re-fetch tokens after 2 seconds */
     } catch (error) {
       console.error(error);
     } finally {
@@ -43,7 +43,7 @@ const Home = ({ account }) => {
     return (
       <div className={`section ${tokenName}-section`}>
         <div className="info">
-          <span className="token-name">{`${tokenName}:`}</span>
+          <span className="token-name">{`Claimable ${tokenName}:`}</span>
           <span className="balance">{value}</span>
         </div>
       </div>
