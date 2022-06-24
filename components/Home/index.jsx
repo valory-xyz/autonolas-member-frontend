@@ -1,38 +1,95 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Web3 from 'web3';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Row, Col } from 'antd/lib';
+import { get } from 'lodash';
+import { CustomButton } from 'common-util/Button';
+import { getBalanceDetails, claimBalances } from './utils';
+
 import { MiddleContent } from './styles';
 
-const Basket = ({ account, balance }) => {
-  useEffect(() => {
-    window.console.log(account, balance);
-  });
+const Home = ({ account }) => {
+  if (!account) return null;
+  const [tokens, setTokens] = useState({});
+  const [isClaimLoading, setClaimLoading] = useState(false);
+
+  const getTokens = async () => {
+    try {
+      const balances = await getBalanceDetails(account);
+      setTokens(balances);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(async () => {
+    getTokens();
+  }, [account]);
+
+  const handleClaim = async () => {
+    setClaimLoading(true);
+    try {
+      await claimBalances(account);
+      setTimeout(getTokens, 5000); /* re-fetch tokens after 5 seconds */
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setClaimLoading(false);
+    }
+  };
+
+  const getToken = ({ tokenName, token }) => {
+    const value = token ? Web3.utils.fromWei(token, 'ether') : 'NA';
+    return (
+      <div className={`section ${tokenName}-section`}>
+        <div className="info">
+          <span className="token-name">{`${tokenName}:`}</span>
+          <span className="balance">{value}</span>
+        </div>
+      </div>
+    );
+  };
+
+  const veOlas = get(tokens, 'veBalance');
+  const buOlas = get(tokens, 'buBalance');
+
+  /**
+   * disabled, iff token
+   * 1. no account (not logged-in)
+   * 2. token is empty (maybe 0)
+   */
+  const isDisabled = !account || !veOlas || !buOlas || veOlas === '0' || buOlas === '0';
 
   return (
     <MiddleContent>
-      <Row>
-        <Col lg={24} md={24}>
-          Mohan
-        </Col>
-      </Row>
+      <div className="sections">
+        {getToken({ tokenName: 'veOlas', token: veOlas })}
+        {getToken({ tokenName: 'buOLAS', token: buOlas })}
+      </div>
+
+      <CustomButton
+        variant={isDisabled ? 'disabled' : 'green'}
+        disabled={isDisabled}
+        onClick={handleClaim}
+        loading={isClaimLoading}
+      >
+        Claim
+      </CustomButton>
     </MiddleContent>
   );
 };
 
-Basket.propTypes = {
+Home.propTypes = {
   account: PropTypes.string,
-  balance: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
-Basket.defaultProps = {
+Home.defaultProps = {
   account: null,
-  balance: null,
 };
 
 const mapStateToProps = (state) => {
-  const { account, balance } = state.setup;
-  return { account, balance };
+  const { account } = state.setup;
+  return { account };
 };
 
-export default connect(mapStateToProps, {})(Basket);
+export default connect(mapStateToProps, {})(Home);

@@ -1,8 +1,6 @@
 import { Layout } from 'antd';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
-import Twitter from 'common-util/SVGs/twitter';
 import Discord from 'common-util/SVGs/discord';
 import Login from '../Login';
 import {
@@ -10,14 +8,6 @@ import {
 } from './styles';
 
 const { Header, Content } = Layout;
-
-const linkToHome = (child, aClassName = '') => (
-  <Link href="/">
-    <a href="/" className={aClassName}>
-      {child}
-    </a>
-  </Link>
-);
 
 /* eslint-disable-next-line react/prop-types */
 const getLink = ({ href, children, className = '' }) => (
@@ -38,16 +28,7 @@ const NavigationBar = ({ children }) => {
     <CustomLayout pathname={router.pathname}>
       <Header>
         <HeaderContainer>
-          <div className="column-1">
-            {linkToHome(
-              <img
-                src="/images/el-collectooorr-logo.png"
-                alt="El collectooorr"
-                loading="lazy"
-                height={48}
-              />,
-            )}
-          </div>
+          <div className="column-1" />
 
           <Login />
         </HeaderContainer>
@@ -60,11 +41,6 @@ const NavigationBar = ({ children }) => {
       <Container>
         <SubFooter>
           <div className="socials">
-            {getLink({
-              href: 'https://twitter.com/autonolas',
-              children: <Twitter />,
-            })}
-
             {getLink({
               href: 'https://discord.com/invite/z2PT65jKqQ',
               children: <Discord />,

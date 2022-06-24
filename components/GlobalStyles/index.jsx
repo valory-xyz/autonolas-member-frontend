@@ -26,6 +26,10 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 
+  .ant-notification-notice-message {
+    margin: 0px !important;
+  }
+
   .show-only-sm {
     display: none;
   }

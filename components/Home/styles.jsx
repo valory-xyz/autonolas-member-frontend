@@ -1,45 +1,39 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import { COLOR, MEDIA_QUERY } from 'util/theme';
 
-const regularFontStyles = css`
-  color: ${COLOR.GREY_1};
-  font-size: 16px;
-  font-weight: 300;
-`;
-
 export const MiddleContent = styled.div`
-  max-width: 1600px;
-  margin: 0 auto;
-  ${regularFontStyles}
-  .right-columm {
-    padding-left: 1rem;
-  }
-  .card-border {
-    padding: 1rem;
-    border-radius: 20px;
-  }
-
-  ${MEDIA_QUERY.desktop} {
-    .ant-card:nth-child(even) {
-      margin-right: 0;
-    }
-  }
-
-  ${MEDIA_QUERY.tablet} {
-    .right-columm {
-      padding-left: 0rem;
-      margin-top: 1rem;
-    }
-    .ant-card {
-      max-width: 100%;
-      margin-right: 0;
-      &-body {
-        img {
-          height: auto !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  margin: 3rem auto 0 auto;
+  max-width: 480px;
+  border: 1px solid ${COLOR.ANTD_ORANGE};
+  padding: 2rem;
+  border-radius: 1rem;
+  font-size: 16px;
+  .sections {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    .section {
+      .info {
+        margin-bottom: 1rem;
+        .balance {
+          margin-left: 0.5rem;
+          font-weight: bold;
+          color: ${COLOR.PRIMARY};
+          font-size: 24px;
         }
       }
     }
   }
-`;
 
-export const XXX = styled.div``;
+  ${MEDIA_QUERY.tablet} {
+    flex-direction: column;
+    gap: 2rem;
+    .sections {
+      flex-direction: column;
+    }
+  }
+`;

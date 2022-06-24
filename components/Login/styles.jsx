@@ -67,9 +67,9 @@ export const WalletContainer = styled.div`
     }
   }
 
-  ${MEDIA_QUERY.mobileS} {
+  ${MEDIA_QUERY.mobileM} {
     .address {
-      width: 70px;
+      width: 40px;
     }
   }
 `;
