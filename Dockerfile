@@ -31,7 +31,7 @@ RUN yarn build
 # COPY --from=builder /app/node_modules ./node_modules
 # COPY --from=builder /app/package.json ./package.json
 
-CMD ["yarn", "start"]
+CMD ["yarn", "dev"]
 # # ---- Base Node ----
 # FROM node:16.14.0 AS base
 # HEALTHCHECK CMD curl --fail http://localhost:3000 || exit 1
