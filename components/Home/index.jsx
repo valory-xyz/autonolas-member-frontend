@@ -4,14 +4,27 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
 import { CustomButton } from 'common-util/Button';
+import { getBalance } from 'common-util/functions';
+import {
+  setUserBalance as setUserBalanceFn,
+  setErrorMessage as setErrorMessageFn,
+} from 'store/setup/actions';
 import { getBalanceDetails, claimBalances } from './utils';
-
 import { MiddleContent } from './styles';
 
-const Home = ({ account }) => {
+const Home = ({ account, setUserBalance, setErrorMessage }) => {
   if (!account) return null;
   const [tokens, setTokens] = useState({});
   const [isClaimLoading, setClaimLoading] = useState(false);
+
+  const setBalance = async (accountPassed) => {
+    try {
+      const result = await getBalance(accountPassed);
+      setUserBalance(result);
+    } catch (error) {
+      setErrorMessage(error);
+    }
+  };
 
   const getTokens = async () => {
     try {
@@ -30,10 +43,15 @@ const Home = ({ account }) => {
     setClaimLoading(true);
     try {
       await claimBalances(account);
-      setTimeout(getTokens, 5000); /* re-fetch tokens after 5 seconds */
+
+      /* re-fetch tokens, balance after 2 seconds */
+      setTimeout(async () => {
+        await getTokens();
+        await setBalance(account);
+        setClaimLoading(false);
+      }, 3000);
     } catch (error) {
       console.error(error);
-    } finally {
       setClaimLoading(false);
     }
   };
@@ -43,7 +61,7 @@ const Home = ({ account }) => {
     return (
       <div className={`section ${tokenName}-section`}>
         <div className="info">
-          <span className="token-name">{`${tokenName}:`}</span>
+          <span className="token-name">{`Claimable ${tokenName}:`}</span>
           <span className="balance">{value}</span>
         </div>
       </div>
@@ -81,15 +99,20 @@ const Home = ({ account }) => {
 
 Home.propTypes = {
   account: PropTypes.string,
+  setUserBalance: PropTypes.func.isRequired,
+  setErrorMessage: PropTypes.func.isRequired,
 };
 
-Home.defaultProps = {
-  account: null,
-};
+Home.defaultProps = { account: null };
 
 const mapStateToProps = (state) => {
   const { account } = state.setup;
   return { account };
 };
 
-export default connect(mapStateToProps, {})(Home);
+const mapDispatchToProps = {
+  setUserBalance: setUserBalanceFn,
+  setErrorMessage: setErrorMessageFn,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

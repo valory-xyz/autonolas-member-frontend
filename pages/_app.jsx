@@ -33,9 +33,6 @@ class MyApp extends App {
         <Head>
           <title>Investor App</title>
           <meta name="title" content="Investor App" />
-
-          <link href="/fonts/stylesheet.css" rel="stylesheet" />
-          <link rel="icon" type="images/png" href="/favicon.ico" />
         </Head>
         <Web3ReactProvider getLibrary={getLibrary}>
           <Layout>
