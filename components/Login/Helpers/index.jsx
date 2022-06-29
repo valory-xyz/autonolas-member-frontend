@@ -7,6 +7,7 @@ export const provider = new WalletConnectProvider({
     5: 'https://eth-goerli.alchemyapi.io/v2/_SrakDJgKhVl19B6EUYK9LEiyU1auKsL',
   },
   pollingInterval: 8000,
+  chainId: 5,
 });
 
 export default provider;
