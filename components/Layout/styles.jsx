@@ -77,6 +77,20 @@ export const HeaderContainer = styled.div`
   }
 `;
 
+export const Logo = styled.div`
+  max-width: 210px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  margin-left: 0.5rem;
+  margin-right: 3.5rem;
+  font-size: 34px;
+  span {
+    margin-left: 0.5rem;
+  }
+`;
+
 // FOOTER
 export const Container = styled.div`
   margin-top: 2rem;
@@ -93,29 +107,7 @@ export const SubFooter = styled.div`
   border-radius: 0px 0px 20px 20px;
   border-top-color: transparent;
 
-  .socials {
-    display: flex;
-    align-items: flex-start;
-    .autonolas-twitter {
-      display: flex;
-      min-width: 240px;
-    }
-    svg {
-      margin-left: 0.5rem;
-    }
-  }
-
-  .sub-footer-text {
-    display: flex;
-    flex-direction: column;
-    max-width: 700px;
-    text-align: right;
-  }
-
   ${MEDIA_QUERY.tabletL} {
-    .sub-footer-text {
-      display: inline-block;
-    }
   }
 
   ${MEDIA_QUERY.tablet} {
@@ -123,19 +115,8 @@ export const SubFooter = styled.div`
     flex-direction: column;
     font-size: 16px;
     padding: 2rem 0.75rem 1.5rem 0.75rem;
-
-    .sub-footer-text {
-      text-align: left;
-      display: inline-block;
-      margin-top: 1.5rem;
-    }
   }
 
   ${MEDIA_QUERY.mobileS} {
-    .socials {
-      .autonolas-twitter {
-        min-width: auto;
-      }
-    }
   }
 `;

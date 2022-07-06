@@ -1,8 +1,13 @@
 import { Layout } from 'antd';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
 import Login from '../Login';
-import { CustomLayout, HeaderContainer, Container } from './styles';
+import {
+  CustomLayout, HeaderContainer, Container, Logo,
+} from './styles';
+
+const LogoSvg = dynamic(() => import('common-util/SVGs/logo'));
 
 const { Header, Content } = Layout;
 
@@ -13,7 +18,12 @@ const NavigationBar = ({ children }) => {
     <CustomLayout pathname={router.pathname}>
       <Header>
         <HeaderContainer>
-          <div className="column-1" />
+          <div className="column-1">
+            <Logo onClick={() => router.push('/')} data-testid="protocol-logo">
+              <LogoSvg />
+              <span>Investors</span>
+            </Logo>
+          </div>
 
           <Login />
         </HeaderContainer>
