@@ -26,7 +26,8 @@ export const MiddleContent = styled.div`
         flex-direction: column;
         margin-bottom: 1rem;
         .balance {
-          font-size: 28px;
+          font-size: 34px;
+          line-height: normal;
         }
       }
     }
@@ -34,7 +35,7 @@ export const MiddleContent = styled.div`
   .section-footer {
     line-height: normal;
     margin-top: 1.25rem;
-    color: #6B6B6B;
+    color: #6b6b6b;
   }
 
   ${MEDIA_QUERY.tablet} {
