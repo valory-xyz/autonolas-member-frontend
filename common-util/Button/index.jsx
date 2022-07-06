@@ -15,20 +15,30 @@ const getStyle = (k) => {
   switch (k) {
     case 'transparent':
       return {
-        borderColor: COLOR.WHITE,
+        color: COLOR.BLACK,
+        borderColor: COLOR.GREY_1,
         backgroundColor: 'transparent',
       };
 
-    case 'green':
+    case 'purple':
       return {
+        color: COLOR.WHITE,
         borderColor: COLOR.PRIMARY,
         backgroundColor: COLOR.PRIMARY,
       };
 
+    case 'green':
+      return {
+        color: COLOR.BLACK,
+        borderColor: COLOR.SECONDARY,
+        backgroundColor: COLOR.SECONDARY,
+      };
+
     case 'disabled':
       return {
-        borderColor: COLOR.GREY_1,
-        backgroundColor: COLOR.GREY_1,
+        color: COLOR.GREY_1,
+        borderColor: COLOR.BORDER_GREY,
+        backgroundColor: COLOR.BORDER_GREY,
       };
 
     default:

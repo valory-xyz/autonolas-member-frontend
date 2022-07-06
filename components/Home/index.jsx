@@ -12,8 +12,9 @@ import {
 import { getBalanceDetails, claimBalances } from './utils';
 import { MiddleContent } from './styles';
 
+const CONNECT_WALLET_MESSAGE = 'To see balances and claim them, connect wallet';
+
 const Home = ({ account, setUserBalance, setErrorMessage }) => {
-  if (!account) return null;
   const [tokens, setTokens] = useState({});
   const [isClaimLoading, setClaimLoading] = useState(false);
 
@@ -36,7 +37,9 @@ const Home = ({ account, setUserBalance, setErrorMessage }) => {
   };
 
   useEffect(async () => {
-    getTokens();
+    if (account) {
+      getTokens();
+    }
   }, [account]);
 
   const handleClaim = async () => {
@@ -57,11 +60,11 @@ const Home = ({ account, setUserBalance, setErrorMessage }) => {
   };
 
   const getToken = ({ tokenName, token }) => {
-    const value = token ? Web3.utils.fromWei(token, 'ether') : 'NA';
+    const value = token ? Web3.utils.fromWei(token, 'ether') : '--';
     return (
       <div className={`section ${tokenName}-section`}>
         <div className="info">
-          <span className="token-name">{`Claimable ${tokenName}:`}</span>
+          <span className="token-name">{tokenName}</span>
           <span className="balance">{value}</span>
         </div>
       </div>
@@ -80,8 +83,10 @@ const Home = ({ account, setUserBalance, setErrorMessage }) => {
 
   return (
     <MiddleContent>
+      <h2 className="section-header">Claimable assets</h2>
+
       <div className="sections">
-        {getToken({ tokenName: 'veOlas', token: veOlas })}
+        {getToken({ tokenName: 'veOLAS', token: veOlas })}
         {getToken({ tokenName: 'buOLAS', token: buOlas })}
       </div>
 
@@ -93,6 +98,10 @@ const Home = ({ account, setUserBalance, setErrorMessage }) => {
       >
         Claim
       </CustomButton>
+
+      {!account && (
+        <div className="section-footer">{CONNECT_WALLET_MESSAGE}</div>
+      )}
     </MiddleContent>
   );
 };

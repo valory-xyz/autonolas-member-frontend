@@ -111,7 +111,7 @@ const Login = ({
   if (!account) {
     return (
       <Container>
-        <CustomButton variant="green" onClick={handleLogin}>
+        <CustomButton variant="purple" onClick={handleLogin}>
           Connect Wallet
         </CustomButton>
       </Container>

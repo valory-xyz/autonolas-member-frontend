@@ -4,7 +4,7 @@ export const COLOR = {
   GREY_1: '#C4C4C4',
   WHITE: '#FFFFFF',
   BLACK: '#000000',
-  BORDER_GREY: '#323232',
+  BORDER_GREY: '#F0F0F0',
   RED: '#FC0E38',
 
   // others
