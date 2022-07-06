@@ -4,6 +4,7 @@ import { COLOR, MEDIA_QUERY } from 'util/theme';
 
 export const CustomLayout = styled(Layout)`
   background-size: 100%;
+  background-color: ${COLOR.WHITE};
   .ant-layout-header {
     z-index: 1000;
     position: fixed;
@@ -11,7 +12,7 @@ export const CustomLayout = styled(Layout)`
     width: 100%;
     padding: 0 1rem;
     margin-top: 1rem;
-    background-color: ${COLOR.BLACK};
+    background-color: ${COLOR.WHITE};
   }
   .site-layout {
     padding: 0 1rem;
@@ -19,13 +20,13 @@ export const CustomLayout = styled(Layout)`
   }
   .site-layout-background {
     padding: 2rem 0;
-    min-height: calc(100vh - 16.5rem);
+    min-height: calc(100vh - 8.5rem);
   }
   .ant-layout-footer {
     text-align: center;
   }
   .ant-result-title {
-    color: ${COLOR.WHITE};
+    color: ${COLOR.BLACK};
   }
 
   ${MEDIA_QUERY.tablet} {
@@ -55,8 +56,7 @@ export const HeaderContainer = styled.div`
   margin-bottom: 1rem;
   padding: 0.5rem 1rem;
   border-radius: 10px;
-  border: 1px solid ${COLOR.GREY_1};
-  background-color: ${COLOR.BLACK};
+  background-color: ${COLOR.WHITE};
 
   ${MEDIA_QUERY.tablet} {
     margin-bottom: 0;

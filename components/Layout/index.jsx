@@ -1,25 +1,10 @@
 import { Layout } from 'antd';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-import Discord from 'common-util/SVGs/discord';
 import Login from '../Login';
-import {
-  CustomLayout, HeaderContainer, Container, SubFooter,
-} from './styles';
+import { CustomLayout, HeaderContainer, Container } from './styles';
 
 const { Header, Content } = Layout;
-
-/* eslint-disable-next-line react/prop-types */
-const getLink = ({ href, children, className = '' }) => (
-  <a
-    href={href}
-    target="_blank"
-    rel="noopener noreferrer"
-    className={className}
-  >
-    {children}
-  </a>
-);
 
 const NavigationBar = ({ children }) => {
   const router = useRouter();
@@ -38,16 +23,7 @@ const NavigationBar = ({ children }) => {
         <div className="site-layout-background">{children}</div>
       </Content>
 
-      <Container>
-        <SubFooter>
-          <div className="socials">
-            {getLink({
-              href: 'https://discord.com/invite/z2PT65jKqQ',
-              children: <Discord />,
-            })}
-          </div>
-        </SubFooter>
-      </Container>
+      <Container />
     </CustomLayout>
   );
 };
