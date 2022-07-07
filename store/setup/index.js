@@ -4,6 +4,7 @@ const initialState = {
   account: null,
   errorMessage: null,
   balance: null,
+  provider: null,
 };
 
 export default (state = initialState, action) => {
@@ -23,6 +24,10 @@ export default (state = initialState, action) => {
     }
 
     case syncTypes.SET_LOGIN_ERROR: {
+      return { ...state, ...action.data };
+    }
+
+    case syncTypes.SET_WALLET_PROVIDER: {
       return { ...state, ...action.data };
     }
 
