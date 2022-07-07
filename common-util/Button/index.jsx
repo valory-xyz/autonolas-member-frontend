@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { COLOR } from 'util/theme';
 
 export const commonStyle = {
-  // color: COLOR.WHITE,
+  color: COLOR.WHITE,
   padding: '6px 32px',
 };
 
@@ -15,22 +15,30 @@ const getStyle = (k) => {
   switch (k) {
     case 'transparent':
       return {
-        borderColor: COLOR.WHITE,
+        color: COLOR.BLACK,
+        borderColor: COLOR.GREY_1,
         backgroundColor: 'transparent',
+      };
+
+    case 'purple':
+      return {
+        color: COLOR.WHITE,
+        borderColor: COLOR.PRIMARY,
+        backgroundColor: COLOR.PRIMARY,
       };
 
     case 'green':
       return {
-        borderColor: COLOR.PRIMARY,
-        backgroundColor: COLOR.PRIMARY,
         color: COLOR.BLACK,
+        borderColor: COLOR.SECONDARY,
+        backgroundColor: COLOR.SECONDARY,
       };
 
     case 'disabled':
       return {
-        borderColor: COLOR.GREY_1,
-        backgroundColor: COLOR.GREY_1,
-        color: COLOR.BORDER_GREY,
+        color: COLOR.GREY_1,
+        borderColor: COLOR.BORDER_GREY,
+        backgroundColor: COLOR.BORDER_GREY,
       };
 
     default:
