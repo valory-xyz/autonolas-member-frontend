@@ -13,36 +13,17 @@ const providerOptions = {
     package: WalletConnectProvider, // required
     options: {
       infuraId: INFURA_ID, // required
+      rpc: {
+        31337: 'https://chain.staging.autonolas.tech/',
+        // 1: 'https://mainnet.infura.io/v3/a5184169a2dd4263b4c164a088353eec',
+      },
     },
   },
-  // 'custom-walletlink': {
-  //   display: {
-  //     logo: 'https://play-lh.googleusercontent.com/PjoJoG27miSglVBXoXrxBSLveV6e3EeBPpNY55aiUUBM9Q1RCETKCOqdOkX2ZydqVf0',
-  //     name: 'Coinbase',
-  //     description: 'Connect to Coinbase Wallet (not Coinbase App)',
-  //   },
-  //   options: {
-  //     appName: 'Coinbase', // Your app name
-  //     networkUrl: `https://mainnet.infura.io/v3/${INFURA_ID}`,
-  //     chainId: 1,
-  //   },
-  //   package: WalletLink,
-  //   connector: async (_, options) => {
-  //     const { appName, networkUrl, chainId } = options;
-  //     const walletLink = new WalletLink({
-  //       appName,
-  //     });
-  //     const provider = walletLink.makeWeb3Provider(networkUrl, chainId);
-  //     await provider.enable();
-  //     return provider;
-  //   },
-  // },
 };
 
 let web3Modal;
 if (typeof window !== 'undefined') {
   web3Modal = new Web3Modal({
-    network: 'mainnet', // optional
     cacheProvider: true,
     providerOptions, // required
   });
@@ -91,39 +72,40 @@ export const Home = () => {
   const connect = useCallback(async () => {
     // This is the initial `provider` that is returned when
     // using web3Modal to connect. Can be MetaMask or WalletConnect.
-    const provider = await web3Modal.connect();
+    try {
+      const providerC = await web3Modal.connect();
 
-    // We plug the initial `provider` into ethers.js and get back
-    // a Web3Provider. This will add on methods from ethers.js and
-    // event listeners such as `.on()` will be different.
-    const web3Provider = new providers.Web3Provider(provider);
+      // We plug the initial `provider` into ethers.js and get back
+      // a Web3Provider. This will add on methods from ethers.js and
+      // event listeners such as `.on()` will be different.
+      const web3Provider = new providers.Web3Provider(providerC);
 
-    const signer = web3Provider.getSigner();
-    const address = await signer.getAddress();
+      const signer = web3Provider.getSigner();
+      const address = await signer.getAddress();
 
-    const network = await web3Provider.getNetwork();
+      const network = await web3Provider.getNetwork();
 
-    dispatch({
-      type: 'SET_WEB3_PROVIDER',
-      provider,
-      web3Provider,
-      address,
-      chainId: network.chainId,
-    });
+      dispatch({
+        type: 'SET_WEB3_PROVIDER',
+        provider,
+        web3Provider,
+        address,
+        chainId: network.chainId,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
-  const disconnect = useCallback(
-    async () => {
-      await web3Modal.clearCachedProvider();
-      if (provider?.disconnect && typeof provider.disconnect === 'function') {
-        await provider.disconnect();
-      }
-      dispatch({
-        type: 'RESET_WEB3_PROVIDER',
-      });
-    },
-    [provider],
-  );
+  const disconnect = useCallback(async () => {
+    await web3Modal.clearCachedProvider();
+    if (provider?.disconnect && typeof provider.disconnect === 'function') {
+      await provider.disconnect();
+    }
+    dispatch({
+      type: 'RESET_WEB3_PROVIDER',
+    });
+  }, [provider]);
 
   // Auto connect to the cached provider
   useEffect(() => {
@@ -170,6 +152,8 @@ export const Home = () => {
         }
       };
     }
+
+    return () => {};
   }, [provider, disconnect]);
 
   // const chainData = getChainData(chainId);
@@ -190,7 +174,7 @@ export const Home = () => {
             </div>
             <div>
               <p className="mb-1">Address:</p>
-              <p>{(address)}</p>
+              <p>{address}</p>
             </div>
           </div>
         )}
@@ -211,62 +195,60 @@ export const Home = () => {
 
       <style jsx>
         {`
-        main {
-          padding: 5rem 0;
-          text-align: center;
-        }
+          main {
+            padding: 5rem 0;
+            text-align: center;
+          }
 
-        p {
-          margin-top: 0;
-        }
+          p {
+            margin-top: 0;
+          }
 
-        .container {
-          padding: 2rem;
-          margin: 0 auto;
-          max-width: 1200px;
-        }
+          .container {
+            padding: 2rem;
+            margin: 0 auto;
+            max-width: 1200px;
+          }
 
-        .grid {
-          display: grid;
-          grid-template-columns: auto auto;
-          justify-content: space-between;
-        }
+          .grid {
+            display: grid;
+            grid-template-columns: auto auto;
+            justify-content: space-between;
+          }
 
-        .button {
-          padding: 1rem 1.5rem;
-          background: ${web3Provider ? 'red' : 'green'};
-          border: none;
-          border-radius: 0.5rem;
-          color: #fff;
-          font-size: 1.2rem;
-        }
+          .button {
+            padding: 1rem 1.5rem;
+            background: ${web3Provider ? 'red' : 'green'};
+            border: none;
+            border-radius: 0.5rem;
+            color: #fff;
+            font-size: 1.2rem;
+          }
 
-        .mb-0 {
-          margin-bottom: 0;
-        }
-        .mb-1 {
-          margin-bottom: 0.25rem;
-        }
-      `}
-
+          .mb-0 {
+            margin-bottom: 0;
+          }
+          .mb-1 {
+            margin-bottom: 0.25rem;
+          }
+        `}
       </style>
 
       <style jsx global>
         {`
-        html,
-        body {
-          padding: 0;
-          margin: 0;
-          font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-            Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
-            sans-serif;
-        }
+          html,
+          body {
+            padding: 0;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
+              Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+              sans-serif;
+          }
 
-        * {
-          box-sizing: border-box;
-        }
-      `}
-
+          * {
+            box-sizing: border-box;
+          }
+        `}
       </style>
     </div>
   );

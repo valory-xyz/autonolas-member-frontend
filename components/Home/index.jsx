@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Web3 from 'web3';
+import { ethers } from 'ethers';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { get } from 'lodash';
@@ -40,10 +40,10 @@ const Home = ({
   };
 
   useEffect(async () => {
-    if (account) {
+    if (account && provider) {
       getTokens();
     }
-  }, [account]);
+  }, [account, provider]);
 
   const handleClaim = async () => {
     setClaimLoading(true);
@@ -63,7 +63,7 @@ const Home = ({
   };
 
   const getToken = ({ tokenName, token }) => {
-    const value = token ? Web3.utils.fromWei(token, 'ether') : '--';
+    const value = token ? ethers.utils.formatEther(token) : '--';
     return (
       <div className={`section ${tokenName}-section`}>
         <div className="info">

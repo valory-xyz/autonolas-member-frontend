@@ -3,12 +3,14 @@ import { getSaleContract } from 'common-util/Contracts';
 import { COLOR } from 'util/theme';
 
 export const getBalanceDetails = (address, providerObject) => new Promise((resolve, reject) => {
+  console.log('>>>>    getBalanceDetails 1');
   const contract = getSaleContract(providerObject);
+  console.log('>>>>    getBalanceDetails 2');
 
-  contract.methods
+  contract
     .claimableBalances(address)
-    .call()
     .then((response) => {
+      console.log({ response });
       resolve(response);
     })
     .catch((e) => {
