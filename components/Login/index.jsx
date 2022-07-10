@@ -66,15 +66,10 @@ const Login = ({
     try {
       const currentProvider = await web3Modal.connect();
 
-      // console.log('first', currentProvider);
-
       // We plug the initial `provider` into ethers.js and get back
       // a Web3Provider. This will add on methods from ethers.js and
       // event listeners such as `.on()` will be different.
       const web3Provider = new providers.Web3Provider(currentProvider);
-
-      console.log(web3Provider.getSigner());
-
       const signer = web3Provider.getSigner();
       const address = await signer.getAddress();
       const network = await web3Provider.getNetwork();
@@ -143,8 +138,6 @@ const Login = ({
 
     return () => {};
   }, [provider, disconnectAccount]);
-
-  // console.log(provider);
 
   if (errorMessage) {
     return (

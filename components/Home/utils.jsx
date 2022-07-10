@@ -3,14 +3,10 @@ import { getSaleContract } from 'common-util/Contracts';
 import { COLOR } from 'util/theme';
 
 export const getBalanceDetails = (address, providerObject) => new Promise((resolve, reject) => {
-  console.log('>>>>    getBalanceDetails 1');
   const contract = getSaleContract(providerObject);
-  console.log('>>>>    getBalanceDetails 2');
-
   contract
     .claimableBalances(address)
     .then((response) => {
-      console.log({ response });
       resolve(response);
     })
     .catch((e) => {
@@ -21,7 +17,6 @@ export const getBalanceDetails = (address, providerObject) => new Promise((resol
 
 export const claimBalances = (account, providerObject) => new Promise((resolve, reject) => {
   const contract = getSaleContract(providerObject);
-
   contract.methods
     .claim()
     .send({ from: account })
