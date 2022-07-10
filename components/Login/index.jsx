@@ -15,6 +15,7 @@ import {
   setUserBalance as setUserBalanceFn,
   setErrorMessage as setErrorMessageFn,
   setProvider as setProviderFn,
+  setEthersProvider as setEthersProviderFn,
 } from 'store/setup/actions';
 import { ProviderProptype } from 'common-util/ReusableProptypes';
 import { providerOptions } from './helpers';
@@ -42,6 +43,7 @@ const Login = ({
   setUserBalance,
   setErrorMessage,
   setProvider,
+  setEthersProvider,
 }) => {
   const [isNetworkSupported, setIsNetworkSupported] = useState(true);
 
@@ -64,17 +66,19 @@ const Login = ({
     // This is the initial `provider` that is returned when
     // using web3Modal to connect. Can be MetaMask or WalletConnect.
     try {
-      const currentProvider = await web3Modal.connect();
+      const modalProvider = await web3Modal.connect();
 
       // We plug the initial `provider` into ethers.js and get back
       // a Web3Provider. This will add on methods from ethers.js and
       // event listeners such as `.on()` will be different.
-      const web3Provider = new providers.Web3Provider(currentProvider);
-      const signer = web3Provider.getSigner();
+      const ethersProvider = new providers.Web3Provider(modalProvider);
+
+      const signer = ethersProvider.getSigner();
       const address = await signer.getAddress();
-      const network = await web3Provider.getNetwork();
+      const network = await ethersProvider.getNetwork();
       setUserAccount(address);
-      setProvider(web3Provider);
+      setProvider(modalProvider);
+      setEthersProvider(ethersProvider);
 
       const isValid = CHAIN_ID.includes(network?.chainId);
       setIsNetworkSupported(isValid);
@@ -119,7 +123,7 @@ const Login = ({
 
       const handleDisconnect = (error) => {
         window.console.log('disconnect', error);
-        handleDisconnect();
+        disconnectAccount();
       };
 
       provider.on('accountsChanged', handleAccountsChanged);
@@ -190,6 +194,7 @@ Login.propTypes = {
   setUserBalance: PropTypes.func.isRequired,
   setErrorMessage: PropTypes.func.isRequired,
   setProvider: PropTypes.func.isRequired,
+  setEthersProvider: PropTypes.func.isRequired,
 };
 
 Login.defaultProps = {
@@ -216,6 +221,7 @@ const mapDispatchToProps = {
   setUserBalance: setUserBalanceFn,
   setErrorMessage: setErrorMessageFn,
   setProvider: setProviderFn,
+  setEthersProvider: setEthersProviderFn,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

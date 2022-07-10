@@ -17,7 +17,7 @@ export const getBalanceDetails = (address, providerObject) => new Promise((resol
 
 export const claimBalances = (account, providerObject) => new Promise((resolve, reject) => {
   const contract = getSaleContract(providerObject);
-  contract.methods
+  contract
     .claim()
     .send({ from: account })
     .then((response) => {

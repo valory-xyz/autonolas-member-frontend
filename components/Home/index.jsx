@@ -9,14 +9,14 @@ import {
   setUserBalance as setUserBalanceFn,
   setErrorMessage as setErrorMessageFn,
 } from 'store/setup/actions';
-import { ProviderProptype } from 'common-util/ReusableProptypes';
+import { EthersProviderProptype } from 'common-util/ReusableProptypes';
 import { getBalanceDetails, claimBalances } from './utils';
 import { MiddleContent } from './styles';
 
 const CONNECT_WALLET_MESSAGE = 'To see balances and claim them, connect wallet';
 
 const Home = ({
-  account, setUserBalance, setErrorMessage, provider,
+  account, setUserBalance, setErrorMessage, web3Provider,
 }) => {
   const [tokens, setTokens] = useState({});
   const [isClaimLoading, setClaimLoading] = useState(false);
@@ -32,7 +32,7 @@ const Home = ({
 
   const getTokens = async () => {
     try {
-      const balances = await getBalanceDetails(account, provider);
+      const balances = await getBalanceDetails(account, web3Provider);
       setTokens(balances);
     } catch (error) {
       console.error(error);
@@ -40,15 +40,15 @@ const Home = ({
   };
 
   useEffect(async () => {
-    if (account && provider) {
+    if (account && web3Provider) {
       getTokens();
     }
-  }, [account, provider]);
+  }, [account, web3Provider]);
 
   const handleClaim = async () => {
     setClaimLoading(true);
     try {
-      await claimBalances(account, provider);
+      await claimBalances(account, web3Provider);
 
       /* re-fetch tokens, balance after 2 seconds */
       setTimeout(async () => {
@@ -113,17 +113,17 @@ Home.propTypes = {
   account: PropTypes.string,
   setUserBalance: PropTypes.func.isRequired,
   setErrorMessage: PropTypes.func.isRequired,
-  provider: ProviderProptype,
+  web3Provider: EthersProviderProptype,
 };
 
 Home.defaultProps = {
   account: null,
-  provider: null,
+  web3Provider: null,
 };
 
 const mapStateToProps = (state) => {
-  const { account, provider } = state.setup;
-  return { account, provider };
+  const { account, web3Provider } = state.setup;
+  return { account, web3Provider };
 };
 
 const mapDispatchToProps = {

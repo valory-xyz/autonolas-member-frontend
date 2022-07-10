@@ -5,3 +5,5 @@ export const ProviderProptype = PropTypes.shape({
   on: PropTypes.func,
   removeListener: PropTypes.func,
 });
+
+export const EthersProviderProptype = PropTypes.shape({});
