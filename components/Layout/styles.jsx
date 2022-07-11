@@ -86,6 +86,7 @@ export const Logo = styled.div`
   margin-left: 0.5rem;
   margin-right: 3.5rem;
   font-size: 34px;
+  color: ${COLOR.PRIMARY};
   span {
     margin-left: 0.5rem;
   }

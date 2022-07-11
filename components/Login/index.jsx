@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { providers } from 'ethers';
 import PropTypes from 'prop-types';
@@ -13,6 +13,7 @@ import { CustomButton } from 'common-util/Button';
 import {
   setUserAccount as setUserAccountFn,
   setUserBalance as setUserBalanceFn,
+  setChainId as setChainIdFn,
   setErrorMessage as setErrorMessageFn,
   setProvider as setProviderFn,
   setEthersProvider as setEthersProviderFn,
@@ -35,18 +36,18 @@ if (typeof window !== 'undefined') {
 const Login = ({
   account,
   balance,
+  chainId,
   errorMessage,
   provider,
 
   // functions
   setUserAccount,
   setUserBalance,
+  setChainId,
   setErrorMessage,
   setProvider,
   setEthersProvider,
 }) => {
-  const [isNetworkSupported, setIsNetworkSupported] = useState(true);
-
   const setBalance = async (accountPassed) => {
     try {
       const result = await getBalance(accountPassed);
@@ -79,9 +80,7 @@ const Login = ({
       setUserAccount(address);
       setProvider(modalProvider);
       setEthersProvider(ethersProvider);
-
-      const isValid = CHAIN_ID.includes(network?.chainId);
-      setIsNetworkSupported(isValid);
+      setChainId(network?.chainId || null);
     } catch (error) {
       window.console.log(error);
     }
@@ -167,7 +166,7 @@ const Login = ({
     <Container>
       <DetailsContainer>
         <WalletContainer>
-          {!isNetworkSupported && (
+          {!CHAIN_ID.includes(chainId) && (
             <div className="unsupported-network">
               <Warning />
               Unsupported network
@@ -188,10 +187,12 @@ const Login = ({
 Login.propTypes = {
   account: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   balance: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  chainId: PropTypes.number,
   errorMessage: PropTypes.string,
   provider: ProviderProptype,
   setUserAccount: PropTypes.func.isRequired,
   setUserBalance: PropTypes.func.isRequired,
+  setChainId: PropTypes.func.isRequired,
   setErrorMessage: PropTypes.func.isRequired,
   setProvider: PropTypes.func.isRequired,
   setEthersProvider: PropTypes.func.isRequired,
@@ -200,17 +201,19 @@ Login.propTypes = {
 Login.defaultProps = {
   account: null,
   balance: null,
+  chainId: null,
   errorMessage: null,
   provider: null,
 };
 
 const mapStateToProps = (state) => {
   const {
-    account, balance, errorMessage, provider,
+    account, balance, errorMessage, provider, chainId,
   } = get(state, 'setup', {});
   return {
     account,
     balance,
+    chainId,
     errorMessage,
     provider,
   };
@@ -219,6 +222,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = {
   setUserAccount: setUserAccountFn,
   setUserBalance: setUserBalanceFn,
+  setChainId: setChainIdFn,
   setErrorMessage: setErrorMessageFn,
   setProvider: setProviderFn,
   setEthersProvider: setEthersProviderFn,

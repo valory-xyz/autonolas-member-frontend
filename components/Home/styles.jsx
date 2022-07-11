@@ -1,16 +1,20 @@
 import styled from 'styled-components';
 import { COLOR, MEDIA_QUERY } from 'util/theme';
 
+export const Container = styled.div`
+  max-width: 340px;
+  margin: auto;
+`;
+
 export const MiddleContent = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   flex-direction: column;
   margin: 3rem auto 0 auto;
-  max-width: 340px;
   border: 1px solid ${COLOR.BORDER_GREY};
   padding: 1.25rem;
-  border-radius: 1rem;
+  border-radius: 5px;
   font-size: 16px;
   .section-header {
     font-weight: normal;
@@ -44,5 +48,13 @@ export const MiddleContent = styled.div`
     .sections {
       flex-direction: column;
     }
+  }
+`;
+
+export const TransactionSuccessMessage = styled.div`
+  .t-id {
+    display: flex;
+    line-height: normal;
+    margin-top: 0.35rem;
   }
 `;
