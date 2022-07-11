@@ -57,6 +57,11 @@ const Home = ({
     if (account && web3Provider) {
       getTokens();
     }
+
+    // if no account, balance should be reset
+    if (!account) {
+      setTokens({});
+    }
   }, [account, web3Provider]);
 
   const handleClaim = async () => {
