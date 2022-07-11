@@ -14,3 +14,8 @@ export const setErrorMessage = (errorMessage) => ({
   type: syncTypes.SET_LOGIN_ERROR,
   data: { errorMessage },
 });
+
+export const setProvider = (provider) => ({
+  type: syncTypes.SET_WALLET_PROVIDER,
+  data: { provider },
+});

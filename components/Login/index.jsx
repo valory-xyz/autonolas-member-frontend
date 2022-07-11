@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import round from 'lodash/round';
 import get from 'lodash/get';
 import isNil from 'lodash/isNil';
+import isString from 'lodash/isString';
 import { CHAIN_ID } from 'util/constants';
 import Warning from 'common-util/SVGs/warning';
 import { getBalance } from 'common-util/functions';
@@ -12,10 +13,11 @@ import {
   setUserAccount as setUserAccountFn,
   setUserBalance as setUserBalanceFn,
   setErrorMessage as setErrorMessageFn,
+  setProvider as setProviderFn,
 } from 'store/setup/actions';
-import { isString } from 'lodash';
+import { ProviderProptype } from 'common-util/ReusableProptypes';
+import { provider as walletProvider } from './Helpers';
 import { Container, DetailsContainer, WalletContainer } from './styles';
-import { provider } from './Helpers';
 
 const Login = ({
   account,
@@ -24,6 +26,8 @@ const Login = ({
   setUserAccount,
   setUserBalance,
   setErrorMessage,
+  setProvider,
+  provider,
 }) => {
   const [isNetworkSupported, setIsNetworkSupported] = useState(true);
 
@@ -45,10 +49,14 @@ const Login = ({
   }, [account]);
 
   const handleLogin = async () => {
+    const updatedProvider = walletProvider();
+    setProvider(updatedProvider);
+
     try {
-      const accounts = await provider.enable();
+      const accounts = await updatedProvider.enable();
       setUserAccount(accounts[0]);
     } catch (error) {
+      setProvider(undefined);
       if (!get(error, 'message') === 'User closed modal') {
         setErrorMessage(isString(error) ? error : JSON.stringify(error));
       }
@@ -60,6 +68,7 @@ const Login = ({
       await provider.disconnect();
       setUserAccount(null);
       setUserBalance(null);
+      setProvider(undefined);
     } catch (error) {
       window.console.log({
         message: 'Something went wrong while disconnecting the wallet',
@@ -79,7 +88,7 @@ const Login = ({
     }
   }, []);
 
-  if (typeof window !== 'undefined' && provider.connected) {
+  if (typeof window !== 'undefined' && provider?.connected) {
     // Subscribe to accounts change
     provider.on('accountsChanged', (accounts) => {
       setUserAccount(accounts[0]);
@@ -95,6 +104,7 @@ const Login = ({
     provider.on('disconnect', () => {
       setUserAccount(null);
       setUserBalance(null);
+      setProvider(undefined);
     });
   }
 
@@ -144,23 +154,29 @@ Login.propTypes = {
   account: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   balance: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   errorMessage: PropTypes.string,
+  provider: ProviderProptype,
   setUserAccount: PropTypes.func.isRequired,
   setUserBalance: PropTypes.func.isRequired,
   setErrorMessage: PropTypes.func.isRequired,
+  setProvider: PropTypes.func.isRequired,
 };
 
 Login.defaultProps = {
   account: null,
   balance: null,
   errorMessage: null,
+  provider: null,
 };
 
 const mapStateToProps = (state) => {
-  const { account, balance, errorMessage } = get(state, 'setup', {});
+  const {
+    account, balance, errorMessage, provider,
+  } = get(state, 'setup', {});
   return {
     account,
     balance,
     errorMessage,
+    provider,
   };
 };
 
@@ -168,6 +184,7 @@ const mapDispatchToProps = {
   setUserAccount: setUserAccountFn,
   setUserBalance: setUserBalanceFn,
   setErrorMessage: setErrorMessageFn,
+  setProvider: setProviderFn,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

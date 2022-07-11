@@ -9,12 +9,15 @@ import {
   setUserBalance as setUserBalanceFn,
   setErrorMessage as setErrorMessageFn,
 } from 'store/setup/actions';
+import { ProviderProptype } from 'common-util/ReusableProptypes';
 import { getBalanceDetails, claimBalances } from './utils';
 import { MiddleContent } from './styles';
 
 const CONNECT_WALLET_MESSAGE = 'To see balances and claim them, connect wallet';
 
-const Home = ({ account, setUserBalance, setErrorMessage }) => {
+const Home = ({
+  account, setUserBalance, setErrorMessage, provider,
+}) => {
   const [tokens, setTokens] = useState({});
   const [isClaimLoading, setClaimLoading] = useState(false);
 
@@ -29,7 +32,7 @@ const Home = ({ account, setUserBalance, setErrorMessage }) => {
 
   const getTokens = async () => {
     try {
-      const balances = await getBalanceDetails(account);
+      const balances = await getBalanceDetails(account, provider);
       setTokens(balances);
     } catch (error) {
       console.error(error);
@@ -45,7 +48,7 @@ const Home = ({ account, setUserBalance, setErrorMessage }) => {
   const handleClaim = async () => {
     setClaimLoading(true);
     try {
-      await claimBalances(account);
+      await claimBalances(account, provider);
 
       /* re-fetch tokens, balance after 2 seconds */
       setTimeout(async () => {
@@ -110,13 +113,17 @@ Home.propTypes = {
   account: PropTypes.string,
   setUserBalance: PropTypes.func.isRequired,
   setErrorMessage: PropTypes.func.isRequired,
+  provider: ProviderProptype,
 };
 
-Home.defaultProps = { account: null };
+Home.defaultProps = {
+  account: null,
+  provider: null,
+};
 
 const mapStateToProps = (state) => {
-  const { account } = state.setup;
-  return { account };
+  const { account, provider } = state.setup;
+  return { account, provider };
 };
 
 const mapDispatchToProps = {
