@@ -6,8 +6,9 @@ export const providerOptions = {
     options: {
       infuraId: process.env.NEXT_PUBLIC_INFURA_ID, // required
       rpc: {
-        31337: 'https://chain.staging.autonolas.tech/',
-        // 1: 'https://mainnet.infura.io/v3/a5184169a2dd4263b4c164a088353eec',
+        1: process.env.NEXT_PUBLIC_MAINNET_URL,
+        5: process.env.NEXT_PUBLIC_GOERLI_URL,
+        31337: process.env.NEXT_PUBLIC_AUTONOLAS_URL,
       },
     },
   },
