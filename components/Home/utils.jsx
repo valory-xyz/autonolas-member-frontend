@@ -19,7 +19,6 @@ export const claimBalances = (account, providerObject) => new Promise((resolve, 
   const contract = getSaleContract(providerObject);
   contract
     .claim()
-    .send({ from: account })
     .then((response) => {
       resolve(response);
 

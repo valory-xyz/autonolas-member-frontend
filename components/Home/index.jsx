@@ -50,7 +50,7 @@ const Home = ({
     try {
       await claimBalances(account, web3Provider);
 
-      /* re-fetch tokens, balance after 2 seconds */
+      /* re-fetch tokens, balance after 3 seconds */
       setTimeout(async () => {
         await getTokens();
         await setBalance(account);
@@ -62,27 +62,27 @@ const Home = ({
     }
   };
 
-  const getToken = ({ tokenName, token }) => {
-    const value = token ? ethers.utils.formatEther(token) : '--';
-    return (
-      <div className={`section ${tokenName}-section`}>
-        <div className="info">
-          <span className="token-name">{tokenName}</span>
-          <span className="balance">{value}</span>
-        </div>
-      </div>
-    );
-  };
+  const bToken = get(tokens, 'buBalance');
+  const buOlas = bToken ? ethers.utils.formatEther(bToken) : null;
 
-  const veOlas = get(tokens, 'veBalance');
-  const buOlas = get(tokens, 'buBalance');
+  const vToken = get(tokens, 'veBalance');
+  const veOlas = bToken ? ethers.utils.formatEther(vToken) : null;
+
+  const getToken = ({ tokenName, token }) => (
+    <div className={`section ${tokenName}-section`}>
+      <div className="info">
+        <span className="token-name">{tokenName}</span>
+        <span className="balance">{token || '--'}</span>
+      </div>
+    </div>
+  );
 
   /**
    * disabled, iff token
    * 1. no account (not logged-in)
    * 2. token is empty (maybe 0)
    */
-  const isDisabled = !account || !veOlas || !buOlas || veOlas === '0' || buOlas === '0';
+  const isDisabled = !account || !veOlas || !buOlas || (veOlas === '0.0' && buOlas === '0.0');
 
   return (
     <MiddleContent>
