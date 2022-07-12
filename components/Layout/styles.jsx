@@ -6,7 +6,7 @@ export const CustomLayout = styled(Layout)`
   background-size: 100%;
   background-color: ${COLOR.WHITE};
   .ant-layout-header {
-    z-index: 1000;
+    z-index: 1;
     position: fixed;
     height: 82px;
     width: 100%;
@@ -86,6 +86,7 @@ export const Logo = styled.div`
   margin-left: 0.5rem;
   margin-right: 3.5rem;
   font-size: 34px;
+  color: ${COLOR.PRIMARY};
   span {
     margin-left: 0.5rem;
   }
