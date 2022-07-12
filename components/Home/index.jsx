@@ -98,8 +98,11 @@ const Home = ({
    * disabled, iff token
    * 1. no account (not logged-in)
    * 2. token is empty (maybe 0)
+   * 3. disable the button completely even if the transaction is successful
+   *    so the user can't click more than once
    */
   const isDisabled = isClaimLoading
+    || transactionState === TRANSACTION_STATE.success
     || !account
     || !veOlas
     || !buOlas
