@@ -37,7 +37,7 @@ const Home = ({
 
   const setBalance = async (accountPassed) => {
     try {
-      const result = await getBalance(accountPassed);
+      const result = await getBalance(accountPassed, web3Provider);
       setUserBalance(result);
     } catch (error) {
       setErrorMessage(error);

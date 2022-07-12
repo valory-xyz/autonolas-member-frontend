@@ -18,7 +18,10 @@ import {
   setProvider as setProviderFn,
   setEthersProvider as setEthersProviderFn,
 } from 'store/setup/actions';
-import { ProviderProptype } from 'common-util/ReusableProptypes';
+import {
+  ProviderProptype,
+  EthersProviderProptype,
+} from 'common-util/ReusableProptypes';
 import { providerOptions } from './helpers';
 import { Container, DetailsContainer, WalletContainer } from './styles';
 
@@ -39,6 +42,7 @@ const Login = ({
   chainId,
   errorMessage,
   provider,
+  web3Provider,
 
   // functions
   setUserAccount,
@@ -50,7 +54,7 @@ const Login = ({
 }) => {
   const setBalance = async (accountPassed) => {
     try {
-      const result = await getBalance(accountPassed);
+      const result = await getBalance(accountPassed, web3Provider);
       setUserBalance(result);
     } catch (error) {
       setErrorMessage(error);
@@ -58,10 +62,10 @@ const Login = ({
   };
 
   useEffect(async () => {
-    if (account) {
+    if (account && web3Provider) {
       setBalance(account);
     }
-  }, [account]);
+  }, [account, web3Provider]);
 
   const handleLogin = useCallback(async () => {
     // This is the initial `provider` that is returned when
@@ -190,6 +194,7 @@ Login.propTypes = {
   chainId: PropTypes.number,
   errorMessage: PropTypes.string,
   provider: ProviderProptype,
+  web3Provider: EthersProviderProptype,
   setUserAccount: PropTypes.func.isRequired,
   setUserBalance: PropTypes.func.isRequired,
   setChainId: PropTypes.func.isRequired,
@@ -204,11 +209,12 @@ Login.defaultProps = {
   chainId: null,
   errorMessage: null,
   provider: null,
+  web3Provider: null,
 };
 
 const mapStateToProps = (state) => {
   const {
-    account, balance, errorMessage, provider, chainId,
+    account, balance, errorMessage, provider, chainId, web3Provider,
   } = get(state, 'setup', {});
   return {
     account,
@@ -216,6 +222,7 @@ const mapStateToProps = (state) => {
     chainId,
     errorMessage,
     provider,
+    web3Provider,
   };
 };
 
