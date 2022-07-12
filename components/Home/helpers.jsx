@@ -1,8 +1,8 @@
 export const getUrl = (chainId, transactionId) => {
   if (chainId === 5) {
-    return `https://goerli.etherscan.io/address/${transactionId}`;
+    return `https://goerli.etherscan.io/tx/${transactionId}`;
   }
-  return `https://etherscan.io/address/${transactionId}`;
+  return `https://etherscan.io/tx/${transactionId}`;
 };
 
 export const getToken = ({ tokenName, token }) => (

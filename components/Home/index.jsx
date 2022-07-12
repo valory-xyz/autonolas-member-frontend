@@ -71,7 +71,7 @@ const Home = ({
 
       // if claim is successfully done, transition to SUCCESS state!
       setTransactionState(TRANSACTION_STATE.success);
-      setTransactionId(get(response, 'transactionHash') || null);
+      setTransactionId(get(response, 'hash') || null);
 
       /* re-fetch tokens, balance after 3 seconds */
       setTimeout(async () => {
@@ -99,7 +99,11 @@ const Home = ({
    * 1. no account (not logged-in)
    * 2. token is empty (maybe 0)
    */
-  const isDisabled = !account || !veOlas || !buOlas || (veOlas === '0.0' && buOlas === '0.0');
+  const isDisabled = isClaimLoading
+    || !account
+    || !veOlas
+    || !buOlas
+    || (veOlas === '0.0' && buOlas === '0.0');
 
   return (
     <Container>
@@ -127,7 +131,7 @@ const Home = ({
 
       <br />
 
-      {transactionState === TRANSACTION_STATE.failure && (
+      {transactionState === TRANSACTION_STATE.success && (
         <Alert
           type="info"
           message={(
