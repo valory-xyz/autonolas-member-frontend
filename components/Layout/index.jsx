@@ -1,25 +1,15 @@
 import { Layout } from 'antd';
 import PropTypes from 'prop-types';
 import { useRouter } from 'next/router';
-import Discord from 'common-util/SVGs/discord';
+import dynamic from 'next/dynamic';
 import Login from '../Login';
 import {
-  CustomLayout, HeaderContainer, Container, SubFooter,
+  CustomLayout, HeaderContainer, Container, Logo,
 } from './styles';
 
-const { Header, Content } = Layout;
+const LogoSvg = dynamic(() => import('common-util/SVGs/logo'));
 
-/* eslint-disable-next-line react/prop-types */
-const getLink = ({ href, children, className = '' }) => (
-  <a
-    href={href}
-    target="_blank"
-    rel="noopener noreferrer"
-    className={className}
-  >
-    {children}
-  </a>
-);
+const { Header, Content } = Layout;
 
 const NavigationBar = ({ children }) => {
   const router = useRouter();
@@ -28,7 +18,12 @@ const NavigationBar = ({ children }) => {
     <CustomLayout pathname={router.pathname}>
       <Header>
         <HeaderContainer>
-          <div className="column-1" />
+          <div className="column-1">
+            <Logo onClick={() => router.push('/')} data-testid="protocol-logo">
+              <LogoSvg />
+              <span>Investors</span>
+            </Logo>
+          </div>
 
           <Login />
         </HeaderContainer>
@@ -38,16 +33,7 @@ const NavigationBar = ({ children }) => {
         <div className="site-layout-background">{children}</div>
       </Content>
 
-      <Container>
-        <SubFooter>
-          <div className="socials">
-            {getLink({
-              href: 'https://discord.com/invite/z2PT65jKqQ',
-              children: <Discord />,
-            })}
-          </div>
-        </SubFooter>
-      </Container>
+      <Container />
     </CustomLayout>
   );
 };

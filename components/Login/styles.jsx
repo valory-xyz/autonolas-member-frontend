@@ -40,7 +40,7 @@ export const WalletContainer = styled.div`
     margin: 0 0.75rem;
     width: 1px;
     height: 2.25rem;
-    background-color: ${COLOR.PRIMARY};
+    background-color: ${COLOR.BLACK};
   }
   .address {
     width: 120px;

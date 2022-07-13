@@ -1,4 +1,4 @@
-import { createGlobalStyle } from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { MEDIA_QUERY, COLOR } from 'util/theme';
 
 // const GlobalStyles = styled.div`
@@ -30,6 +30,10 @@ const GlobalStyle = createGlobalStyle`
     margin: 0px !important;
   }
 
+  .ant-alert {
+    border-radius: 5px;
+  }
+
   .show-only-sm {
     display: none;
   }
@@ -47,3 +51,14 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 export default GlobalStyle;
+
+export const Ellipsis = styled.span`
+  max-width: 100px;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  ${MEDIA_QUERY.tablet} {
+    max-width: 200px;
+  }
+`;

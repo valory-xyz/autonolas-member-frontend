@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useCallback } from 'react';
 import { connect } from 'react-redux';
+import { providers } from 'ethers';
 import PropTypes from 'prop-types';
+import Web3Modal from 'web3modal';
 import round from 'lodash/round';
 import get from 'lodash/get';
 import isNil from 'lodash/isNil';
@@ -11,25 +13,48 @@ import { CustomButton } from 'common-util/Button';
 import {
   setUserAccount as setUserAccountFn,
   setUserBalance as setUserBalanceFn,
+  setChainId as setChainIdFn,
   setErrorMessage as setErrorMessageFn,
+  setProvider as setProviderFn,
+  setEthersProvider as setEthersProviderFn,
 } from 'store/setup/actions';
-import { isString } from 'lodash';
+import {
+  ProviderProptype,
+  EthersProviderProptype,
+} from 'common-util/ReusableProptypes';
+import { providerOptions } from './helpers';
 import { Container, DetailsContainer, WalletContainer } from './styles';
-import { provider } from './Helpers';
 
+/* --------------- web3Modal --------------- */
+let web3Modal;
+if (typeof window !== 'undefined') {
+  web3Modal = new Web3Modal({
+    network: 'mainnet', // optional
+    cacheProvider: true,
+    providerOptions, // required
+  });
+}
+
+/* --------------- Login component --------------- */
 const Login = ({
   account,
   balance,
+  chainId,
   errorMessage,
+  provider,
+  web3Provider,
+
+  // functions
   setUserAccount,
   setUserBalance,
+  setChainId,
   setErrorMessage,
+  setProvider,
+  setEthersProvider,
 }) => {
-  const [isNetworkSupported, setIsNetworkSupported] = useState(true);
-
   const setBalance = async (accountPassed) => {
     try {
-      const result = await getBalance(accountPassed);
+      const result = await getBalance(accountPassed, web3Provider);
       setUserBalance(result);
     } catch (error) {
       setErrorMessage(error);
@@ -37,66 +62,89 @@ const Login = ({
   };
 
   useEffect(async () => {
-    if (account) {
-      const isValid = CHAIN_ID.includes(Number(provider.chainId));
-      setIsNetworkSupported(isValid);
+    if (account && web3Provider) {
       setBalance(account);
     }
-  }, [account]);
+  }, [account, web3Provider]);
 
-  const handleLogin = async () => {
+  const handleLogin = useCallback(async () => {
+    // This is the initial `provider` that is returned when
+    // using web3Modal to connect. Can be MetaMask or WalletConnect.
     try {
-      const accounts = await provider.enable();
-      setUserAccount(accounts[0]);
-    } catch (error) {
-      if (!get(error, 'message') === 'User closed modal') {
-        setErrorMessage(isString(error) ? error : JSON.stringify(error));
-      }
-    }
-  };
+      const modalProvider = await web3Modal.connect();
 
-  const handleDisconnect = async () => {
-    try {
-      await provider.disconnect();
-      setUserAccount(null);
-      setUserBalance(null);
-    } catch (error) {
-      window.console.log({
-        message: 'Something went wrong while disconnecting the wallet',
-        error,
-      });
-    }
-  };
+      // We plug the initial `provider` into ethers.js and get back
+      // a Web3Provider. This will add on methods from ethers.js and
+      // event listeners such as `.on()` will be different.
+      const ethersProvider = new providers.Web3Provider(modalProvider);
 
-  /**
-   * "Wallect Connect" on login, places a key in the localStorage as
-   * `walletconnect` & on disconnect it is removed from the localStorage.
-   *  Hence, if it is present, call `handleLogin` & set account and balance.
-   */
-  useEffect(() => {
-    if (localStorage.getItem('walletconnect')) {
-      handleLogin();
+      const signer = ethersProvider.getSigner();
+      const address = await signer.getAddress();
+      const network = await ethersProvider.getNetwork();
+      setUserAccount(address);
+      setProvider(modalProvider);
+      setEthersProvider(ethersProvider);
+      setChainId(network?.chainId || null);
+    } catch (error) {
+      window.console.log(error);
     }
   }, []);
 
-  if (typeof window !== 'undefined' && provider.connected) {
-    // Subscribe to accounts change
-    provider.on('accountsChanged', (accounts) => {
-      setUserAccount(accounts[0]);
-    });
+  const disconnectAccount = useCallback(async () => {
+    await web3Modal.clearCachedProvider();
+    if (provider?.disconnect && typeof provider.disconnect === 'function') {
+      await provider.disconnect();
+    }
 
-    // Subscribe to chainId change
-    provider.on('chainChanged', (chainId) => {
-      const isValid = CHAIN_ID.includes(chainId);
-      setIsNetworkSupported(isValid);
-    });
+    setUserAccount(null);
+    setUserBalance(null);
+    setErrorMessage(null);
+    setProvider(null);
+  }, [provider]);
 
-    // Subscribe to session disconnection
-    provider.on('disconnect', () => {
-      setUserAccount(null);
-      setUserBalance(null);
-    });
-  }
+  // Auto connect to the cached provider
+  useEffect(() => {
+    if (web3Modal.cachedProvider) {
+      handleLogin();
+    }
+  }, [handleLogin]);
+
+  // A `provider` should come with EIP-1193 events. We'll listen for those events
+  // here so that when a user switches accounts or networks, we can update the
+  // local React state with that new information.
+  useEffect(() => {
+    if (provider?.on) {
+      const handleAccountsChanged = (accounts) => {
+        window.console.log('accountsChanged', accounts);
+        setUserAccount(accounts[0]);
+      };
+
+      // https://docs.ethers.io/v5/concepts/best-practices/#best-practices--network-changes
+      const handleChainChanged = () => {
+        window.location.reload();
+      };
+
+      const handleDisconnect = (error) => {
+        window.console.log('disconnect', error);
+        disconnectAccount();
+      };
+
+      provider.on('accountsChanged', handleAccountsChanged);
+      provider.on('chainChanged', handleChainChanged);
+      provider.on('disconnect', handleDisconnect);
+
+      // cleanup
+      return () => {
+        if (provider.removeListener) {
+          provider.removeListener('accountsChanged', handleAccountsChanged);
+          provider.removeListener('chainChanged', handleChainChanged);
+          provider.removeListener('disconnect', handleDisconnect);
+        }
+      };
+    }
+
+    return () => {};
+  }, [provider, disconnectAccount]);
 
   if (errorMessage) {
     return (
@@ -111,7 +159,7 @@ const Login = ({
   if (!account) {
     return (
       <Container>
-        <CustomButton variant="green" onClick={handleLogin}>
+        <CustomButton variant="purple" onClick={handleLogin}>
           Connect Wallet
         </CustomButton>
       </Container>
@@ -122,7 +170,7 @@ const Login = ({
     <Container>
       <DetailsContainer>
         <WalletContainer>
-          {!isNetworkSupported && (
+          {!CHAIN_ID.includes(chainId) && (
             <div className="unsupported-network">
               <Warning />
               Unsupported network
@@ -131,7 +179,7 @@ const Login = ({
           <div>{isNil(balance) ? '--' : `${round(balance, 2)} ETH`}</div>
           <div className="dash" />
           <div className="address">{account ? `${account}` : 'NA'}</div>
-          <CustomButton variant="transparent" onClick={handleDisconnect}>
+          <CustomButton variant="transparent" onClick={disconnectAccount}>
             Disconnect
           </CustomButton>
         </WalletContainer>
@@ -143,31 +191,48 @@ const Login = ({
 Login.propTypes = {
   account: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
   balance: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  chainId: PropTypes.number,
   errorMessage: PropTypes.string,
+  provider: ProviderProptype,
+  web3Provider: EthersProviderProptype,
   setUserAccount: PropTypes.func.isRequired,
   setUserBalance: PropTypes.func.isRequired,
+  setChainId: PropTypes.func.isRequired,
   setErrorMessage: PropTypes.func.isRequired,
+  setProvider: PropTypes.func.isRequired,
+  setEthersProvider: PropTypes.func.isRequired,
 };
 
 Login.defaultProps = {
   account: null,
   balance: null,
+  chainId: null,
   errorMessage: null,
+  provider: null,
+  web3Provider: null,
 };
 
 const mapStateToProps = (state) => {
-  const { account, balance, errorMessage } = get(state, 'setup', {});
+  const {
+    account, balance, errorMessage, provider, chainId, web3Provider,
+  } = get(state, 'setup', {});
   return {
     account,
     balance,
+    chainId,
     errorMessage,
+    provider,
+    web3Provider,
   };
 };
 
 const mapDispatchToProps = {
   setUserAccount: setUserAccountFn,
   setUserBalance: setUserBalanceFn,
+  setChainId: setChainIdFn,
   setErrorMessage: setErrorMessageFn,
+  setProvider: setProviderFn,
+  setEthersProvider: setEthersProviderFn,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

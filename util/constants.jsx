@@ -1,6 +1,3 @@
-export const CHAIN_ID = [5]; // TODO: update
+export const CHAIN_ID = [5];
 
-export const CONSTANTS = {
-  ETH_GETBALANCE: 'eth_getBalance',
-  ETH_REQUESTACCOUNTS: 'eth_requestAccounts',
-};
+export const SUPPORTED_NETWORKS = [5];
