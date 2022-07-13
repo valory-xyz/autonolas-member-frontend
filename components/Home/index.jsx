@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { ethers } from 'ethers';
 import PropTypes from 'prop-types';
 import Image from 'next/image';
@@ -11,7 +11,7 @@ import {
   setUserBalance as setUserBalanceFn,
   setErrorMessage as setErrorMessageFn,
 } from 'store/setup/actions';
-import { EthersProviderProptype } from 'common-util/ReusableProptypes';
+import { DataContext } from 'common-util/context';
 import { Ellipsis } from 'components/GlobalStyles';
 import { getBalanceDetails, claimBalances } from './utils';
 import { getUrl, getToken } from './helpers';
@@ -24,12 +24,10 @@ const TRANSACTION_STATE = {
 };
 
 const Home = ({
-  account,
-  chainId,
-  setUserBalance,
-  setErrorMessage,
-  web3Provider,
+  account, chainId, setUserBalance, setErrorMessage,
 }) => {
+  const { web3Provider } = useContext(DataContext);
+
   const [tokens, setTokens] = useState({});
   const [isClaimLoading, setClaimLoading] = useState(false);
   const [transactionState, setTransactionState] = useState(null);
@@ -46,7 +44,7 @@ const Home = ({
 
   const getTokens = async () => {
     try {
-      const balances = await getBalanceDetails(account, web3Provider);
+      const balances = await getBalanceDetails(account, web3Provider, chainId);
       setTokens(balances);
     } catch (error) {
       console.error(error);
@@ -67,11 +65,11 @@ const Home = ({
   const handleClaim = async () => {
     setClaimLoading(true);
     try {
-      const response = await claimBalances(account, web3Provider);
+      const response = await claimBalances(account, web3Provider, chainId);
 
       // if claim is successfully done, transition to SUCCESS state!
       setTransactionState(TRANSACTION_STATE.success);
-      setTransactionId(get(response, 'hash') || null);
+      setTransactionId(get(response, 'transactionHash') || null);
 
       /* re-fetch tokens, balance after 3 seconds */
       setTimeout(async () => {
@@ -133,43 +131,46 @@ const Home = ({
       </MiddleContent>
 
       <br />
-
-      {transactionState === TRANSACTION_STATE.success && (
-        <Alert
-          type="info"
-          message={(
-            <TransactionSuccessMessage>
-              <div>Transaction Submitted</div>
-              <div className="t-id">
-                Track on Etherscan:&nbsp;
-                <a
-                  href={getUrl(chainId, transactionId)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="ropsten-transaction"
-                >
-                  <Ellipsis>{transactionId}</Ellipsis>
-                  <span className="external-link">
-                    <Image
-                      src="/images/external-link.svg"
-                      alt="Transaction link"
-                      width={18}
-                      height={16}
-                    />
-                  </span>
-                </a>
-              </div>
-            </TransactionSuccessMessage>
+      {account && (
+        <>
+          {transactionState === TRANSACTION_STATE.success && (
+            <Alert
+              type="info"
+              message={(
+                <TransactionSuccessMessage>
+                  <div>Transaction Submitted</div>
+                  <div className="t-id">
+                    Track on Etherscan:&nbsp;
+                    <a
+                      href={getUrl(chainId, transactionId)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="ropsten-transaction"
+                    >
+                      <Ellipsis>{transactionId}</Ellipsis>
+                      <span className="external-link">
+                        <Image
+                          src="/images/external-link.svg"
+                          alt="Transaction link"
+                          width={18}
+                          height={16}
+                        />
+                      </span>
+                    </a>
+                  </div>
+                </TransactionSuccessMessage>
+              )}
+            />
           )}
-        />
-      )}
 
-      {transactionState === TRANSACTION_STATE.failure && (
-        <Alert
-          message="Claim transaction failed – try again"
-          type="error"
-          showIcon
-        />
+          {transactionState === TRANSACTION_STATE.failure && (
+            <Alert
+              message="Claim transaction failed – try again"
+              type="error"
+              showIcon
+            />
+          )}
+        </>
       )}
     </Container>
   );
@@ -180,18 +181,16 @@ Home.propTypes = {
   chainId: PropTypes.number,
   setUserBalance: PropTypes.func.isRequired,
   setErrorMessage: PropTypes.func.isRequired,
-  web3Provider: EthersProviderProptype,
 };
 
 Home.defaultProps = {
   account: null,
   chainId: null,
-  web3Provider: null,
 };
 
 const mapStateToProps = (state) => {
-  const { account, chainId, web3Provider } = state.setup;
-  return { account, chainId, web3Provider };
+  const { account, chainId } = state.setup;
+  return { account, chainId };
 };
 
 const mapDispatchToProps = {

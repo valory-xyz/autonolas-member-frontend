@@ -20,8 +20,6 @@ export default (state = initialState, action) => {
     case syncTypes.SET_ACCOUNT:
     case syncTypes.SET_BALANCE:
     case syncTypes.SET_LOGIN_ERROR:
-    case syncTypes.SET_WALLET_PROVIDER:
-    case syncTypes.SET_ETHERS_PROVIDER:
     case syncTypes.SET_CHAIND_ID:
     case syncTypes.SET_STORE_STATE: {
       return { ...state, ...action.data };

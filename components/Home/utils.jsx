@@ -2,10 +2,11 @@ import { notification } from 'antd/lib';
 import { getSaleContract } from 'common-util/Contracts';
 import { COLOR } from 'util/theme';
 
-export const getBalanceDetails = (address, providerObject) => new Promise((resolve, reject) => {
-  const contract = getSaleContract(providerObject);
-  contract
+export const getBalanceDetails = (address, providerObject, cd) => new Promise((resolve, reject) => {
+  const contract = getSaleContract(providerObject, cd);
+  contract.methods
     .claimableBalances(address)
+    .call()
     .then((response) => {
       resolve(response);
     })
@@ -15,13 +16,13 @@ export const getBalanceDetails = (address, providerObject) => new Promise((resol
     });
 });
 
-export const claimBalances = (account, providerObject) => new Promise((resolve, reject) => {
-  const contract = getSaleContract(providerObject);
-  contract
+export const claimBalances = (account, providerObject, cd) => new Promise((resolve, reject) => {
+  const contract = getSaleContract(providerObject, cd);
+  contract.methods
     .claim()
+    .send({ from: account })
     .then((response) => {
       resolve(response);
-
       notification.success({
         description: 'Transaction Successful',
         style: { border: `1px solid ${COLOR.PRIMARY}` },

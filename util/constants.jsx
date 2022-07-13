@@ -1,3 +1,1 @@
-export const CHAIN_ID = [5];
-
-export const SUPPORTED_NETWORKS = [5];
+export const CHAIN_ID = [1, 5, 31337];
