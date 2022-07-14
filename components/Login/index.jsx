@@ -17,12 +17,6 @@ import {
   setErrorMessage as setErrorMessageFn,
 } from 'store/setup/actions';
 import { DataContext } from 'common-util/context';
-// import {
-//   SALE_CONTRACT_ADDRESS,
-//   SALE_CONTRACT_ABI,
-//   SALE_CONTRACT_ADDRESS_GOERLI,
-//   SALE_CONTRACT_ABI_GOERLI,
-// } from 'common-util/AbiAndAddresses';
 import { getSaleContract } from 'common-util/Contracts';
 import { providerOptions } from './helpers';
 import { Container, DetailsContainer, WalletContainer } from './styles';
@@ -79,6 +73,9 @@ const Login = ({
     try {
       const modalProvider = await web3Modal.connect();
 
+      // ------ setting to the window object! ------
+      window.MODAL_PROVIDER = modalProvider;
+
       // We plug the initial `provider` and get back
       // a Web3Provider. This will add on methods and
       // event listeners such as `.on()` will be different.
@@ -93,12 +90,6 @@ const Login = ({
       setChainId(currentChainId || null);
 
       /* --------------- OLAS balances --------------- */
-      // const web3 = new Web3(modalProvider);
-      // const contract = new web3.eth.Contract(
-      //   currentChainId === 5 ? SALE_CONTRACT_ABI_GOERLI : SALE_CONTRACT_ABI,
-      //   currentChainId === 5 ? SALE_CONTRACT_ADDRESS_GOERLI : SALE_CONTRACT_ADDRESS,
-      // );
-
       const contract = getSaleContract(modalProvider, currentChainId);
       const response = await contract.methods
         .claimableBalances(address[0])

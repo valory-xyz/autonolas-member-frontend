@@ -14,7 +14,7 @@ import initStore from '../store';
 
 require('../styles/antd.less');
 
-const getLibrary = (provider) => new Web3(provider);
+const getLibrary = (p) => new Web3(p);
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {

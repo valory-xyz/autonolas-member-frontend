@@ -5,8 +5,6 @@ const initialState = {
   balance: null,
   chainId: null,
   errorMessage: null,
-  provider: null,
-  web3Provider: null,
 };
 
 export default (state = initialState, action) => {

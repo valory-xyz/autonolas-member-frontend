@@ -6,8 +6,8 @@ import {
   SALE_CONTRACT_ABI_GOERLI,
 } from 'common-util/AbiAndAddresses';
 
-export const getSaleContract = (provider, chainId) => {
-  const web3 = new Web3(provider);
+export const getSaleContract = (p, chainId) => {
+  const web3 = new Web3(p);
 
   // Goerli has separate contract
   const contract = new web3.eth.Contract(
