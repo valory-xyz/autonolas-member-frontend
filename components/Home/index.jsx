@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { ethers } from 'ethers';
 import PropTypes from 'prop-types';
 import Image from 'next/image';
@@ -13,7 +13,7 @@ import {
 } from 'store/setup/actions';
 import { DataContext } from 'common-util/context';
 import { Ellipsis } from 'components/GlobalStyles';
-import { getBalanceDetails, claimBalances } from './utils';
+import { claimBalances } from './utils';
 import { getUrl, getToken } from './helpers';
 import { Container, MiddleContent, TransactionSuccessMessage } from './styles';
 
@@ -26,9 +26,8 @@ const TRANSACTION_STATE = {
 const Home = ({
   account, chainId, setUserBalance, setErrorMessage,
 }) => {
-  const { web3Provider } = useContext(DataContext);
+  const { web3Provider, olasBalances: tokens } = useContext(DataContext);
 
-  const [tokens, setTokens] = useState({});
   const [isClaimLoading, setClaimLoading] = useState(false);
   const [transactionState, setTransactionState] = useState(null);
   const [transactionId, setTransactionId] = useState(null);
@@ -42,26 +41,6 @@ const Home = ({
     }
   };
 
-  const getTokens = async () => {
-    try {
-      const balances = await getBalanceDetails(account, web3Provider, chainId);
-      setTokens(balances);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(async () => {
-    if (account && web3Provider) {
-      getTokens();
-    }
-
-    // if no account, balance should be reset
-    if (!account) {
-      setTokens({});
-    }
-  }, [account, web3Provider]);
-
   const handleClaim = async () => {
     setClaimLoading(true);
     try {
@@ -73,7 +52,6 @@ const Home = ({
 
       /* re-fetch tokens, balance after 3 seconds */
       setTimeout(async () => {
-        await getTokens();
         await setBalance(account);
       }, 3000);
     } catch (error) {
