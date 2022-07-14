@@ -11,7 +11,6 @@ export const getBalanceDetails = (address, providerObject, cd) => new Promise((r
       resolve(response);
     })
     .catch((e) => {
-      console.error(e);
       reject(e);
     });
 });
@@ -29,7 +28,6 @@ export const claimBalances = (account, providerObject, cd) => new Promise((resol
       });
     })
     .catch((e) => {
-      console.error(e);
       reject(e);
       notification.error({
         description: 'Some error occured',
