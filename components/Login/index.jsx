@@ -17,6 +17,7 @@ import {
   setErrorMessage as setErrorMessageFn,
 } from 'store/setup/actions';
 import { DataContext } from 'common-util/context';
+import { getSaleContract } from 'common-util/Contracts';
 import { providerOptions } from './helpers';
 import { Container, DetailsContainer, WalletContainer } from './styles';
 
@@ -44,7 +45,11 @@ const Login = ({
   setErrorMessage,
 }) => {
   const {
-    provider, web3Provider, setProvider, setWeb3Provider,
+    provider,
+    web3Provider,
+    setProvider,
+    setWeb3Provider,
+    setOlasBalances,
   } = useContext(DataContext);
 
   const setBalance = async (accountPassed) => {
@@ -68,6 +73,9 @@ const Login = ({
     try {
       const modalProvider = await web3Modal.connect();
 
+      // ------ setting to the window object! ------
+      window.MODAL_PROVIDER = modalProvider;
+
       // We plug the initial `provider` and get back
       // a Web3Provider. This will add on methods and
       // event listeners such as `.on()` will be different.
@@ -80,8 +88,16 @@ const Login = ({
       setProvider(modalProvider);
       setWeb3Provider(wProvider);
       setChainId(currentChainId || null);
+
+      /* --------------- OLAS balances --------------- */
+      const contract = getSaleContract(modalProvider, currentChainId);
+      const response = await contract.methods
+        .claimableBalances(address[0])
+        .call();
+
+      setOlasBalances(response);
     } catch (error) {
-      window.console.log(error);
+      window.console.error(error);
     }
   }, []);
 
