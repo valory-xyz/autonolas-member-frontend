@@ -11,6 +11,5 @@ export const providerOptions = {
         31337: process.env.NEXT_PUBLIC_AUTONOLAS_URL,
       },
     },
-    chainId: 1,
   },
 };
