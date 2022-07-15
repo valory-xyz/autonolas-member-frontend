@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 
-export const getBalance = (account, provider) => new Promise((resolve, reject) => {
-  provider
+export const getBalance = (account, p) => new Promise((resolve, reject) => {
+  p.eth
     .getBalance(account)
     .then((balance) => {
       const balanceInEth = ethers.utils.formatEther(balance);

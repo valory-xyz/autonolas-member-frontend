@@ -19,7 +19,7 @@ const NavigationBar = ({ children }) => {
       <Header>
         <HeaderContainer>
           <div className="column-1">
-            <Logo onClick={() => router.push('/')} data-testid="protocol-logo">
+            <Logo data-testid="protocol-logo">
               <LogoSvg />
               <span>Investors</span>
             </Logo>

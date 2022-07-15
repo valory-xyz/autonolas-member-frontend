@@ -5,15 +5,16 @@ import { createWrapper } from 'next-redux-wrapper';
 import PropTypes from 'prop-types';
 
 import { Web3ReactProvider } from '@web3-react/core';
-import { Web3Provider } from '@ethersproject/providers';
+import Web3 from 'web3';
 
 import GlobalStyle from 'components/GlobalStyles';
+import { DataProvider } from 'common-util/context';
 import Layout from 'components/Layout';
 import initStore from '../store';
 
 require('../styles/antd.less');
 
-const getLibrary = (provider) => new Web3Provider(provider);
+const getLibrary = (p) => new Web3(p);
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
@@ -34,11 +35,13 @@ class MyApp extends App {
           <title>Investor App</title>
           <meta name="title" content="Investor App" />
         </Head>
-        <Web3ReactProvider getLibrary={getLibrary}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </Web3ReactProvider>
+        <DataProvider>
+          <Web3ReactProvider getLibrary={getLibrary}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </Web3ReactProvider>
+        </DataProvider>
       </>
     );
   }

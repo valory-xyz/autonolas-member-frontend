@@ -1,6 +1,6 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useContext, useCallback } from 'react';
 import { connect } from 'react-redux';
-import { providers } from 'ethers';
+import Web3 from 'web3';
 import PropTypes from 'prop-types';
 import Web3Modal from 'web3modal';
 import round from 'lodash/round';
@@ -15,13 +15,9 @@ import {
   setUserBalance as setUserBalanceFn,
   setChainId as setChainIdFn,
   setErrorMessage as setErrorMessageFn,
-  setProvider as setProviderFn,
-  setEthersProvider as setEthersProviderFn,
 } from 'store/setup/actions';
-import {
-  ProviderProptype,
-  EthersProviderProptype,
-} from 'common-util/ReusableProptypes';
+import { DataContext } from 'common-util/context';
+import { getSaleContract } from 'common-util/Contracts';
 import { providerOptions } from './helpers';
 import { Container, DetailsContainer, WalletContainer } from './styles';
 
@@ -41,17 +37,21 @@ const Login = ({
   balance,
   chainId,
   errorMessage,
-  provider,
-  web3Provider,
 
   // functions
   setUserAccount,
   setUserBalance,
   setChainId,
   setErrorMessage,
-  setProvider,
-  setEthersProvider,
 }) => {
+  const {
+    provider,
+    web3Provider,
+    setProvider,
+    setWeb3Provider,
+    setOlasBalances,
+  } = useContext(DataContext);
+
   const setBalance = async (accountPassed) => {
     try {
       const result = await getBalance(accountPassed, web3Provider);
@@ -73,20 +73,31 @@ const Login = ({
     try {
       const modalProvider = await web3Modal.connect();
 
-      // We plug the initial `provider` into ethers.js and get back
-      // a Web3Provider. This will add on methods from ethers.js and
-      // event listeners such as `.on()` will be different.
-      const ethersProvider = new providers.Web3Provider(modalProvider);
+      // ------ setting to the window object! ------
+      window.MODAL_PROVIDER = modalProvider;
 
-      const signer = ethersProvider.getSigner();
-      const address = await signer.getAddress();
-      const network = await ethersProvider.getNetwork();
-      setUserAccount(address);
+      // We plug the initial `provider` and get back
+      // a Web3Provider. This will add on methods and
+      // event listeners such as `.on()` will be different.
+      const wProvider = new Web3(modalProvider);
+
+      const address = await wProvider.eth.getAccounts();
+      const currentChainId = await wProvider.eth.getChainId();
+
+      setUserAccount(address[0]);
       setProvider(modalProvider);
-      setEthersProvider(ethersProvider);
-      setChainId(network?.chainId || null);
+      setWeb3Provider(wProvider);
+      setChainId(currentChainId || null);
+
+      /* --------------- OLAS balances --------------- */
+      const contract = getSaleContract(modalProvider, currentChainId);
+      const response = await contract.methods
+        .claimableBalances(address[0])
+        .call();
+
+      setOlasBalances(response);
     } catch (error) {
-      window.console.log(error);
+      window.console.error(error);
     }
   }, []);
 
@@ -193,14 +204,10 @@ Login.propTypes = {
   balance: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   chainId: PropTypes.number,
   errorMessage: PropTypes.string,
-  provider: ProviderProptype,
-  web3Provider: EthersProviderProptype,
   setUserAccount: PropTypes.func.isRequired,
   setUserBalance: PropTypes.func.isRequired,
   setChainId: PropTypes.func.isRequired,
   setErrorMessage: PropTypes.func.isRequired,
-  setProvider: PropTypes.func.isRequired,
-  setEthersProvider: PropTypes.func.isRequired,
 };
 
 Login.defaultProps = {
@@ -208,21 +215,17 @@ Login.defaultProps = {
   balance: null,
   chainId: null,
   errorMessage: null,
-  provider: null,
-  web3Provider: null,
 };
 
 const mapStateToProps = (state) => {
   const {
-    account, balance, errorMessage, provider, chainId, web3Provider,
+    account, balance, errorMessage, chainId,
   } = get(state, 'setup', {});
   return {
     account,
     balance,
     chainId,
     errorMessage,
-    provider,
-    web3Provider,
   };
 };
 
@@ -231,8 +234,6 @@ const mapDispatchToProps = {
   setUserBalance: setUserBalanceFn,
   setChainId: setChainIdFn,
   setErrorMessage: setErrorMessageFn,
-  setProvider: setProviderFn,
-  setEthersProvider: setEthersProviderFn,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
