@@ -1,6 +1,6 @@
-export const SALE_CONTRACT_ADDRESS = '0xD1155408D58293BE0743225bcDe28b9FD0C12378';
+export const SALE_CONTRACT_ADDRESS_GOERLI = '0xE49CB081e8d96920C38aA7AB90cb0294ab4Bc8EA';
 
-export const SALE_CONTRACT_ABI = [
+export const SALE_CONTRACT_ABI_GOERLI = [
   {
     inputs: [
       { internalType: 'address', name: '_olasToken', type: 'address' },

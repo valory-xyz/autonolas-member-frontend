@@ -9,7 +9,5 @@ export const syncTypes = {
   SET_BALANCE: `${reducerName}/Set balance`,
   SET_CHAIND_ID: `${reducerName}/Set chain id`,
   SET_LOGIN_ERROR: `${reducerName}/Set error`,
-  SET_WALLET_PROVIDER: `${reducerName}/Set wallet provider`,
-  SET_ETHERS_PROVIDER: `${reducerName}/Set ethers provider`,
   SET_STORE_STATE: `${reducerName}/Set Store State`,
 };

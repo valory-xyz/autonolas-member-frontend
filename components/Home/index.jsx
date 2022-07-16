@@ -1,21 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useState, useContext } from 'react';
 import { ethers } from 'ethers';
 import PropTypes from 'prop-types';
-import Image from 'next/image';
 import { connect } from 'react-redux';
+import { notification } from 'antd/lib';
 import { get } from 'lodash';
-import { Alert } from 'antd';
 import { CustomButton } from 'common-util/Button';
 import { getBalance } from 'common-util/functions';
 import {
   setUserBalance as setUserBalanceFn,
   setErrorMessage as setErrorMessageFn,
 } from 'store/setup/actions';
-import { EthersProviderProptype } from 'common-util/ReusableProptypes';
-import { Ellipsis } from 'components/GlobalStyles';
-import { getBalanceDetails, claimBalances } from './utils';
-import { getUrl, getToken } from './helpers';
-import { Container, MiddleContent, TransactionSuccessMessage } from './styles';
+import { DataContext } from 'common-util/context';
+import { getSaleContract } from 'common-util/Contracts';
+import AlertInfo from 'components/AlertInfo';
+import { COLOR } from 'util/theme';
+import Image from 'next/image';
+import { Container, MiddleContent } from './styles';
 
 const CONNECT_WALLET_MESSAGE = 'To see balances and claim them, connect wallet';
 const GNOSIS_DESKTOP_MESSAGE = 'If claiming via Gnosis Safe on desktop, complete transaction there and refresh here to see updated balances.';
@@ -24,14 +24,24 @@ const TRANSACTION_STATE = {
   failure: 'failure',
 };
 
+export const getToken = ({ tokenName, token }) => (
+  <div className={`section ${tokenName}-section`}>
+    <div className="info">
+      <span className="token-name">{tokenName}</span>
+      <span className="balance">{token || '--'}</span>
+    </div>
+  </div>
+);
+
 const Home = ({
-  account,
-  chainId,
-  setUserBalance,
-  setErrorMessage,
-  web3Provider,
+  account, chainId, setUserBalance, setErrorMessage,
 }) => {
-  const [tokens, setTokens] = useState({});
+  const {
+    web3Provider,
+    olasBalances: tokens,
+    setOlasBalances,
+  } = useContext(DataContext);
+
   const [isClaimLoading, setClaimLoading] = useState(false);
   const [transactionState, setTransactionState] = useState(null);
   const [transactionId, setTransactionId] = useState(null);
@@ -45,48 +55,51 @@ const Home = ({
     }
   };
 
-  const getTokens = async () => {
-    try {
-      const balances = await getBalanceDetails(account, web3Provider);
-      setTokens(balances);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(async () => {
-    if (account && web3Provider) {
-      getTokens();
-    }
-
-    // if no account, balance should be reset
-    if (!account) {
-      setTokens({});
-    }
-  }, [account, web3Provider]);
-
   const handleClaim = async () => {
     setClaimLoading(true);
-    try {
-      const response = await claimBalances(account, web3Provider);
 
-      // if claim is successfully done, transition to SUCCESS state!
-      setTransactionState(TRANSACTION_STATE.success);
-      setTransactionId(get(response, 'hash') || null);
+    const contract = getSaleContract(window.MODAL_PROVIDER, chainId);
 
-      /* re-fetch tokens, balance after 3 seconds */
-      setTimeout(async () => {
-        await getTokens();
-        await setBalance(account);
-      }, 3000);
-    } catch (error) {
-      console.error(error);
+    contract.methods
+      .claim()
+      .send({ from: account })
+      .then((response) => {
+        // if claim is successfully done, transition to SUCCESS state!
+        setTransactionState(TRANSACTION_STATE.success);
+        setTransactionId(get(response, 'transactionHash') || null);
 
-      // if claim is unsuccessful, transition to FAILURE state!
-      setTransactionState(TRANSACTION_STATE.failure);
-    } finally {
-      setClaimLoading(false);
-    }
+        // SHOW SUCCESS NOTIFICATION
+        notification.success({
+          description: 'Transaction Successful',
+          style: { border: `1px solid ${COLOR.PRIMARY}` },
+        });
+
+        /* re-fetch tokens, balance after 3 seconds */
+        setTimeout(async () => {
+          await setBalance(account);
+
+          const balancesAfterClaim = await contract.methods
+            .claimableBalances(account)
+            .call();
+
+          setOlasBalances(balancesAfterClaim);
+        }, 3000);
+      })
+      .catch((error) => {
+        console.error(error);
+
+        // SHOW ERROR NOTIFICATION
+        notification.error({
+          description: 'Some error occured',
+          style: { border: `1px solid ${COLOR.RED}` },
+        });
+
+        // if claim is unsuccessful, transition to FAILURE state!
+        setTransactionState(TRANSACTION_STATE.failure);
+      })
+      .finally(() => {
+        setClaimLoading(false);
+      });
   };
 
   const bToken = get(tokens, 'buBalance');
@@ -133,48 +146,14 @@ const Home = ({
         )}
       </MiddleContent>
 
-      {transactionState === TRANSACTION_STATE.success && (
+      {account && (
         <>
           <br />
 
-          <Alert
-            type="info"
-            message={(
-              <TransactionSuccessMessage>
-                <div>Transaction Submitted</div>
-                <div className="t-id">
-                  Track on Etherscan:&nbsp;
-                  <a
-                    href={getUrl(chainId, transactionId)}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="ropsten-transaction"
-                  >
-                    <Ellipsis>{transactionId}</Ellipsis>
-                    <span className="external-link">
-                      <Image
-                        src="/images/external-link.svg"
-                        alt="Transaction link"
-                        width={18}
-                        height={16}
-                      />
-                    </span>
-                  </a>
-                </div>
-              </TransactionSuccessMessage>
-            )}
-          />
-        </>
-      )}
-
-      {transactionState === TRANSACTION_STATE.failure && (
-        <>
-          <br />
-
-          <Alert
-            message="Claim transaction failed – try again"
-            type="error"
-            showIcon
+          <AlertInfo
+            transactionState={transactionState}
+            chainId={chainId}
+            transactionId={transactionId}
           />
         </>
       )}
@@ -194,18 +173,16 @@ Home.propTypes = {
   chainId: PropTypes.number,
   setUserBalance: PropTypes.func.isRequired,
   setErrorMessage: PropTypes.func.isRequired,
-  web3Provider: EthersProviderProptype,
 };
 
 Home.defaultProps = {
   account: null,
   chainId: null,
-  web3Provider: null,
 };
 
 const mapStateToProps = (state) => {
-  const { account, chainId, web3Provider } = state.setup;
-  return { account, chainId, web3Provider };
+  const { account, chainId } = state.setup;
+  return { account, chainId };
 };
 
 const mapDispatchToProps = {
