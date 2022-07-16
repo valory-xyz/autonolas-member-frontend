@@ -18,6 +18,7 @@ import { getUrl, getToken } from './helpers';
 import { Container, MiddleContent, TransactionSuccessMessage } from './styles';
 
 const CONNECT_WALLET_MESSAGE = 'To see balances and claim them, connect wallet';
+const GNOSIS_DESKTOP_MESSAGE = 'If claiming via Gnosis Safe on desktop, complete transaction there and refresh here to see updated balances.';
 const TRANSACTION_STATE = {
   success: 'success',
   failure: 'failure',
@@ -111,7 +112,7 @@ const Home = ({
   return (
     <Container>
       <MiddleContent>
-        <h2 className="section-header">Claimable assets</h2>
+        <h2 className="section-header">Claimable balances</h2>
 
         <div className="sections">
           {getToken({ tokenName: 'veOLAS', token: veOlas })}
@@ -132,45 +133,58 @@ const Home = ({
         )}
       </MiddleContent>
 
-      <br />
-
       {transactionState === TRANSACTION_STATE.success && (
-        <Alert
-          type="info"
-          message={(
-            <TransactionSuccessMessage>
-              <div>Transaction Submitted</div>
-              <div className="t-id">
-                Track on Etherscan:&nbsp;
-                <a
-                  href={getUrl(chainId, transactionId)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="ropsten-transaction"
-                >
-                  <Ellipsis>{transactionId}</Ellipsis>
-                  <span className="external-link">
-                    <Image
-                      src="/images/external-link.svg"
-                      alt="Transaction link"
-                      width={18}
-                      height={16}
-                    />
-                  </span>
-                </a>
-              </div>
-            </TransactionSuccessMessage>
-          )}
-        />
+        <>
+          <br />
+
+          <Alert
+            type="info"
+            message={(
+              <TransactionSuccessMessage>
+                <div>Transaction Submitted</div>
+                <div className="t-id">
+                  Track on Etherscan:&nbsp;
+                  <a
+                    href={getUrl(chainId, transactionId)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="ropsten-transaction"
+                  >
+                    <Ellipsis>{transactionId}</Ellipsis>
+                    <span className="external-link">
+                      <Image
+                        src="/images/external-link.svg"
+                        alt="Transaction link"
+                        width={18}
+                        height={16}
+                      />
+                    </span>
+                  </a>
+                </div>
+              </TransactionSuccessMessage>
+            )}
+          />
+        </>
       )}
 
       {transactionState === TRANSACTION_STATE.failure && (
-        <Alert
-          message="Claim transaction failed – try again"
-          type="error"
-          showIcon
-        />
+        <>
+          <br />
+
+          <Alert
+            message="Claim transaction failed – try again"
+            type="error"
+            showIcon
+          />
+        </>
       )}
+
+      <br />
+
+      <MiddleContent>
+        <Image width={50} height={50} src="/images/gnosis-logo.svg" />
+        <div className="section-footer">{GNOSIS_DESKTOP_MESSAGE}</div>
+      </MiddleContent>
     </Container>
   );
 };

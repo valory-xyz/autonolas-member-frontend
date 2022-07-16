@@ -11,7 +11,7 @@ export const MiddleContent = styled.div`
   align-items: flex-start;
   justify-content: space-between;
   flex-direction: column;
-  margin: 3rem auto 0 auto;
+  margin: 1rem auto 0 auto;
   border: 1px solid ${COLOR.BORDER_GREY};
   padding: 1.25rem;
   border-radius: 5px;
@@ -40,6 +40,9 @@ export const MiddleContent = styled.div`
     line-height: normal;
     margin-top: 1.25rem;
     color: #6b6b6b;
+  }
+  .gnosis-logo {
+
   }
 
   ${MEDIA_QUERY.tablet} {
