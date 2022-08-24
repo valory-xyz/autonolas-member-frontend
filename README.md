@@ -1,8 +1,5 @@
-# investor-app-frontend
-This repository contains code for investor-app-frontend.
-
-## Project Status
-This project is currently in development. Feel free to create a branch and send me a PR for changes.
+# Investor App Frontend
+This repository contains code for the [Investor App](https://investor.autonolas.network/) frontend.
 
 ## Tech Stack
 - web3.js
@@ -12,15 +9,15 @@ This project is currently in development. Feel free to create a branch and send 
 
 ## Installation and Setup Instructions
 
-Clone down this repository. You will need `node` version ">=14" and `yarn` version ">=1" installed globally on your machine.  
+Clone down this repository. You will need `node` version ">=14" and `yarn` version ">=1" installed globally on your machine.
 
 Installation:
 
-`yarn`  
+`yarn`
 
 To Start Server:
 
-`yarn dev`  
+`yarn dev`
 
 To Visit App:
 

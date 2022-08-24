@@ -32,7 +32,7 @@ jobs:
         refs/heads/staging
       ', github.ref)
     env:
-      BRANCH_NAME: ${{ github.head_ref || github.ref_name }} 
+      BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
     steps:
       - name: Confirm Image
         run: echo "Building image for ${{env.BRANCH_NAME}}"
@@ -72,4 +72,18 @@ jobs:
           tags: valory/${{ github.event.repository.name }}:${{env.BRANCH_NAME}}
           build-args: "BACKEND_PUBLIC_URL=${{secrets.PROD_BACKEND_PUBLIC_URL}}"
 
-
+  scan:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v3
+        with:
+          go-version: "1.17.7"
+      - run: |
+          wget https://github.com/zricethezav/gitleaks/releases/download/v8.10.1/gitleaks_8.10.1_linux_x64.tar.gz && \
+          tar -xzf gitleaks_8.10.1_linux_x64.tar.gz && \
+          sudo install gitleaks /usr/bin && \
+          gitleaks detect --report-format json --report-path leak_report
