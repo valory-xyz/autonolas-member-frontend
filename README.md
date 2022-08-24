@@ -1,9 +1,6 @@
 # Investor App Frontend
 This repository contains code for the [Investor App](https://investor.autonolas.network/) frontend.
 
-## Project Status
-This project is currently in development. Feel free to create a branch and send me a PR for changes.
-
 ## Tech Stack
 - web3.js
 - ReactJS
