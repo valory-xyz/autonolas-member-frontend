@@ -16,7 +16,7 @@ const VeOlas = ({ account, chainId }) => {
   const [votes, setVotesCount] = useState(null);
 
   useEffect(() => {
-    if (account) {
+    if (account && chainId) {
       const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 
       // get balance
@@ -27,7 +27,8 @@ const VeOlas = ({ account, chainId }) => {
           setBalance(response);
         })
         .catch((error) => {
-          window.console.log('Error occured on fetching balance ', error);
+          window.console.log('Error occured on fetching balance:');
+          window.console.error(error);
         });
 
       // get votes count
@@ -39,10 +40,11 @@ const VeOlas = ({ account, chainId }) => {
           setVotesCount(response);
         })
         .catch((error) => {
-          window.console.log('Error occured on fetching votes ', error);
+          window.console.log('Error occured on fetching votes:');
+          window.console.error(error);
         });
     }
-  }, [account]);
+  }, [account, chainId]);
 
   const veOlasBalance = balance ? ethers.utils.formatEther(balance) : null;
 

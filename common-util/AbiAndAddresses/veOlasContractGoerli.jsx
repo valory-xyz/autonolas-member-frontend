@@ -1,255 +1,117 @@
-export const VEOLAS_ADDRESS_GOERLI = '0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f';
+export const VEOLAS_ADDRESS_GOERLI = '0xf8B20e160557c747E8640CdcE77E1dd44bCaAfbB';
 
 export const VEOLAS_ABI_GOERLI = [
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: '_token',
-        type: 'address',
-      },
-      {
-        internalType: 'string',
-        name: '_name',
-        type: 'string',
-      },
-      {
-        internalType: 'string',
-        name: '_symbol',
-        type: 'string',
-      },
+      { internalType: 'address', name: '_token', type: 'address' },
+      { internalType: 'string', name: '_name', type: 'string' },
+      { internalType: 'string', name: '_symbol', type: 'string' },
     ],
     stateMutability: 'nonpayable',
     type: 'constructor',
   },
   {
     inputs: [
-      {
-        internalType: 'uint256',
-        name: 'provided',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'expected',
-        type: 'uint256',
-      },
+      { internalType: 'uint256', name: 'provided', type: 'uint256' },
+      { internalType: 'uint256', name: 'expected', type: 'uint256' },
     ],
     name: 'InsufficientAllowance',
     type: 'error',
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'deadline',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'curTime',
-        type: 'uint256',
-      },
+      { internalType: 'address', name: 'account', type: 'address' },
+      { internalType: 'uint256', name: 'deadline', type: 'uint256' },
+      { internalType: 'uint256', name: 'curTime', type: 'uint256' },
     ],
     name: 'LockExpired',
     type: 'error',
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'deadline',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'curTime',
-        type: 'uint256',
-      },
+      { internalType: 'address', name: 'account', type: 'address' },
+      { internalType: 'uint256', name: 'deadline', type: 'uint256' },
+      { internalType: 'uint256', name: 'curTime', type: 'uint256' },
     ],
     name: 'LockNotExpired',
     type: 'error',
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
+      { internalType: 'address', name: 'account', type: 'address' },
+      { internalType: 'uint256', name: 'amount', type: 'uint256' },
     ],
     name: 'LockedValueNotZero',
     type: 'error',
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'maxUnlockTime',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'providedUnlockTime',
-        type: 'uint256',
-      },
+      { internalType: 'address', name: 'account', type: 'address' },
+      { internalType: 'uint256', name: 'maxUnlockTime', type: 'uint256' },
+      { internalType: 'uint256', name: 'providedUnlockTime', type: 'uint256' },
     ],
     name: 'MaxUnlockTimeReached',
     type: 'error',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
+    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
     name: 'NoValueLocked',
     type: 'error',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
+    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
     name: 'NonDelegatable',
     type: 'error',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
+    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
     name: 'NonTransferable',
     type: 'error',
   },
-  {
-    inputs: [],
-    name: 'NonZeroValue',
-    type: 'error',
-  },
+  { inputs: [], name: 'NonZeroValue', type: 'error' },
   {
     inputs: [
-      {
-        internalType: 'uint256',
-        name: 'provided',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'max',
-        type: 'uint256',
-      },
+      { internalType: 'uint256', name: 'provided', type: 'uint256' },
+      { internalType: 'uint256', name: 'max', type: 'uint256' },
     ],
     name: 'Overflow',
     type: 'error',
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'sender',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: 'owner',
-        type: 'address',
-      },
+      { internalType: 'address', name: 'sender', type: 'address' },
+      { internalType: 'address', name: 'owner', type: 'address' },
     ],
     name: 'OwnerOnly',
     type: 'error',
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'minUnlockTime',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'providedUnlockTime',
-        type: 'uint256',
-      },
+      { internalType: 'address', name: 'account', type: 'address' },
+      { internalType: 'uint256', name: 'minUnlockTime', type: 'uint256' },
+      { internalType: 'uint256', name: 'providedUnlockTime', type: 'uint256' },
     ],
     name: 'UnlockTimeIncorrect',
     type: 'error',
   },
   {
     inputs: [
-      {
-        internalType: 'uint256',
-        name: 'numValues1',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'numValues2',
-        type: 'uint256',
-      },
+      { internalType: 'uint256', name: 'numValues1', type: 'uint256' },
+      { internalType: 'uint256', name: 'numValues2', type: 'uint256' },
     ],
     name: 'WrongArrayLength',
     type: 'error',
   },
   {
     inputs: [
-      {
-        internalType: 'uint256',
-        name: 'providedBlockNumber',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'actualBlockNumber',
-        type: 'uint256',
-      },
+      { internalType: 'uint256', name: 'providedBlockNumber', type: 'uint256' },
+      { internalType: 'uint256', name: 'actualBlockNumber', type: 'uint256' },
     ],
     name: 'WrongBlockNumber',
     type: 'error',
   },
-  {
-    inputs: [],
-    name: 'ZeroAddress',
-    type: 'error',
-  },
-  {
-    inputs: [],
-    name: 'ZeroValue',
-    type: 'error',
-  },
+  { inputs: [], name: 'ZeroAddress', type: 'error' },
+  { inputs: [], name: 'ZeroValue', type: 'error' },
   {
     anonymous: false,
     inputs: [
@@ -353,10 +215,7 @@ export const VEOLAS_ABI_GOERLI = [
         type: 'uint8',
       },
       {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'ts',
-        type: 'uint256',
+        indexed: false, internalType: 'uint256', name: 'ts', type: 'uint256',
       },
     ],
     name: 'Deposit',
@@ -385,16 +244,10 @@ export const VEOLAS_ABI_GOERLI = [
     anonymous: false,
     inputs: [
       {
-        indexed: true,
-        internalType: 'address',
-        name: 'from',
-        type: 'address',
+        indexed: true, internalType: 'address', name: 'from', type: 'address',
       },
       {
-        indexed: true,
-        internalType: 'address',
-        name: 'to',
-        type: 'address',
+        indexed: true, internalType: 'address', name: 'to', type: 'address',
       },
       {
         indexed: false,
@@ -422,10 +275,7 @@ export const VEOLAS_ABI_GOERLI = [
         type: 'uint256',
       },
       {
-        indexed: false,
-        internalType: 'uint256',
-        name: 'ts',
-        type: 'uint256',
+        indexed: false, internalType: 'uint256', name: 'ts', type: 'uint256',
       },
     ],
     name: 'Withdraw',
@@ -433,92 +283,38 @@ export const VEOLAS_ABI_GOERLI = [
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'owner',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: 'spender',
-        type: 'address',
-      },
+      { internalType: 'address', name: 'owner', type: 'address' },
+      { internalType: 'address', name: 'spender', type: 'address' },
     ],
     name: 'allowance',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'spender',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
+      { internalType: 'address', name: 'spender', type: 'address' },
+      { internalType: 'uint256', name: 'amount', type: 'uint256' },
     ],
     name: 'approve',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
+    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
     name: 'balanceOf',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'balance',
-        type: 'uint256',
-      },
-    ],
+    outputs: [{ internalType: 'uint256', name: 'balance', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'blockNumber',
-        type: 'uint256',
-      },
+      { internalType: 'address', name: 'account', type: 'address' },
+      { internalType: 'uint256', name: 'blockNumber', type: 'uint256' },
     ],
     name: 'balanceOfAt',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'balance',
-        type: 'uint256',
-      },
-    ],
+    outputs: [{ internalType: 'uint256', name: 'balance', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
@@ -531,16 +327,8 @@ export const VEOLAS_ABI_GOERLI = [
   },
   {
     inputs: [
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'unlockTime',
-        type: 'uint256',
-      },
+      { internalType: 'uint256', name: 'amount', type: 'uint256' },
+      { internalType: 'uint256', name: 'unlockTime', type: 'uint256' },
     ],
     name: 'createLock',
     outputs: [],
@@ -549,21 +337,9 @@ export const VEOLAS_ABI_GOERLI = [
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'unlockTime',
-        type: 'uint256',
-      },
+      { internalType: 'address', name: 'account', type: 'address' },
+      { internalType: 'uint256', name: 'amount', type: 'uint256' },
+      { internalType: 'uint256', name: 'unlockTime', type: 'uint256' },
     ],
     name: 'createLockFor',
     outputs: [],
@@ -573,24 +349,12 @@ export const VEOLAS_ABI_GOERLI = [
   {
     inputs: [],
     name: 'decimals',
-    outputs: [
-      {
-        internalType: 'uint8',
-        name: '',
-        type: 'uint8',
-      },
-    ],
+    outputs: [{ internalType: 'uint8', name: '', type: 'uint8' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'delegatee',
-        type: 'address',
-      },
-    ],
+    inputs: [{ internalType: 'address', name: 'delegatee', type: 'address' }],
     name: 'delegate',
     outputs: [],
     stateMutability: 'nonpayable',
@@ -598,36 +362,12 @@ export const VEOLAS_ABI_GOERLI = [
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'delegatee',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'nonce',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint256',
-        name: 'expiry',
-        type: 'uint256',
-      },
-      {
-        internalType: 'uint8',
-        name: 'v',
-        type: 'uint8',
-      },
-      {
-        internalType: 'bytes32',
-        name: 'r',
-        type: 'bytes32',
-      },
-      {
-        internalType: 'bytes32',
-        name: 's',
-        type: 'bytes32',
-      },
+      { internalType: 'address', name: 'delegatee', type: 'address' },
+      { internalType: 'uint256', name: 'nonce', type: 'uint256' },
+      { internalType: 'uint256', name: 'expiry', type: 'uint256' },
+      { internalType: 'uint8', name: 'v', type: 'uint8' },
+      { internalType: 'bytes32', name: 'r', type: 'bytes32' },
+      { internalType: 'bytes32', name: 's', type: 'bytes32' },
     ],
     name: 'delegateBySig',
     outputs: [],
@@ -635,36 +375,16 @@ export const VEOLAS_ABI_GOERLI = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
+    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
     name: 'delegates',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
+    outputs: [{ internalType: 'address', name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
+      { internalType: 'address', name: 'account', type: 'address' },
+      { internalType: 'uint256', name: 'amount', type: 'uint256' },
     ],
     name: 'depositFor',
     outputs: [],
@@ -672,42 +392,16 @@ export const VEOLAS_ABI_GOERLI = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
+    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
     name: 'getLastUserPoint',
     outputs: [
       {
         components: [
-          {
-            internalType: 'int128',
-            name: 'bias',
-            type: 'int128',
-          },
-          {
-            internalType: 'int128',
-            name: 'slope',
-            type: 'int128',
-          },
-          {
-            internalType: 'uint64',
-            name: 'ts',
-            type: 'uint64',
-          },
-          {
-            internalType: 'uint64',
-            name: 'blockNumber',
-            type: 'uint64',
-          },
-          {
-            internalType: 'uint128',
-            name: 'balance',
-            type: 'uint128',
-          },
+          { internalType: 'int128', name: 'bias', type: 'int128' },
+          { internalType: 'int128', name: 'slope', type: 'int128' },
+          { internalType: 'uint64', name: 'ts', type: 'uint64' },
+          { internalType: 'uint64', name: 'blockNumber', type: 'uint64' },
+          { internalType: 'uint128', name: 'balance', type: 'uint128' },
         ],
         internalType: 'struct PointVoting',
         name: 'pv',
@@ -718,109 +412,45 @@ export const VEOLAS_ABI_GOERLI = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
+    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
     name: 'getNumUserPoints',
     outputs: [
-      {
-        internalType: 'uint256',
-        name: 'accountNumPoints',
-        type: 'uint256',
-      },
+      { internalType: 'uint256', name: 'accountNumPoints', type: 'uint256' },
     ],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'blockNumber',
-        type: 'uint256',
-      },
-    ],
+    inputs: [{ internalType: 'uint256', name: 'blockNumber', type: 'uint256' }],
     name: 'getPastTotalSupply',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'blockNumber',
-        type: 'uint256',
-      },
+      { internalType: 'address', name: 'account', type: 'address' },
+      { internalType: 'uint256', name: 'blockNumber', type: 'uint256' },
     ],
     name: 'getPastVotes',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'balance',
-        type: 'uint256',
-      },
-    ],
+    outputs: [{ internalType: 'uint256', name: 'balance', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'idx',
-        type: 'uint256',
-      },
+      { internalType: 'address', name: 'account', type: 'address' },
+      { internalType: 'uint256', name: 'idx', type: 'uint256' },
     ],
     name: 'getUserPoint',
     outputs: [
       {
         components: [
-          {
-            internalType: 'int128',
-            name: 'bias',
-            type: 'int128',
-          },
-          {
-            internalType: 'int128',
-            name: 'slope',
-            type: 'int128',
-          },
-          {
-            internalType: 'uint64',
-            name: 'ts',
-            type: 'uint64',
-          },
-          {
-            internalType: 'uint64',
-            name: 'blockNumber',
-            type: 'uint64',
-          },
-          {
-            internalType: 'uint128',
-            name: 'balance',
-            type: 'uint128',
-          },
+          { internalType: 'int128', name: 'bias', type: 'int128' },
+          { internalType: 'int128', name: 'slope', type: 'int128' },
+          { internalType: 'uint64', name: 'ts', type: 'uint64' },
+          { internalType: 'uint64', name: 'blockNumber', type: 'uint64' },
+          { internalType: 'uint128', name: 'balance', type: 'uint128' },
         ],
         internalType: 'struct PointVoting',
         name: '',
@@ -831,191 +461,75 @@ export const VEOLAS_ABI_GOERLI = [
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
+    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
     name: 'getVotes',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
-    ],
+    inputs: [{ internalType: 'uint256', name: 'amount', type: 'uint256' }],
     name: 'increaseAmount',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'unlockTime',
-        type: 'uint256',
-      },
-    ],
+    inputs: [{ internalType: 'uint256', name: 'unlockTime', type: 'uint256' }],
     name: 'increaseUnlockTime',
     outputs: [],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: 'account',
-        type: 'address',
-      },
-    ],
+    inputs: [{ internalType: 'address', name: 'account', type: 'address' }],
     name: 'lockedEnd',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'unlockTime',
-        type: 'uint256',
-      },
-    ],
+    outputs: [{ internalType: 'uint256', name: 'unlockTime', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
+    inputs: [{ internalType: 'address', name: '', type: 'address' }],
     name: 'mapLockedBalances',
     outputs: [
-      {
-        internalType: 'uint128',
-        name: 'amount',
-        type: 'uint128',
-      },
-      {
-        internalType: 'uint64',
-        name: 'endTime',
-        type: 'uint64',
-      },
+      { internalType: 'uint128', name: 'amount', type: 'uint128' },
+      { internalType: 'uint64', name: 'endTime', type: 'uint64' },
     ],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'uint64',
-        name: '',
-        type: 'uint64',
-      },
-    ],
+    inputs: [{ internalType: 'uint64', name: '', type: 'uint64' }],
     name: 'mapSlopeChanges',
-    outputs: [
-      {
-        internalType: 'int128',
-        name: '',
-        type: 'int128',
-      },
-    ],
+    outputs: [{ internalType: 'int128', name: '', type: 'int128' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
+    inputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     name: 'mapSupplyPoints',
     outputs: [
-      {
-        internalType: 'int128',
-        name: 'bias',
-        type: 'int128',
-      },
-      {
-        internalType: 'int128',
-        name: 'slope',
-        type: 'int128',
-      },
-      {
-        internalType: 'uint64',
-        name: 'ts',
-        type: 'uint64',
-      },
-      {
-        internalType: 'uint64',
-        name: 'blockNumber',
-        type: 'uint64',
-      },
-      {
-        internalType: 'uint128',
-        name: 'balance',
-        type: 'uint128',
-      },
+      { internalType: 'int128', name: 'bias', type: 'int128' },
+      { internalType: 'int128', name: 'slope', type: 'int128' },
+      { internalType: 'uint64', name: 'ts', type: 'uint64' },
+      { internalType: 'uint64', name: 'blockNumber', type: 'uint64' },
+      { internalType: 'uint128', name: 'balance', type: 'uint128' },
     ],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
+      { internalType: 'address', name: '', type: 'address' },
+      { internalType: 'uint256', name: '', type: 'uint256' },
     ],
     name: 'mapUserPoints',
     outputs: [
-      {
-        internalType: 'int128',
-        name: 'bias',
-        type: 'int128',
-      },
-      {
-        internalType: 'int128',
-        name: 'slope',
-        type: 'int128',
-      },
-      {
-        internalType: 'uint64',
-        name: 'ts',
-        type: 'uint64',
-      },
-      {
-        internalType: 'uint64',
-        name: 'blockNumber',
-        type: 'uint64',
-      },
-      {
-        internalType: 'uint128',
-        name: 'balance',
-        type: 'uint128',
-      },
+      { internalType: 'int128', name: 'bias', type: 'int128' },
+      { internalType: 'int128', name: 'slope', type: 'int128' },
+      { internalType: 'uint64', name: 'ts', type: 'uint64' },
+      { internalType: 'uint64', name: 'blockNumber', type: 'uint64' },
+      { internalType: 'uint128', name: 'balance', type: 'uint128' },
     ],
     stateMutability: 'view',
     type: 'function',
@@ -1023,201 +537,91 @@ export const VEOLAS_ABI_GOERLI = [
   {
     inputs: [],
     name: 'name',
-    outputs: [
-      {
-        internalType: 'string',
-        name: '',
-        type: 'string',
-      },
-    ],
+    outputs: [{ internalType: 'string', name: '', type: 'string' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'supply',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'bytes4',
-        name: 'interfaceId',
-        type: 'bytes4',
-      },
-    ],
+    inputs: [{ internalType: 'bytes4', name: 'interfaceId', type: 'bytes4' }],
     name: 'supportsInterface',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'symbol',
-    outputs: [
-      {
-        internalType: 'string',
-        name: '',
-        type: 'string',
-      },
-    ],
+    outputs: [{ internalType: 'string', name: '', type: 'string' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'token',
-    outputs: [
-      {
-        internalType: 'address',
-        name: '',
-        type: 'address',
-      },
-    ],
+    outputs: [{ internalType: 'address', name: '', type: 'address' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'totalNumPoints',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'totalSupply',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'blockNumber',
-        type: 'uint256',
-      },
-    ],
+    inputs: [{ internalType: 'uint256', name: 'blockNumber', type: 'uint256' }],
     name: 'totalSupplyAt',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: 'supplyAt',
-        type: 'uint256',
-      },
-    ],
+    outputs: [{ internalType: 'uint256', name: 'supplyAt', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [],
     name: 'totalSupplyLocked',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
-    inputs: [
-      {
-        internalType: 'uint256',
-        name: 'ts',
-        type: 'uint256',
-      },
-    ],
+    inputs: [{ internalType: 'uint256', name: 'ts', type: 'uint256' }],
     name: 'totalSupplyLockedAtT',
-    outputs: [
-      {
-        internalType: 'uint256',
-        name: '',
-        type: 'uint256',
-      },
-    ],
+    outputs: [{ internalType: 'uint256', name: '', type: 'uint256' }],
     stateMutability: 'view',
     type: 'function',
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'to',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
+      { internalType: 'address', name: 'to', type: 'address' },
+      { internalType: 'uint256', name: 'amount', type: 'uint256' },
     ],
     name: 'transfer',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
     inputs: [
-      {
-        internalType: 'address',
-        name: 'from',
-        type: 'address',
-      },
-      {
-        internalType: 'address',
-        name: 'to',
-        type: 'address',
-      },
-      {
-        internalType: 'uint256',
-        name: 'amount',
-        type: 'uint256',
-      },
+      { internalType: 'address', name: 'from', type: 'address' },
+      { internalType: 'address', name: 'to', type: 'address' },
+      { internalType: 'uint256', name: 'amount', type: 'uint256' },
     ],
     name: 'transferFrom',
-    outputs: [
-      {
-        internalType: 'bool',
-        name: '',
-        type: 'bool',
-      },
-    ],
+    outputs: [{ internalType: 'bool', name: '', type: 'bool' }],
     stateMutability: 'nonpayable',
     type: 'function',
   },
