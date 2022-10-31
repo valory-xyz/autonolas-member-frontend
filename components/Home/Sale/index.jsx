@@ -2,19 +2,20 @@ import { useState, useContext } from 'react';
 import { ethers } from 'ethers';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import Image from 'next/image';
 import { notification } from 'antd/lib';
 import { get } from 'lodash';
-import { CustomButton } from 'common-util/Button';
-import { getBalance } from 'common-util/functions';
 import {
   setUserBalance as setUserBalanceFn,
   setErrorMessage as setErrorMessageFn,
 } from 'store/setup/actions';
+import { CustomButton } from 'common-util/Button';
+import { getBalance } from 'common-util/functions';
 import { DataContext } from 'common-util/context';
 import { getSaleContract } from 'common-util/Contracts';
 import AlertInfo from 'components/AlertInfo';
 import { COLOR } from 'util/theme';
-import Image from 'next/image';
+import { getToken } from '../common';
 import {
   BoxContainer,
   MiddleContent,
@@ -29,15 +30,6 @@ const TRANSACTION_STATE = {
   success: 'success',
   failure: 'failure',
 };
-
-export const getToken = ({ tokenName, token }) => (
-  <div className={`section ${tokenName}-section`}>
-    <div className="info">
-      <span className="token-name">{tokenName}</span>
-      <span className="balance">{token || '--'}</span>
-    </div>
-  </div>
-);
 
 const Sale = ({
   account, chainId, setUserBalance, setErrorMessage,

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { ethers } from 'ethers';
 import PropTypes from 'prop-types';
 import { getVeolasContract } from 'common-util/Contracts';
+import { getToken } from '../common';
 import {
   MiddleContent,
   BoxContainer,
@@ -12,11 +13,13 @@ import {
 
 const VeOlas = ({ account, chainId }) => {
   const [balance, setBalance] = useState(null);
+  const [votes, setVotesCount] = useState(null);
 
   useEffect(() => {
     if (account) {
       const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 
+      // get balance
       contract.methods
         .balanceOf(account)
         .call()
@@ -25,6 +28,18 @@ const VeOlas = ({ account, chainId }) => {
         })
         .catch((error) => {
           window.console.log('Error occured on fetching balance ', error);
+        });
+
+      // get votes count
+      const contract2 = getVeolasContract(window.MODAL_PROVIDER, chainId);
+      contract2.methods
+        .getVotes(account)
+        .call()
+        .then((response) => {
+          setVotesCount(response);
+        })
+        .catch((error) => {
+          window.console.log('Error occured on fetching votes ', error);
         });
     }
   }, [account]);
@@ -37,12 +52,8 @@ const VeOlas = ({ account, chainId }) => {
         <SectionHeader>Balance</SectionHeader>
 
         <Sections>
-          <div className="section velos-section">
-            <div className="info">
-              <span className="token-name">veOLAS</span>
-              <span className="balance">{veOlasBalance}</span>
-            </div>
-          </div>
+          {getToken({ tokenName: 'veOLAS', token: veOlasBalance })}
+          {getToken({ tokenName: 'Votes', token: votes })}
         </Sections>
       </MiddleContent>
     </BoxContainer>

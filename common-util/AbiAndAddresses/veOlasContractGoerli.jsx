@@ -1,6 +1,6 @@
-export const VEOLAS_ADDRESS = '0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f';
+export const VEOLAS_ADDRESS_GOERLI = '0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f';
 
-export const VEOLAS_ABI = [
+export const VEOLAS_ABI_GOERLI = [
   {
     inputs: [
       {
