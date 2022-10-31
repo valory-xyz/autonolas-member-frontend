@@ -7,19 +7,15 @@ export const CustomLayout = styled(Layout)`
   background-color: ${COLOR.WHITE};
   .ant-layout-header {
     z-index: 1;
-    position: fixed;
     height: 82px;
     width: 100%;
-    padding: 0 1rem;
-    margin-top: 1rem;
+    padding: 0;
     background-color: ${COLOR.WHITE};
   }
   .site-layout {
     padding: 0 1rem;
-    margin-top: 90px;
   }
   .site-layout-background {
-    padding: 2rem 0;
     min-height: calc(100vh - 8.5rem);
   }
   .ant-layout-footer {
@@ -53,10 +49,9 @@ export const HeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  padding: 0.5rem 1rem;
   border-radius: 10px;
   background-color: ${COLOR.WHITE};
+  line-height: normal;
 
   ${MEDIA_QUERY.tablet} {
     margin-bottom: 0;
@@ -88,7 +83,8 @@ export const Logo = styled.div`
   font-size: 34px;
   color: ${COLOR.PRIMARY};
   span {
-    margin-left: 0.5rem;
+    margin-left: 1rem;
+    font-weight: bold;
   }
 `;
 

@@ -2,6 +2,7 @@ export const COLOR = {
   PRIMARY: '#7200D6',
   SECONDARY: '#00FF85',
   GREY_1: '#C4C4C4',
+  GREY_2: '#6B6B6B',
   WHITE: '#FFFFFF',
   BLACK: '#000000',
   BORDER_GREY: '#F0F0F0',
