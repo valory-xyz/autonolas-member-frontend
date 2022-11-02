@@ -11,3 +11,11 @@ export const getBalance = (account, p) => new Promise((resolve, reject) => {
       reject(e);
     });
 });
+
+/**
+ *
+ * @param {BigNumebr} value value to be converted to Eth
+ * @param {Number} dv Default value to be returned
+ * @returns
+ */
+export const formatToEth = (value, dv = 0) => (+ethers.utils.formatEther(value)).toFixed(4) || dv;

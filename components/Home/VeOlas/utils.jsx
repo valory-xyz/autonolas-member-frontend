@@ -1,4 +1,5 @@
 import { getVeolasContract } from 'common-util/Contracts';
+import { formatToEth } from 'common-util/functions';
 
 export const fetchBalanceOf = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
@@ -7,7 +8,7 @@ export const fetchBalanceOf = ({ account, chainId }) => new Promise((resolve, re
     .balanceOf(account)
     .call()
     .then((response) => {
-      resolve(response);
+      resolve(formatToEth(response));
     })
     .catch((e) => {
       window.console.log('Error occured on fetching balance:');
@@ -22,7 +23,22 @@ export const fetchVotes = ({ account, chainId }) => new Promise((resolve, reject
     .getVotes(account)
     .call()
     .then((response) => {
-      resolve(response);
+      resolve(formatToEth(response));
+    })
+    .catch((e) => {
+      window.console.log('Error occured on fetching balance:');
+      reject(e);
+    });
+});
+
+export const fetchTotalSupplyLocked = ({ chainId }) => new Promise((resolve, reject) => {
+  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+
+  contract.methods
+    .totalSupplyLocked()
+    .call()
+    .then((response) => {
+      resolve(formatToEth(response));
     })
     .catch((e) => {
       window.console.log('Error occured on fetching balance:');

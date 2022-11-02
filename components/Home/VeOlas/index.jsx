@@ -1,18 +1,17 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
-import { ethers } from 'ethers';
 import PropTypes from 'prop-types';
 import { Radio } from 'antd/lib';
-import { getVeolasContract } from 'common-util/Contracts';
 import { getToken } from '../common';
 import { CreateLock } from './WriteFunctionality';
-import { fetchBalanceOf, fetchVotes } from './utils';
+import { fetchBalanceOf, fetchVotes, fetchTotalSupplyLocked } from './utils';
 import { MiddleContent, SectionHeader, Sections } from '../styles';
 import { VeOlasContainer, WriteFunctionalityContainer } from './styles';
 
 const VeOlas = ({ account, chainId }) => {
   const [balance, setBalance] = useState(null);
   const [votes, setVotesCount] = useState(null);
+  const [totalSupplyLocked, setTotalSupplyLocked] = useState(null);
   const [currentFormType, setCurrentFormType] = useState('typeCreateLock');
 
   useEffect(() => {
@@ -24,22 +23,12 @@ const VeOlas = ({ account, chainId }) => {
 
           const votesResponse = await fetchVotes({ account, chainId });
           setVotesCount(votesResponse);
+
+          const total = await fetchTotalSupplyLocked({ chainId });
+          setTotalSupplyLocked(total);
         } catch (error) {
           window.console.error(error);
         }
-
-        // get votes count
-        const contract2 = getVeolasContract(window.MODAL_PROVIDER, chainId);
-        contract2.methods
-          .getVotes(account)
-          .call()
-          .then((response) => {
-            setVotesCount(response);
-          })
-          .catch((error) => {
-            window.console.log('Error occured on fetching votes:');
-            window.console.error(error);
-          });
       }
     };
     fn();
@@ -50,21 +39,19 @@ const VeOlas = ({ account, chainId }) => {
     setCurrentFormType(e.target.value);
   };
 
-  const veOlasBalance = balance ? ethers.utils.formatEther(balance) : null;
-  const votesInEth = votes ? ethers.utils.formatEther(votes) : null;
-
   return (
     <VeOlasContainer>
       <MiddleContent className="balance-container">
-        <SectionHeader>Balance</SectionHeader>
+        <SectionHeader>veOLAS Balance</SectionHeader>
 
         <Sections>
           {/* TODO: need to be removed? */}
           <div style={{ display: 'none' }}>
-            {getToken({ tokenName: 'veOLAS', token: veOlasBalance })}
+            {getToken({ tokenName: 'veOLAS', token: balance })}
           </div>
 
-          {getToken({ tokenName: 'Votes', token: (+votesInEth).toFixed(4) })}
+          {getToken({ tokenName: 'Votes', token: votes })}
+          {getToken({ tokenName: 'Total Voting power', token: totalSupplyLocked })}
         </Sections>
       </MiddleContent>
 
