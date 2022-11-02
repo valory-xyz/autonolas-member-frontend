@@ -17,9 +17,11 @@ const Home = () => (
         <Sale />
       </TabPane>
 
-      <TabPane tab="veOLAS" key={TAB_KEYS.veOlas}>
+      <TabPane tab="Voting Power" key={TAB_KEYS.veOlas}>
         <VeOlas />
       </TabPane>
+
+      {/* <TabPane tab="buOLAS" disabled key={TAB_KEYS.buOlas}> <VeOlas /> </TabPane> */}
     </Tabs>
   </>
 );

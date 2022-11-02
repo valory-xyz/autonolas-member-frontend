@@ -6,6 +6,10 @@ import {
   SALE_ABI_GOERLI,
 
   // buOlas
+  BUOLAS_ADDRESS_GOERLI,
+  BUOLAS_ABI_GOERLI,
+  BUOLAS_ADDRESS_MAINNET,
+  BUOLAS_ABI_MAINNET,
 
   // veOlas
   VEOLAS_ADDRESS_GOERLI,
@@ -32,6 +36,17 @@ export const getVeolasContract = (p, chainId) => {
   const contract = new web3.eth.Contract(
     chainId === 5 ? VEOLAS_ABI_GOERLI : VEOLAS_ABI_MAINNET,
     chainId === 5 ? VEOLAS_ADDRESS_GOERLI : VEOLAS_ADDRESS_MAINNET,
+  );
+  return contract;
+};
+
+export const getBUolasContract = (p, chainId) => {
+  const web3 = new Web3(p);
+
+  // Goerli has separate contract
+  const contract = new web3.eth.Contract(
+    chainId === 5 ? BUOLAS_ABI_GOERLI : BUOLAS_ABI_MAINNET,
+    chainId === 5 ? BUOLAS_ADDRESS_GOERLI : BUOLAS_ADDRESS_MAINNET,
   );
   return contract;
 };

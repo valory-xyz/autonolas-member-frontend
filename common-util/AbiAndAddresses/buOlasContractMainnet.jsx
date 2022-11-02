@@ -1,6 +1,7 @@
-export const BUOLAS_ADDRESS = '0x67d269191c92Caf3cD7723F116c85e6E9bf55933';
+// TODO: check address and abi
+export const BUOLAS_ADDRESS_MAINNET = '0x67d269191c92Caf3cD7723F116c85e6E9bf55933';
 
-export const BUOLAS_ABI = [
+export const BUOLAS_ABI_MAINNET = [
   {
     inputs: [
       {
