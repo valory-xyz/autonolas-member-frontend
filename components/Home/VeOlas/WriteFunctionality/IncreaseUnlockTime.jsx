@@ -2,29 +2,23 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Button, Form, Typography } from 'antd/lib';
 import { notifyError, notifySuccess } from 'common-util/functions';
-import {
-  parseAmount,
-  parseToSeconds,
-  FormItemDate,
-  FormItemInputNumber,
-} from '../../common';
-import { createLock } from '../utils';
+import { parseToSeconds, FormItemDate } from '../../common';
+import { increaseUnlockTime } from '../utils';
 
 const { Title } = Typography;
 
-export const CreateLockComponent = ({ account, chainId }) => {
+const IncreaseUnlockTimeComponent = ({ account, chainId }) => {
   const [form] = Form.useForm();
 
   const onFinish = async (e) => {
     try {
-      const txHash = await createLock({
-        amount: parseAmount(e.amount),
-        unlockTime: parseToSeconds(e.unlockTime),
+      const txHash = await increaseUnlockTime({
+        time: parseToSeconds(e.unlockTime),
         account,
         chainId,
       });
       notifySuccess(
-        'Lock created successfully!',
+        'Unlock time increased successfully!',
         `Transaction Hash: ${txHash}`,
       );
     } catch (error) {
@@ -35,19 +29,18 @@ export const CreateLockComponent = ({ account, chainId }) => {
 
   return (
     <>
-      <Title level={3}>Create Lock</Title>
+      <Title level={3}>Increase Unlock Time</Title>
 
       <Form
         form={form}
         layout="vertical"
         autoComplete="off"
-        name="create-lock-form"
+        name="increase-amount-form"
         onFinish={onFinish}
       >
-        <FormItemInputNumber />
         <FormItemDate />
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" disabled={!account}>
             Submit
           </Button>
         </Form.Item>
@@ -56,12 +49,12 @@ export const CreateLockComponent = ({ account, chainId }) => {
   );
 };
 
-CreateLockComponent.propTypes = {
+IncreaseUnlockTimeComponent.propTypes = {
   account: PropTypes.string,
   chainId: PropTypes.number,
 };
 
-CreateLockComponent.defaultProps = {
+IncreaseUnlockTimeComponent.defaultProps = {
   account: null,
   chainId: null,
 };
@@ -71,7 +64,7 @@ const mapStateToProps = (state) => {
   return { account, chainId };
 };
 
-export const CreateLock = connect(
+export const IncreaseUnlockTime = connect(
   mapStateToProps,
   null,
-)(CreateLockComponent);
+)(IncreaseUnlockTimeComponent);

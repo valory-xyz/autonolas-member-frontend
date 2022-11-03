@@ -65,7 +65,7 @@ export const fetchMapLockedBalances = ({ account, chainId }) => new Promise((res
     });
 });
 
-// CREATE LOCK
+// Create lock
 export const createLock = ({
   amount, unlockTime, account, chainId,
 }) => new Promise((resolve, reject) => {
@@ -74,12 +74,40 @@ export const createLock = ({
   contract.methods
     .createLock(amount, unlockTime)
     .send({ from: account })
-    .then((response) => {
-      console.log(response);
-      resolve(response);
-    })
+    .once('transactionHash', (hash) => resolve(hash))
+    .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
       window.console.log('Error occured on creating lock:');
+      reject(e);
+    });
+});
+
+// Increase Amount
+export const increaseAmount = ({ amount, account, chainId }) => new Promise((resolve, reject) => {
+  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+
+  contract.methods
+    .increaseAmount(amount)
+    .send({ from: account })
+    .once('transactionHash', (hash) => resolve(hash))
+    .then((response) => resolve(response?.transactionHash))
+    .catch((e) => {
+      window.console.log('Error occured on increasing amount:');
+      reject(e);
+    });
+});
+
+// Increase Unlock time
+export const increaseUnlockTime = ({ time, account, chainId }) => new Promise((resolve, reject) => {
+  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+
+  contract.methods
+    .increaseUnlockTime(time)
+    .send({ from: account })
+    .once('transactionHash', (hash) => resolve(hash))
+    .then((response) => resolve(response?.transactionHash))
+    .catch((e) => {
+      window.console.log('Error occured on increasing amount:');
       reject(e);
     });
 });

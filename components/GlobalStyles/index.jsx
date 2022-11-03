@@ -27,9 +27,6 @@ const GlobalStyle = createGlobalStyle`
       color: ${COLOR.WALLECT_CONNECT_BLUE} !important;
     }
   }
-  .ant-notification-notice-message {
-    margin: 0px !important;
-  }
   .ant-alert {
     border-radius: 5px;
   }

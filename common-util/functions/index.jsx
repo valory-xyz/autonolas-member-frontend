@@ -26,7 +26,9 @@ export const notifyError = (message = 'Some error occured') => notification.erro
   message,
   style: { border: `1px solid ${COLOR.PRIMARY}` },
 });
-export const notifySuccess = (message = 'Successfull') => notification.success({
+
+export const notifySuccess = (message = 'Successfull', description = null) => notification.success({
   message,
+  description,
   style: { border: `1px solid ${COLOR.PRIMARY}` },
 });

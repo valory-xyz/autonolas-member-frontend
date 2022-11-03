@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Radio, Statistic } from 'antd/lib';
 import { getToken } from '../common';
-import { CreateLock } from './WriteFunctionality';
+import { CreateLock, IncreaseAmount, IncreaseUnlockTime } from './WriteFunctionality';
 import {
   fetchVotes,
   fetchTotalSupplyLocked,
@@ -13,6 +13,13 @@ import { MiddleContent, SectionHeader, Sections } from '../styles';
 import { VeOlasContainer, WriteFunctionalityContainer } from './styles';
 
 const { Countdown } = Statistic;
+
+const FORM_TYPE = {
+  createLock: 'typeCreateLock',
+  increaseAmount: 'typeIncreaseAmount',
+  increaseUnlockTime: 'typeIncreaseUnlockTime',
+  claim: 'typeClaim',
+};
 
 const VeOlas = ({ account, chainId }) => {
   const [votes, setVotesCount] = useState(null);
@@ -89,16 +96,21 @@ const VeOlas = ({ account, chainId }) => {
 
       <WriteFunctionalityContainer>
         <Radio.Group onChange={onChange} value={currentFormType}>
-          <Radio value="typeCreateLock">Create Lock</Radio>
-          <Radio value="typeIncreaseAmount">Increase Amount</Radio>
-          <Radio value="typeIncreaseUnlockTime">Increase Unlock Time</Radio>
-          <Radio value="typeClaim">Claim</Radio>
+          <Radio value={FORM_TYPE.createLock}>Create Lock</Radio>
+          <Radio value={FORM_TYPE.increaseAmount}>Increase Amount</Radio>
+          <Radio value={FORM_TYPE.increaseUnlockTime}>
+            Increase Unlock Time
+          </Radio>
+          {/* <Radio value={FORM_TYPE.claim}>Claim</Radio> */}
         </Radio.Group>
 
         <div className="forms-container">
-          {currentFormType === 'typeCreateLock' && (
-            <CreateLock account={account} chainId={chainId} />
+          {currentFormType === FORM_TYPE.createLock && <CreateLock />}
+          {currentFormType === FORM_TYPE.increaseAmount && <IncreaseAmount />}
+          {currentFormType === FORM_TYPE.increaseUnlockTime && (
+            <IncreaseUnlockTime />
           )}
+          {currentFormType === FORM_TYPE.claim && <IncreaseAmount />}
         </div>
       </WriteFunctionalityContainer>
     </VeOlasContainer>
