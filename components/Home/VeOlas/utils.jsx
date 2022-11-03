@@ -45,3 +45,23 @@ export const fetchTotalSupplyLocked = ({ chainId }) => new Promise((resolve, rej
       reject(e);
     });
 });
+
+//
+export const fetchMapLockedBalances = ({ account, chainId }) => new Promise((resolve, reject) => {
+  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+
+  contract.methods
+    .mapLockedBalances(account)
+    .call()
+    .then((response) => {
+      // multiplied by 1000 to convert to milliseconds
+      resolve({
+        amount: formatToEth(response.amount),
+        endTime: response.endTime * 1000,
+      });
+    })
+    .catch((e) => {
+      window.console.log('Error occured on fetching balance:');
+      reject(e);
+    });
+});

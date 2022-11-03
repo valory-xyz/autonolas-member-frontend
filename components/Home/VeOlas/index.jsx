@@ -1,31 +1,42 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Radio } from 'antd/lib';
+import { Radio, Statistic } from 'antd/lib';
 import { getToken } from '../common';
 import { CreateLock } from './WriteFunctionality';
-import { fetchBalanceOf, fetchVotes, fetchTotalSupplyLocked } from './utils';
+import {
+  fetchVotes,
+  fetchTotalSupplyLocked,
+  fetchMapLockedBalances,
+} from './utils';
 import { MiddleContent, SectionHeader, Sections } from '../styles';
 import { VeOlasContainer, WriteFunctionalityContainer } from './styles';
 
+const { Countdown } = Statistic;
+
 const VeOlas = ({ account, chainId }) => {
-  const [balance, setBalance] = useState(null);
   const [votes, setVotesCount] = useState(null);
   const [totalSupplyLocked, setTotalSupplyLocked] = useState(null);
+  const [mappedAmount, setMappedAmount] = useState(null);
+  const [mappedEndTime, setMappedEndTime] = useState(null);
   const [currentFormType, setCurrentFormType] = useState('typeCreateLock');
 
   useEffect(() => {
     const fn = async () => {
       if (account && chainId) {
         try {
-          const balanceResponse = await fetchBalanceOf({ account, chainId });
-          setBalance(balanceResponse);
-
           const votesResponse = await fetchVotes({ account, chainId });
           setVotesCount(votesResponse);
 
           const total = await fetchTotalSupplyLocked({ chainId });
           setTotalSupplyLocked(total);
+
+          const { amount, endTime } = await fetchMapLockedBalances({
+            account,
+            chainId,
+          });
+          setMappedAmount(amount);
+          setMappedEndTime(endTime);
         } catch (error) {
           window.console.error(error);
         }
@@ -41,19 +52,33 @@ const VeOlas = ({ account, chainId }) => {
 
   return (
     <VeOlasContainer>
-      <MiddleContent className="balance-container">
-        <SectionHeader>veOLAS Balance</SectionHeader>
+      <div className="left-content">
+        <MiddleContent className="balance-container">
+          <SectionHeader>veOLAS Balance</SectionHeader>
+          <Sections>
+            {getToken({ tokenName: 'Votes', token: votes })}
+            {getToken({
+              tokenName: 'Total Voting power',
+              token: totalSupplyLocked,
+            })}
+          </Sections>
+        </MiddleContent>
 
-        <Sections>
-          {/* TODO: need to be removed? */}
-          <div style={{ display: 'none' }}>
-            {getToken({ tokenName: 'veOLAS', token: balance })}
-          </div>
-
-          {getToken({ tokenName: 'Votes', token: votes })}
-          {getToken({ tokenName: 'Total Voting power', token: totalSupplyLocked })}
-        </Sections>
-      </MiddleContent>
+        <MiddleContent className="balance-container">
+          <SectionHeader>Locked OLAS</SectionHeader>
+          <Sections>
+            {getToken({ tokenName: 'Amount', token: mappedAmount })}
+            {getToken({
+              tokenName: 'Unlocking time',
+              token: (
+                <>
+                  <Countdown value={mappedEndTime} format="MM DD HH:mm:ss" />
+                </>
+              ),
+            })}
+          </Sections>
+        </MiddleContent>
+      </div>
 
       <WriteFunctionalityContainer>
         <Radio.Group onChange={onChange} value={currentFormType}>

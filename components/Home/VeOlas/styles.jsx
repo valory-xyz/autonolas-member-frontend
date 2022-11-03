@@ -6,8 +6,8 @@ export const VeOlasContainer = styled.div`
   align-items: flex-start;
   max-width: 940px;
   .balance-container {
-    width: 260px;
-    margin: 0.25rem 2rem 0 0;
+    width: 320px;
+    margin: 0.25rem 2rem 1rem 0;
   }
 `;
 
