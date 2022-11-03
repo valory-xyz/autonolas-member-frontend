@@ -46,7 +46,6 @@ export const fetchTotalSupplyLocked = ({ chainId }) => new Promise((resolve, rej
     });
 });
 
-//
 export const fetchMapLockedBalances = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 
@@ -61,7 +60,26 @@ export const fetchMapLockedBalances = ({ account, chainId }) => new Promise((res
       });
     })
     .catch((e) => {
-      window.console.log('Error occured on fetching balance:');
+      window.console.log('Error occured on fetching MapLockedBalances:');
+      reject(e);
+    });
+});
+
+// CREATE LOCK
+export const createLock = ({
+  amount, unlockTime, account, chainId,
+}) => new Promise((resolve, reject) => {
+  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+
+  contract.methods
+    .createLock(amount, unlockTime)
+    .send({ from: account })
+    .then((response) => {
+      console.log(response);
+      resolve(response);
+    })
+    .catch((e) => {
+      window.console.log('Error occured on creating lock:');
       reject(e);
     });
 });

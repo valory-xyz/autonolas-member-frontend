@@ -45,10 +45,17 @@ const VeOlas = ({ account, chainId }) => {
     fn();
   }, [account, chainId]);
 
+  // Create Lock
   const onChange = (e) => {
     window.console.log('radio checked', e.target.value);
     setCurrentFormType(e.target.value);
   };
+
+  //
+
+  //
+
+  //
 
   return (
     <VeOlasContainer>
@@ -89,7 +96,9 @@ const VeOlas = ({ account, chainId }) => {
         </Radio.Group>
 
         <div className="forms-container">
-          {currentFormType === 'typeCreateLock' && <CreateLock />}
+          {currentFormType === 'typeCreateLock' && (
+            <CreateLock account={account} chainId={chainId} />
+          )}
         </div>
       </WriteFunctionalityContainer>
     </VeOlasContainer>
