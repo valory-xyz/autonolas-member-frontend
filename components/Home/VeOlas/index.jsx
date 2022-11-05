@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Radio, Statistic } from 'antd/lib';
 import { getToken } from '../common';
-import { CreateLock, IncreaseAmount, IncreaseUnlockTime } from './WriteFunctionality';
+import { IncreaseAmount, IncreaseUnlockTime } from './WriteFunctionality';
 import {
   fetchVotes,
   fetchTotalSupplyLocked,
@@ -15,7 +15,6 @@ import { VeOlasContainer, WriteFunctionalityContainer } from './styles';
 const { Countdown } = Statistic;
 
 const FORM_TYPE = {
-  createLock: 'typeCreateLock',
   increaseAmount: 'typeIncreaseAmount',
   increaseUnlockTime: 'typeIncreaseUnlockTime',
   claim: 'typeClaim',
@@ -26,7 +25,7 @@ const VeOlas = ({ account, chainId }) => {
   const [totalSupplyLocked, setTotalSupplyLocked] = useState(null);
   const [mappedAmount, setMappedAmount] = useState(null);
   const [mappedEndTime, setMappedEndTime] = useState(null);
-  const [currentFormType, setCurrentFormType] = useState('typeCreateLock');
+  const [currentFormType, setCurrentFormType] = useState(FORM_TYPE.increaseAmount);
 
   useEffect(() => {
     const fn = async () => {
@@ -67,7 +66,8 @@ const VeOlas = ({ account, chainId }) => {
   return (
     <VeOlasContainer>
       <div className="left-content">
-        <MiddleContent className="balance-container">
+        {/* TODO: delete? */}
+        <MiddleContent className="balance-container" style={{ display: 'none' }}>
           <SectionHeader>veOLAS Balance</SectionHeader>
           <Sections>
             {getToken({ tokenName: 'Votes', token: votes })}
@@ -86,7 +86,11 @@ const VeOlas = ({ account, chainId }) => {
               tokenName: 'Unlocking time',
               token: (
                 <>
-                  <Countdown value={mappedEndTime} format="MM DD HH:mm:ss" />
+                  {mappedEndTime ? (
+                    <Countdown value={mappedEndTime} format="MM DD HH:mm:ss" />
+                  ) : (
+                    '--'
+                  )}
                 </>
               ),
             })}
@@ -96,7 +100,6 @@ const VeOlas = ({ account, chainId }) => {
 
       <WriteFunctionalityContainer>
         <Radio.Group onChange={onChange} value={currentFormType}>
-          <Radio value={FORM_TYPE.createLock}>Create Lock</Radio>
           <Radio value={FORM_TYPE.increaseAmount}>Increase Amount</Radio>
           <Radio value={FORM_TYPE.increaseUnlockTime}>
             Increase Unlock Time
@@ -105,7 +108,6 @@ const VeOlas = ({ account, chainId }) => {
         </Radio.Group>
 
         <div className="forms-container">
-          {currentFormType === FORM_TYPE.createLock && <CreateLock />}
           {currentFormType === FORM_TYPE.increaseAmount && <IncreaseAmount />}
           {currentFormType === FORM_TYPE.increaseUnlockTime && (
             <IncreaseUnlockTime />
