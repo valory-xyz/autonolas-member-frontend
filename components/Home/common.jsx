@@ -21,8 +21,11 @@ export const parseAmount = (amount) => ethers.utils.parseUnits(`${amount}`, 18).
 // - divide by 100 to convert to seconds
 // - remove decimals
 export const parseToSeconds = (unlockTime) => {
-  const inSeconds = Math.round(new Date(unlockTime).getTime() / 1000);
-  return inSeconds.toString();
+  const futureDateInTimeStamp = Math.round(
+    new Date(unlockTime).getTime() / 1000,
+  );
+  const todayDateInTimeStamp = Math.round(new Date().getTime() / 1000);
+  return futureDateInTimeStamp - todayDateInTimeStamp;
 };
 
 // Cannot select days before today and today
