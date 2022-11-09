@@ -65,6 +65,17 @@ export const fetchMapLockedBalances = ({ account, chainId }) => new Promise((res
     });
 });
 
+export const fetchCanCreateLock = async ({ account, chainId }) => {
+  try {
+    const { amount } = await fetchMapLockedBalances({ account, chainId });
+    return Promise.resolve({
+      cannotCreateLock: !!(amount && Number(amount) !== 0),
+    });
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
 // Create lock
 export const createLock = ({
   amount, unlockTime, account, chainId,

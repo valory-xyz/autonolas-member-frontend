@@ -1,5 +1,6 @@
-import PropTypes from 'prop-types';
+import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import { Button, Form, Typography } from 'antd/lib';
 import { notifyError, notifySuccess } from 'common-util/functions';
 import {
@@ -8,12 +9,26 @@ import {
   FormItemDate,
   FormItemInputNumber,
 } from '../../common';
-import { createLock } from '../utils';
+import { createLock, fetchCanCreateLock } from '../utils';
 
 const { Title } = Typography;
 
 export const CreateLockComponent = ({ account, chainId }) => {
+  const [isDisabled, setIsDisabled] = useState(true);
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    if (account && chainId) {
+      const fn = async () => {
+        const { cannotCreateLock } = await fetchCanCreateLock({
+          account,
+          chainId,
+        });
+        setIsDisabled(cannotCreateLock);
+      };
+      fn();
+    }
+  }, [account, chainId]);
 
   const onFinish = async (e) => {
     try {
@@ -47,7 +62,7 @@ export const CreateLockComponent = ({ account, chainId }) => {
         <FormItemInputNumber />
         <FormItemDate />
         <Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" disabled={isDisabled}>
             Submit
           </Button>
         </Form.Item>
@@ -71,7 +86,4 @@ const mapStateToProps = (state) => {
   return { account, chainId };
 };
 
-export const CreateLock = connect(
-  mapStateToProps,
-  null,
-)(CreateLockComponent);
+export const CreateLock = connect(mapStateToProps, null)(CreateLockComponent);
