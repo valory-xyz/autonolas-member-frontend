@@ -40,7 +40,7 @@ export const getVeolasContract = (p, chainId) => {
   return contract;
 };
 
-export const getBUolasContract = (p, chainId) => {
+export const getBuolasContract = (p, chainId) => {
   const web3 = new Web3(p);
 
   // Goerli has separate contract

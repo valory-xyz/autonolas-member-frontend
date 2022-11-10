@@ -2,6 +2,7 @@ import { Tabs } from 'antd/lib';
 import Sale from './Sale';
 import VeOlas from './VeOlas';
 import { CreateLock } from './VeOlas/WriteFunctionality';
+import BuOlas from './BuOlas';
 import { CreateLockContainer } from './styles';
 
 const { TabPane } = Tabs;
@@ -30,7 +31,9 @@ const Home = () => (
         <VeOlas />
       </TabPane>
 
-      {/* <TabPane tab="buOLAS" disabled key={TAB_KEYS.buOlas}> <VeOlas /> </TabPane> */}
+      <TabPane tab="buOLAS" key={TAB_KEYS.buOlas}>
+        <BuOlas />
+      </TabPane>
     </Tabs>
   </>
 );
