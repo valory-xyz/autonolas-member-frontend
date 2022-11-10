@@ -57,12 +57,6 @@ const VeOlas = ({ account, chainId }) => {
     setCurrentFormType(e.target.value);
   };
 
-  //
-
-  //
-
-  //
-
   return (
     <VeOlasContainer>
       <div className="left-content">

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import styled from 'styled-components';
-import { Alert } from 'antd';
+import { Alert } from 'antd/lib';
 import Image from 'next/image';
 import { Ellipsis } from 'components/GlobalStyles';
 import { TRANSACTION_STATE } from 'util/constants';

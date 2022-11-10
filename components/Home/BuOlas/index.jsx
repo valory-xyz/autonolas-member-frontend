@@ -8,12 +8,14 @@ import { MiddleContent, SectionHeader, Sections } from '../styles';
 import { BuOlasContainer } from './styles';
 
 const BuOlas = ({ account, chainId }) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [mappedBalances, setMappedBalances] = useState(null);
   const [releasableAmount, setReleasableAmount] = useState(null);
 
   useEffect(() => {
     const fn = async () => {
       if (account && chainId) {
+        setIsLoading(true);
         try {
           const values = await fetchMapLockedBalances({
             account,
@@ -26,8 +28,12 @@ const BuOlas = ({ account, chainId }) => {
             chainId,
           });
           setReleasableAmount(rAmount);
+          setIsLoading(false);
         } catch (error) {
           window.console.error(error);
+          setIsLoading(false);
+        } finally {
+          setIsLoading(false);
         }
       }
     };
@@ -47,18 +53,22 @@ const BuOlas = ({ account, chainId }) => {
             {getToken({
               tokenName: 'Amount',
               token: amount || '--',
+              isLoading,
             })}
             {getToken({
               tokenName: 'transferredAmount',
               token: transferredAmount || '--',
+              isLoading,
             })}
             {getToken({
               tokenName: 'startTime',
               token: startTime ? new Date(startTime).toLocaleString() : '--',
+              isLoading,
             })}
             {getToken({
               tokenName: 'endTime',
               token: endTime ? new Date(endTime).toLocaleString() : '--',
+              isLoading,
             })}
           </Sections>
         </MiddleContent>
@@ -69,6 +79,7 @@ const BuOlas = ({ account, chainId }) => {
             {getToken({
               tokenName: 'Amount',
               token: releasableAmount || '--',
+              isLoading,
             })}
           </Sections>
         </MiddleContent>

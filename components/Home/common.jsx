@@ -1,15 +1,18 @@
 import { ethers } from 'ethers';
 import moment from 'moment';
 import { Form, InputNumber, DatePicker } from 'antd/lib';
-import { isNil } from 'lodash';
+import isNil from 'lodash/isNil';
+import { Shimmer } from 'common-util/Shimmer';
 
 const fullWidth = { width: '100%' };
 
-export const getToken = ({ tokenName, token }) => (
+export const getToken = ({ tokenName, token, isLoading = false }) => (
   <div className={`section ${tokenName}-section`}>
     <div className="info">
       <span className="token-name">{tokenName}</span>
-      <span className="balance">{token || '--'}</span>
+      <span className="balance">
+        <>{isLoading ? <Shimmer /> : <>{token || '--'}</>}</>
+      </span>
     </div>
   </div>
 );
