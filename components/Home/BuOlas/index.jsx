@@ -1,16 +1,25 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Button } from 'antd/lib';
 import PropTypes from 'prop-types';
 // import get from 'lodash/get';
 import { getToken } from '../common';
-import { fetchMapLockedBalances, fetchReleasableAmount } from './utils';
+import {
+  fetchMapLockedBalances,
+  fetchReleasableAmount,
+  withdraw,
+} from './utils';
 import { MiddleContent, SectionHeader, Sections } from '../styles';
-import { BuOlasContainer } from './styles';
+import { BuOlasContainer, WriteFunctionalityContainer } from './styles';
 
 const BuOlas = ({ account, chainId }) => {
+  // balances
   const [isLoading, setIsLoading] = useState(true);
   const [mappedBalances, setMappedBalances] = useState(null);
   const [releasableAmount, setReleasableAmount] = useState(null);
+
+  // withdraw
+  const [isWithdrawLoading, setIsWithdrawLoading] = useState(false);
 
   useEffect(() => {
     const fn = async () => {
@@ -28,10 +37,8 @@ const BuOlas = ({ account, chainId }) => {
             chainId,
           });
           setReleasableAmount(rAmount);
-          setIsLoading(false);
         } catch (error) {
           window.console.error(error);
-          setIsLoading(false);
         } finally {
           setIsLoading(false);
         }
@@ -39,6 +46,19 @@ const BuOlas = ({ account, chainId }) => {
     };
     fn();
   }, [account, chainId]);
+
+  const onWithdraw = async () => {
+    if (account && chainId) {
+      setIsWithdrawLoading(true);
+      try {
+        await withdraw({ account, chainId });
+      } catch (error) {
+        window.console.error(error);
+      } finally {
+        setIsWithdrawLoading(false);
+      }
+    }
+  };
 
   const {
     amount, startTime, endTime, transferredAmount,
@@ -48,7 +68,7 @@ const BuOlas = ({ account, chainId }) => {
     <BuOlasContainer>
       <div className="left-content">
         <MiddleContent className="balance-container">
-          <SectionHeader>mapLockedBalances</SectionHeader>
+          <SectionHeader>Locked Balances</SectionHeader>
           <Sections>
             {getToken({
               tokenName: 'Amount',
@@ -56,17 +76,17 @@ const BuOlas = ({ account, chainId }) => {
               isLoading,
             })}
             {getToken({
-              tokenName: 'transferredAmount',
+              tokenName: 'Transferred Amount',
               token: transferredAmount || '--',
               isLoading,
             })}
             {getToken({
-              tokenName: 'startTime',
+              tokenName: 'Start Time',
               token: startTime ? new Date(startTime).toLocaleString() : '--',
               isLoading,
             })}
             {getToken({
-              tokenName: 'endTime',
+              tokenName: 'Eend Time',
               token: endTime ? new Date(endTime).toLocaleString() : '--',
               isLoading,
             })}
@@ -74,7 +94,7 @@ const BuOlas = ({ account, chainId }) => {
         </MiddleContent>
 
         <MiddleContent className="balance-container">
-          <SectionHeader>releasableAmount</SectionHeader>
+          <SectionHeader>Releasable Amount</SectionHeader>
           <Sections>
             {getToken({
               tokenName: 'Amount',
@@ -84,6 +104,12 @@ const BuOlas = ({ account, chainId }) => {
           </Sections>
         </MiddleContent>
       </div>
+
+      <WriteFunctionalityContainer>
+        <Button type="primary" onClick={onWithdraw} loading={isWithdrawLoading}>
+          Withdraw
+        </Button>
+      </WriteFunctionalityContainer>
     </BuOlasContainer>
   );
 };

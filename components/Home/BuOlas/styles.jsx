@@ -10,3 +10,5 @@ export const BuOlasContainer = styled.div`
     margin: 0.25rem 3rem 1rem 0;
   }
 `;
+
+export const WriteFunctionalityContainer = styled.div``;
