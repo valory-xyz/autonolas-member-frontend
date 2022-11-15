@@ -21,15 +21,19 @@ const FORM_TYPE = {
 };
 
 const VeOlas = ({ account, chainId }) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [votes, setVotesCount] = useState(null);
   const [totalSupplyLocked, setTotalSupplyLocked] = useState(null);
   const [mappedAmount, setMappedAmount] = useState(null);
   const [mappedEndTime, setMappedEndTime] = useState(null);
-  const [currentFormType, setCurrentFormType] = useState(FORM_TYPE.increaseAmount);
+  const [currentFormType, setCurrentFormType] = useState(
+    FORM_TYPE.increaseAmount,
+  );
 
   useEffect(() => {
     const fn = async () => {
       if (account && chainId) {
+        setIsLoading(true);
         try {
           const votesResponse = await fetchVotes({ account, chainId });
           setVotesCount(votesResponse);
@@ -45,6 +49,8 @@ const VeOlas = ({ account, chainId }) => {
           setMappedEndTime(endTime);
         } catch (error) {
           window.console.error(error);
+        } finally {
+          setIsLoading(false);
         }
       }
     };
@@ -61,13 +67,21 @@ const VeOlas = ({ account, chainId }) => {
     <VeOlasContainer>
       <div className="left-content">
         {/* TODO: delete? */}
-        <MiddleContent className="balance-container" style={{ display: 'none' }}>
+        <MiddleContent
+          className="balance-container"
+          style={{ display: 'none' }}
+        >
           <SectionHeader>veOLAS Balance</SectionHeader>
           <Sections>
-            {getToken({ tokenName: 'Votes', token: votes })}
+            {getToken({
+              tokenName: 'Votes',
+              token: votes,
+              isLoading,
+            })}
             {getToken({
               tokenName: 'Total Voting power',
               token: totalSupplyLocked,
+              isLoading,
             })}
           </Sections>
         </MiddleContent>
@@ -75,9 +89,14 @@ const VeOlas = ({ account, chainId }) => {
         <MiddleContent className="balance-container">
           <SectionHeader>Locked OLAS</SectionHeader>
           <Sections>
-            {getToken({ tokenName: 'Amount', token: mappedAmount })}
+            {getToken({
+              tokenName: 'Amount',
+              token: mappedAmount,
+              isLoading,
+            })}
             {getToken({
               tokenName: 'Unlocking time',
+              isLoading,
               token: (
                 <>
                   {mappedEndTime ? (
