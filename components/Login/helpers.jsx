@@ -8,7 +8,7 @@ export const providerOptions = {
       rpc: {
         1: process.env.NEXT_PUBLIC_MAINNET_URL,
         5: process.env.NEXT_PUBLIC_GOERLI_URL,
-        31337: process.env.NEXT_PUBLIC_AUTONOLAS_URL,
+        31337: process.env.NEXT_PUBLIC_GOVERNANCE_URL,
       },
     },
   },
