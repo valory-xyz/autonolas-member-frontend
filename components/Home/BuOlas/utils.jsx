@@ -37,7 +37,7 @@ export const fetchReleasableAmount = ({ account, chainId }) => new Promise((reso
     });
 });
 
-// Create lock
+// Withdraw
 export const withdraw = ({
   account, chainId,
 }) => new Promise((resolve, reject) => {

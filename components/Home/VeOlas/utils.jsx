@@ -2,27 +2,9 @@
 import { getVeolasContract, getOlasContract } from 'common-util/Contracts';
 import { formatToEth } from 'common-util/functions';
 
-// TODO: remove (checking totolSuppy for Olas)
-// change the location
-export const fetchTotalSupplyOfOlas = ({ chainId }) => new Promise((resolve, reject) => {
-  const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
-
-  contract.methods
-    .totalSupply()
-    .call()
-    .then((response) => {
-      console.log(response);
-      resolve(formatToEth(response));
-    })
-    .catch((e) => {
-      window.console.log('Error occured on fetching balance:');
-      reject(e);
-    });
-});
-
 // TODO: remove `fetchBalanceOf` if unused - ask Mariapia
 export const fetchBalanceOf = ({ account, chainId }) => new Promise((resolve, reject) => {
-  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+  const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
 
   contract.methods
     .balanceOf(account)
@@ -74,7 +56,7 @@ export const fetchMapLockedBalances = ({ account, chainId }) => new Promise((res
     .call()
     .then((response) => {
       // multiplied by 1000 to convert to milliseconds
-      console.log(response);
+      // console.log(response);
       resolve({
         amount: formatToEth(response.amount),
         endTime: response.endTime * 1000,
@@ -89,6 +71,7 @@ export const fetchMapLockedBalances = ({ account, chainId }) => new Promise((res
 export const fetchCanCreateLock = async ({ account, chainId }) => {
   try {
     const { amount } = await fetchMapLockedBalances({ account, chainId });
+    // console.log(amount);
     return Promise.resolve({
       cannotCreateLock: !!(amount && Number(amount) !== 0),
     });
@@ -140,6 +123,45 @@ export const updateIncreaseUnlockTime = ({ time, account, chainId }) => new Prom
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
       window.console.log('Error occured on increasing amount:');
+      reject(e);
+    });
+});
+
+/**
+ * *********************************************
+ * functions not used in the UI
+ * *********************************************
+ */
+export const fetchTotalSupplyOfOlas = ({ chainId }) => new Promise((resolve, reject) => {
+  const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
+
+  contract.methods
+    .totalSupply()
+    .call()
+    .then((response) => {
+      window.console.log(response);
+    })
+    .catch((e) => {
+      window.console.log('Error occured on fetching balance:');
+      reject(e);
+    });
+});
+
+export const mintOlas = ({ account, chainId }) => new Promise((resolve, reject) => {
+  const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
+
+  contract.methods
+    .mint(
+      '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+      '10000000000',
+      // ethers.BigNumber.from(100000000),
+    )
+    .send({ from: account })
+    .then((response) => {
+      window.console.log(response);
+    })
+    .catch((e) => {
+      window.console.log('Error occured on minting Olas:');
       reject(e);
     });
 });

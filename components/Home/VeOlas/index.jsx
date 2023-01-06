@@ -8,7 +8,9 @@ import {
   fetchVotes,
   fetchTotalSupplyLocked,
   fetchMapLockedBalances,
-  fetchTotalSupplyOfOlas,
+  // fetchTotalSupplyOfOlas,
+  // mintOlas,
+  // fetchBalanceOf,
 } from './utils';
 import { MiddleContent, SectionHeader, Sections } from '../styles';
 import { VeOlasContainer, WriteFunctionalityContainer } from './styles';
@@ -36,7 +38,9 @@ const VeOlas = ({ account, chainId }) => {
       if (account && chainId) {
         setIsLoading(true);
         try {
-          await fetchTotalSupplyOfOlas({ chainId });
+          // await fetchTotalSupplyOfOlas({ chainId });
+          // await mintOlas({ account, chainId });
+          // await fetchBalanceOf({ account, chainId });
 
           const votesResponse = await fetchVotes({ account, chainId });
           setVotesCount(votesResponse);

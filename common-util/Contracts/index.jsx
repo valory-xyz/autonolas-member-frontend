@@ -69,7 +69,7 @@ export const getSaleContract = (p, chainId) => {
 export const getOlasContract = (p, chainId) => {
   const web3 = new Web3(p);
   const contract = new web3.eth.Contract(
-    chainId === 5 ? OLAS_ABI_GOERLI : OLAS_ABI_MAINNET,
+    chainId === 1 ? OLAS_ABI_MAINNET : OLAS_ABI_GOERLI,
     getContractAddress('olas', chainId),
   );
   return contract;
@@ -78,7 +78,7 @@ export const getOlasContract = (p, chainId) => {
 export const getVeolasContract = (p, chainId) => {
   const web3 = new Web3(p);
   const contract = new web3.eth.Contract(
-    chainId === 5 ? VEOLAS_ABI_GOERLI : VEOLAS_ABI_MAINNET,
+    chainId === 1 ? VEOLAS_ABI_MAINNET : VEOLAS_ABI_GOERLI,
     getContractAddress('veOlas', chainId),
   );
   return contract;
@@ -87,7 +87,7 @@ export const getVeolasContract = (p, chainId) => {
 export const getBuolasContract = (p, chainId) => {
   const web3 = new Web3(p);
   const contract = new web3.eth.Contract(
-    chainId === 5 ? BUOLAS_ABI_GOERLI : BUOLAS_ABI_MAINNET,
+    chainId === 1 ? BUOLAS_ABI_MAINNET : BUOLAS_ABI_GOERLI,
     getContractAddress('buOlas', chainId),
   );
   return contract;
