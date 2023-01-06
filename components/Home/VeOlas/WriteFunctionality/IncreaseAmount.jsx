@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Button, Form, Typography } from 'antd/lib';
 import { notifyError, notifySuccess } from 'common-util/functions';
 import { parseAmount, FormItemInputNumber } from '../../common';
-import { increaseAmount } from '../utils';
+import { updateIncreaseAmount } from '../utils';
 
 const { Title } = Typography;
 
@@ -12,7 +12,7 @@ const IncreaseAmountComponent = ({ account, chainId }) => {
 
   const onFinish = async (e) => {
     try {
-      const txHash = await increaseAmount({
+      const txHash = await updateIncreaseAmount({
         amount: parseAmount(e.amount),
         account,
         chainId,

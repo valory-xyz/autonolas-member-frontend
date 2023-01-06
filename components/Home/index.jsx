@@ -9,8 +9,8 @@ const { TabPane } = Tabs;
 
 const TAB_KEYS = {
   sale: 'sale',
-  manageLock: 'manageLock',
   createLock: 'createLock',
+  manageLock: 'manageLock',
   buOlas: 'buOlas',
 };
 

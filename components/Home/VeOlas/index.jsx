@@ -8,6 +8,7 @@ import {
   fetchVotes,
   fetchTotalSupplyLocked,
   fetchMapLockedBalances,
+  fetchTotalSupplyOfOlas,
 } from './utils';
 import { MiddleContent, SectionHeader, Sections } from '../styles';
 import { VeOlasContainer, WriteFunctionalityContainer } from './styles';
@@ -35,6 +36,8 @@ const VeOlas = ({ account, chainId }) => {
       if (account && chainId) {
         setIsLoading(true);
         try {
+          await fetchTotalSupplyOfOlas({ chainId });
+
           const votesResponse = await fetchVotes({ account, chainId });
           setVotesCount(votesResponse);
 
@@ -66,7 +69,7 @@ const VeOlas = ({ account, chainId }) => {
   return (
     <VeOlasContainer>
       <div className="left-content">
-        {/* TODO: delete? */}
+        {/* TODO: delete below `MiddleContent` it not used - ask Mariapia */}
         <MiddleContent
           className="balance-container"
           style={{ display: 'none' }}
@@ -125,7 +128,6 @@ const VeOlas = ({ account, chainId }) => {
           {currentFormType === FORM_TYPE.increaseUnlockTime && (
             <IncreaseUnlockTime />
           )}
-          {currentFormType === FORM_TYPE.claim && <IncreaseAmount />}
         </div>
       </WriteFunctionalityContainer>
     </VeOlasContainer>
@@ -148,3 +150,13 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, null)(VeOlas);
+/**
+ * mint using Account #0
+ *
+ * mint Olas for account 1
+ * switch to account 1 -> do the lock -> by calling the fuction from veOlas
+ *
+ * check the lock-balance
+ *
+ * // withdraw for veOlas is pending
+ */

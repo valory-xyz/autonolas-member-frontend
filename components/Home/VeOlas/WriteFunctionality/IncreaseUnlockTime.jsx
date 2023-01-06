@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Button, Form, Typography } from 'antd/lib';
 import { notifyError, notifySuccess } from 'common-util/functions';
 import { parseToSeconds, FormItemDate } from '../../common';
-import { increaseUnlockTime } from '../utils';
+import { updateIncreaseUnlockTime } from '../utils';
 
 const { Title } = Typography;
 
@@ -12,7 +12,7 @@ const IncreaseUnlockTimeComponent = ({ account, chainId }) => {
 
   const onFinish = async (e) => {
     try {
-      const txHash = await increaseUnlockTime({
+      const txHash = await updateIncreaseUnlockTime({
         time: parseToSeconds(e.unlockTime),
         account,
         chainId,

@@ -20,9 +20,12 @@ export const getToken = ({ tokenName, token, isLoading = false }) => (
 // multiply by 10^18
 export const parseAmount = (amount) => ethers.utils.parseUnits(`${amount}`, 18).toString();
 
-// - convert to milliseconds
-// - divide by 100 to convert to seconds
-// - remove decimals
+/**
+ * Parses to second by doing the following operation in order
+ * 1. convert to milliseconds
+ * 2. divide by 100 to convert to seconds
+ * 3. remove decimals
+ */
 export const parseToSeconds = (unlockTime) => {
   const futureDateInTimeStamp = Math.round(
     new Date(unlockTime).getTime() / 1000,
@@ -31,15 +34,21 @@ export const parseToSeconds = (unlockTime) => {
   return futureDateInTimeStamp - todayDateInTimeStamp;
 };
 
-// Cannot select days before today and today
+/**
+ * Cannot select days before today and today nor
+ * can select more than 4 year
+ */
 export const disableDateForUnlockTime = (current) => {
   const pastDate = current < moment().endOf('day');
 
-  // cannot select date more than 4 years
+  // do not allow selection for more than 4 years
   const futureDate = current > moment().add(4, 'years');
   return (current && pastDate) || futureDate;
 };
 
+/**
+ * @returns Amount Input
+ */
 export const FormItemInputNumber = () => (
   <Form.Item
     name="amount"
