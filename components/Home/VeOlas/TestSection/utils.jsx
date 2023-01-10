@@ -47,6 +47,7 @@ export const fetchBalanceOfOlas = ({ account, chainId }) => new Promise((resolve
     .balanceOf(account)
     .call()
     .then((response) => {
+      console.log('balance of Olas: ', response);
       resolve(formatToEth(response));
     })
     .catch((e) => {
@@ -54,3 +55,5 @@ export const fetchBalanceOfOlas = ({ account, chainId }) => new Promise((resolve
       reject(e);
     });
 });
+
+// https://github.com/valory-xyz/autonolas-investor-frontend/pull/20/files#diff-0ca6e20f028ae7f39dd9af0d28bf3e403ec176f397117ec4eff2ed0800365353R26

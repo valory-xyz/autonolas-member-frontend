@@ -9,7 +9,8 @@ import {
   FormItemDate,
   FormItemInputNumber,
 } from '../../common';
-import { createLock, fetchCanCreateLock } from '../utils';
+import { approveOlasByOwner, createLock, fetchCanCreateLock } from '../utils';
+import { fetchBalanceOfOlas } from '../TestSection/utils';
 
 const { Title } = Typography;
 
@@ -32,9 +33,12 @@ export const CreateLockComponent = ({ account, chainId }) => {
 
   const onFinish = async (e) => {
     try {
+      await fetchBalanceOfOlas({ account, chainId });
+
       const txHash = await createLock({
         amount: parseAmount(e.amount),
         unlockTime: parseToSeconds(e.unlockTime),
+        // unlockTime: 93312000,
         account,
         chainId,
       });
@@ -51,6 +55,16 @@ export const CreateLockComponent = ({ account, chainId }) => {
   return (
     <>
       <Title level={3}>Create Lock</Title>
+
+      <Button
+        type="primary"
+        onClick={async () => {
+          await approveOlasByOwner({ account, chainId });
+        }}
+        style={{ marginBottom: '3rem' }}
+      >
+        Approve 10000000 By Owner
+      </Button>
 
       <Form
         form={form}

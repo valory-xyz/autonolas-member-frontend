@@ -19,7 +19,7 @@ const TAB_KEYS = {
 
 const Home = () => (
   <>
-    <Tabs defaultActiveKey={TAB_KEYS.testSection}>
+    <Tabs defaultActiveKey={TAB_KEYS.createLock}>
       <TabPane tab="Sale" key={TAB_KEYS.sale}>
         <Sale />
       </TabPane>

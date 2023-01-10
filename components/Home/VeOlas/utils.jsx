@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
-import { getVeolasContract } from 'common-util/Contracts';
+import { getVeolasContract, getOlasContract, LOCAL_ADDRESSES } from 'common-util/Contracts';
 import { formatToEth } from 'common-util/functions';
+import { fetchBalanceOfOlas } from './TestSection/utils';
 
 export const fetchVotes = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
@@ -76,8 +77,10 @@ export const createLock = ({
   contract.methods
     .createLock(amount, unlockTime)
     .send({ from: account })
-    .once('transactionHash', (hash) => resolve(hash))
-    .then((response) => resolve(response?.transactionHash))
+    // .once('transactionHash', (hash) => resolve(hash))
+    .then(async (response) => {
+      resolve(response?.transactionHash);
+    })
     .catch((e) => {
       window.console.log('Error occured on creating lock:');
       reject(e);
@@ -88,6 +91,9 @@ export const createLock = ({
 export const updateIncreaseAmount = ({ amount, account, chainId }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 
+  console.log({
+    amount, account, chainId,
+  });
   contract.methods
     .increaseAmount(amount)
     .send({ from: account })
@@ -110,6 +116,35 @@ export const updateIncreaseUnlockTime = ({ time, account, chainId }) => new Prom
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
       window.console.log('Error occured on increasing amount:');
+      reject(e);
+    });
+});
+
+/**
+ * *********************************************
+ * functions not used in the UI
+ * *********************************************
+ */
+export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve, reject) => {
+  console.log({ account, chainId, owner: LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL });
+  const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
+
+  contract.methods
+    .approve(
+      // process.env.NEXT_PUBLIC_TEMP_OWNER_ADDRESS,
+      LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL,
+      '10000000000',
+    )
+    .send({ from: account })
+    // .call()
+    .then(async (response) => {
+      window.console.log(response);
+
+      const amount = await contract.methods.allowance(account, LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL).call();
+      console.log({ amount });
+    })
+    .catch((e) => {
+      window.console.log('Error occured on approving Olas by owner:');
       reject(e);
     });
 });

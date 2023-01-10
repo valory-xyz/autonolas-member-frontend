@@ -15,7 +15,9 @@ const TestSection = ({ account, chainId }) => {
     const fn = async () => {
       if (account && chainId) {
         try {
-          await fetchTotalSupplyOfOlas({ chainId });
+          // await fetchTotalSupplyOfOlas({ chainId });
+
+          await fetchBalanceOfOlas({ account, chainId });
         } catch (error) {
           window.console.error(error);
         }
