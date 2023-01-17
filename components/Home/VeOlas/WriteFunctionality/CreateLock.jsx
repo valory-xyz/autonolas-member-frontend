@@ -9,7 +9,9 @@ import {
   FormItemDate,
   FormItemInputNumber,
 } from '../../common';
-import { approveOlasByOwner, createLock, fetchCanCreateLock } from '../utils';
+import {
+  approveOlasByOwner, createLock, fetchCanCreateLock, fetchVotes,
+} from '../utils';
 import { fetchBalanceOfOlas } from '../TestSection/utils';
 
 const { Title } = Typography;
@@ -34,11 +36,13 @@ export const CreateLockComponent = ({ account, chainId }) => {
   const onFinish = async (e) => {
     try {
       await fetchBalanceOfOlas({ account, chainId });
+      await fetchVotes({ account, chainId });
 
       const txHash = await createLock({
         amount: parseAmount(e.amount),
-        unlockTime: parseToSeconds(e.unlockTime),
+        // unlockTime: parseToSeconds(e.unlockTime),
         // unlockTime: 93312000,
+        unlockTime: 7 * 86400,
         account,
         chainId,
       });
@@ -58,10 +62,11 @@ export const CreateLockComponent = ({ account, chainId }) => {
 
       <Button
         type="primary"
+        style={{ marginBottom: '3rem' }}
+        disabled={!account}
         onClick={async () => {
           await approveOlasByOwner({ account, chainId });
         }}
-        style={{ marginBottom: '3rem' }}
       >
         Approve 10000000 By Owner
       </Button>
@@ -101,3 +106,16 @@ const mapStateToProps = (state) => {
 };
 
 export const CreateLock = connect(mapStateToProps, null)(CreateLockComponent);
+
+/**
+ * if already approved => create lock
+ * else ask for approval then create lock
+ *
+ * approval will be checked by `allowance` method
+ *
+ * https://docs.ethers.org/v5/api/utils/constants/#constants-MaxUint256
+ *
+ * 1. read test cases - understand about the functionality
+ * 2. look at the code - check out the comments
+ * 3. look at the documentation
+ */

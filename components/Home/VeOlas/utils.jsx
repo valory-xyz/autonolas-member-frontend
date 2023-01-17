@@ -10,6 +10,7 @@ export const fetchVotes = ({ account, chainId }) => new Promise((resolve, reject
     .getVotes(account)
     .call()
     .then((response) => {
+      console.log('Votes:', response);
       resolve(formatToEth(response));
     })
     .catch((e) => {
@@ -75,7 +76,7 @@ export const createLock = ({
     amount, unlockTime, account, chainId,
   });
   contract.methods
-    .createLock(amount, unlockTime)
+    .createLock('10000000000', 7 * 86400)
     .send({ from: account })
     // .once('transactionHash', (hash) => resolve(hash))
     .then(async (response) => {
@@ -133,7 +134,7 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
     .approve(
       // process.env.NEXT_PUBLIC_TEMP_OWNER_ADDRESS,
       LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL,
-      '10000000000',
+      '10000000000', // TODO: aleks will send this huge number
     )
     .send({ from: account })
     // .call()
