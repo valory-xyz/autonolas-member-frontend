@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Alert, Button, Form, Typography,
+  Alert, Button, Form, Typography, Modal,
 } from 'antd/lib';
 import { setMappedBalances } from 'store/setup/actions';
 import { notifyError, notifySuccess } from 'common-util/functions';
@@ -15,10 +15,8 @@ import {
   cannotApproveTokens,
   approveOlasByOwner,
   fetchMapLockedBalances,
-  fetchVotes,
   createLockRequest,
 } from '../utils';
-import { fetchBalanceOfOlas } from '../TestSection/utils';
 
 const { Title } = Typography;
 
@@ -27,7 +25,7 @@ export const CreateLock = () => {
   const account = useSelector((state) => state?.setup?.account);
   const chainId = useSelector((state) => state?.setup?.chainId);
 
-  const [isApproveDisable, setIsApproveDisabled] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitBtnDisabled, setIsDisabled] = useState(true);
   const [form] = Form.useForm();
 
@@ -36,44 +34,49 @@ export const CreateLock = () => {
       account,
       chainId,
     });
-    setIsDisabled(!Number(data.amount) === 0);
+    setIsDisabled(Number(data.amount) !== 0);
 
+    // set the data in redux
     dispatch(setMappedBalances(data));
-  };
-
-  const approveTokenHelper = async () => {
-    const isTrue = await cannotApproveTokens({ account, chainId });
-    setIsApproveDisabled(isTrue);
   };
 
   useEffect(() => {
     if (account && chainId) {
       const fn = async () => {
         await fetchCanCreateLockHelper();
-        await approveTokenHelper();
       };
       fn();
     }
   }, [account, chainId]);
 
+  const createLockFn = async () => {
+    const txHash = await createLockRequest({
+      amount: parseAmount(form.getFieldValue('amount')),
+      unlockTime: parseToSeconds(form.getFieldValue('unlockTime')),
+      account,
+      chainId,
+    });
+    notifySuccess('Lock created successfully!', `Transaction Hash: ${txHash}`);
+
+    // fetch the data again to disable button or show message
+    await fetchCanCreateLockHelper();
+  };
+
   const onFinish = async (e) => {
     try {
-      await fetchBalanceOfOlas({ account, chainId });
-      await fetchVotes({ account, chainId });
-
-      const txHash = await createLockRequest({
-        amount: parseAmount(e.amount),
-        unlockTime: parseToSeconds(e.unlockTime),
+      const hasSufficientTokes = await cannotApproveTokens({
         account,
         chainId,
       });
-      notifySuccess(
-        'Lock created successfully!',
-        `Transaction Hash: ${txHash}`,
-      );
 
-      // fetch the data again to disable button or show message
-      await fetchCanCreateLockHelper();
+      // Approve can be clicked only once. Meaning, the user
+      // will approve the maximum token, and no need to do it again.
+      // Hence, if user has sufficient tokens, create lock without approval
+      if (hasSufficientTokes) {
+        createLockFn(e.amount, e.unlockTime);
+      } else {
+        setIsModalOpen(true);
+      }
     } catch (error) {
       window.console.error(error);
       notifyError('Some error occured');
@@ -83,23 +86,6 @@ export const CreateLock = () => {
   return (
     <>
       <Title level={3}>Create Lock</Title>
-
-      {/* Approve can be clicked only once. Meaning, the user
-      will approve the maximum token, and no need to do it again.
-      We can test it by calling the allowance method */}
-      <Button
-        type="primary"
-        style={{ marginBottom: '3rem' }}
-        disabled={!account || isApproveDisable}
-        onClick={async () => {
-          await approveOlasByOwner({ account, chainId });
-
-          // button to be disabled once approve is successful
-          await approveTokenHelper();
-        }}
-      >
-        Approve Max
-      </Button>
 
       <Form
         form={form}
@@ -114,7 +100,7 @@ export const CreateLock = () => {
           <Button
             type="primary"
             htmlType="submit"
-            disabled={!account || isSubmitBtnDisabled || !isApproveDisable}
+            disabled={!account || isSubmitBtnDisabled}
           >
             Create Lock
           </Button>
@@ -127,6 +113,29 @@ export const CreateLock = () => {
           type="warning"
         />
       )}
+
+      {isModalOpen
+        && Modal.info({
+          title: 'Approve?',
+          content: (
+            <div>
+              <Alert
+                message="Before creating you lock an approval for veOLAS is required, please approve to proceed"
+                type="warning"
+              />
+            </div>
+          ),
+          okText: 'Approve',
+          onOk: async () => {
+            await approveOlasByOwner({ account, chainId });
+            setIsModalOpen(false);
+
+            // once approved, create lock
+            createLockFn();
+          },
+          visible: isModalOpen,
+          onCancel: () => setIsModalOpen(false),
+        })}
     </>
   );
 };
