@@ -1,13 +1,11 @@
 /* eslint-disable max-len */
+import { ethers } from 'ethers';
+import { formatToEth } from 'common-util/functions';
 import {
   getVeolasContract,
   getOlasContract,
-  LOCAL_ADDRESSES,
   getContractAddress,
 } from 'common-util/Contracts';
-import { formatToEth } from 'common-util/functions';
-import { ethers } from 'ethers';
-// import { fetchBalanceOfOlas } from './TestSection/utils';
 
 /**
  * spender = LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL
@@ -52,10 +50,10 @@ export const fetchMapLockedBalances = ({ account, chainId }) => new Promise((res
     .mapLockedBalances(account)
     .call()
     .then((response) => {
-      // multiplied by 1000 to convert to milliseconds
-      // console.log(response);
       resolve({
         amount: formatToEth(response.amount),
+
+        // multiplied by 1000 to convert to milliseconds
         endTime: response.endTime * 1000,
       });
     })
@@ -68,39 +66,13 @@ export const fetchMapLockedBalances = ({ account, chainId }) => new Promise((res
 export const fetchCanCreateLock = async ({ account, chainId }) => {
   try {
     const { amount } = await fetchMapLockedBalances({ account, chainId });
-    // console.log(amount);
-    return Promise.resolve({
-      cannotCreateLock: !!(amount && Number(amount) !== 0),
-    });
+
+    // amount should be 0 for user to create lock
+    return Promise.resolve({ canCreateLock: Number(amount) === 0 });
   } catch (error) {
     return Promise.reject(error);
   }
 };
-
-// Create lock
-export const createLock = ({
-  amount, unlockTime, account, chainId,
-}) => new Promise((resolve, reject) => {
-  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
-
-  console.log({
-    amount,
-    unlockTime,
-    account,
-    chainId,
-  });
-  contract.methods
-    .createLock('10000000000', 7 * 86400)
-    .send({ from: account })
-  // .once('transactionHash', (hash) => resolve(hash))
-    .then(async (response) => {
-      resolve(response?.transactionHash);
-    })
-    .catch((e) => {
-      window.console.log('Error occured on creating lock:');
-      reject(e);
-    });
-});
 
 // Increase Amount
 export const updateIncreaseAmount = ({ amount, account, chainId }) => new Promise((resolve, reject) => {
@@ -138,12 +110,8 @@ export const updateIncreaseUnlockTime = ({ time, account, chainId }) => new Prom
 });
 
 /**
- * *********************************************
- * functions not used in the UI
- * *********************************************
- */
-/**
- * Approve tokens before creating lock
+ * Check if `Approve` button can be clicked.
+ * `allowance` returns 0 or maxAmount if already approved
  */
 export const cannotApproveTokens = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
@@ -162,6 +130,9 @@ export const cannotApproveTokens = ({ account, chainId }) => new Promise((resolv
     });
 });
 
+/**
+ * Approve amount of Olas to be used
+ */
 export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
   const spender = getContractAddress('veOlas', chainId);
@@ -170,16 +141,35 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
     .approve(spender, maxAmount)
     .send({ from: account })
     .then(async (response) => {
-      console.log(response);
-
-      const amount = await contract.methods
-        .allowance(account, LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL)
-        .call();
-      console.log({ amount, maxAmount });
-      resolve();
+      resolve(response);
     })
     .catch((e) => {
       window.console.log('Error occured on approving Olas by owner:');
       reject(e);
     });
 });
+
+/**
+ * Create lock
+ */
+export const createLockRequest = ({
+  amount, unlockTime, account, chainId,
+}) => new Promise((resolve, reject) => {
+  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+  contract.methods
+    .createLock(amount, unlockTime)
+    .send({ from: account })
+    .then(async (response) => {
+      resolve(response?.transactionHash);
+    })
+    .catch((e) => {
+      window.console.log('Error occured on creating lock:');
+      reject(e);
+    });
+});
+
+/**
+ * *********************************************
+ * functions not used in the UI
+ * *********************************************
+ */

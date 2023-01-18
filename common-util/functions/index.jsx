@@ -20,7 +20,7 @@ export const getBalance = (account, p) => new Promise((resolve, reject) => {
  * @param {Number} dv Default value to be returned
  * @returns
  */
-export const formatToEth = (value, dv = 0) => (+ethers.utils.formatEther(value)).toFixed(4) || dv;
+export const formatToEth = (value, dv = 0) => (+ethers.utils.formatEther(value)).toFixed(8) || dv;
 
 export const notifyError = (message = 'Some error occured') => notification.error({
   message,

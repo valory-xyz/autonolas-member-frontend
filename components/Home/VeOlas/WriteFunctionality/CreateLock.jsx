@@ -1,28 +1,30 @@
 import { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Button, Form, Typography } from 'antd/lib';
+import {
+  Alert, Button, Form, Typography,
+} from 'antd/lib';
 import { notifyError, notifySuccess } from 'common-util/functions';
 import {
   parseAmount,
-  // parseToSeconds,
+  parseToSeconds,
   FormItemDate,
   FormItemInputNumber,
 } from '../../common';
 import {
+  cannotApproveTokens,
   approveOlasByOwner,
-  createLock,
   fetchCanCreateLock,
   fetchVotes,
-  cannotApproveTokens,
+  createLockRequest,
 } from '../utils';
 import { fetchBalanceOfOlas } from '../TestSection/utils';
 
 const { Title } = Typography;
 
 export const CreateLockComponent = ({ account, chainId }) => {
-  const [isApproveDisable, setIsApproveDisabled] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [isApproveDisable, setIsApproveDisabled] = useState(true);
+  const [isSubmitBtnDisabled, setIsDisabled] = useState(true);
   const [form] = Form.useForm();
 
   const approveTokenFn = async () => {
@@ -33,11 +35,11 @@ export const CreateLockComponent = ({ account, chainId }) => {
   useEffect(() => {
     if (account && chainId) {
       const fn = async () => {
-        const { cannotCreateLock } = await fetchCanCreateLock({
+        const { canCreateLock } = await fetchCanCreateLock({
           account,
           chainId,
         });
-        setIsDisabled(cannotCreateLock);
+        setIsDisabled(!canCreateLock);
 
         await approveTokenFn();
       };
@@ -50,11 +52,9 @@ export const CreateLockComponent = ({ account, chainId }) => {
       await fetchBalanceOfOlas({ account, chainId });
       await fetchVotes({ account, chainId });
 
-      const txHash = await createLock({
+      const txHash = await createLockRequest({
         amount: parseAmount(e.amount),
-        // unlockTime: parseToSeconds(e.unlockTime),
-        // unlockTime: 93312000,
-        unlockTime: 7 * 86400,
+        unlockTime: parseToSeconds(e.unlockTime),
         account,
         chainId,
       });
@@ -99,11 +99,22 @@ export const CreateLockComponent = ({ account, chainId }) => {
         <FormItemInputNumber />
         <FormItemDate />
         <Form.Item>
-          <Button type="primary" htmlType="submit" disabled={isDisabled}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={!account || isSubmitBtnDisabled}
+          >
             Submit
           </Button>
         </Form.Item>
       </Form>
+
+      {isSubmitBtnDisabled && (
+        <Alert
+          message="Amount already locked, please wait until the lock expires."
+          type="warning"
+        />
+      )}
     </>
   );
 };

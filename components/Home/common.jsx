@@ -65,7 +65,7 @@ export const FormItemInputNumber = () => (
       }),
     ]}
   >
-    <InputNumber style={fullWidth} />
+    <InputNumber style={fullWidth} placeholder="Add amount" />
   </Form.Item>
 );
 
