@@ -1,7 +1,18 @@
 /* eslint-disable max-len */
-import { getVeolasContract, getOlasContract, LOCAL_ADDRESSES } from 'common-util/Contracts';
+import {
+  getVeolasContract,
+  getOlasContract,
+  LOCAL_ADDRESSES,
+  getContractAddress,
+} from 'common-util/Contracts';
 import { formatToEth } from 'common-util/functions';
-import { fetchBalanceOfOlas } from './TestSection/utils';
+import { ethers } from 'ethers';
+// import { fetchBalanceOfOlas } from './TestSection/utils';
+
+/**
+ * spender = LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL
+ */
+const maxAmount = ethers.constants.MaxUint256;
 
 export const fetchVotes = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
@@ -73,12 +84,15 @@ export const createLock = ({
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 
   console.log({
-    amount, unlockTime, account, chainId,
+    amount,
+    unlockTime,
+    account,
+    chainId,
   });
   contract.methods
     .createLock('10000000000', 7 * 86400)
     .send({ from: account })
-    // .once('transactionHash', (hash) => resolve(hash))
+  // .once('transactionHash', (hash) => resolve(hash))
     .then(async (response) => {
       resolve(response?.transactionHash);
     })
@@ -93,7 +107,9 @@ export const updateIncreaseAmount = ({ amount, account, chainId }) => new Promis
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 
   console.log({
-    amount, account, chainId,
+    amount,
+    account,
+    chainId,
   });
   contract.methods
     .increaseAmount(amount)
@@ -126,23 +142,41 @@ export const updateIncreaseUnlockTime = ({ time, account, chainId }) => new Prom
  * functions not used in the UI
  * *********************************************
  */
-export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve, reject) => {
-  console.log({ account, chainId, owner: LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL });
+/**
+ * Approve tokens before creating lock
+ */
+export const cannotApproveTokens = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
+  const spender = getContractAddress('veOlas', chainId);
 
   contract.methods
-    .approve(
-      // process.env.NEXT_PUBLIC_TEMP_OWNER_ADDRESS,
-      LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL,
-      '10000000000', // TODO: aleks will send this huge number
-    )
-    .send({ from: account })
-    // .call()
+    .allowance(account, spender)
+    .call()
     .then(async (response) => {
-      window.console.log(response);
+      // check if the allowance is equal to maxAmount
+      resolve(ethers.BigNumber.from(response).eq(maxAmount));
+    })
+    .catch((e) => {
+      window.console.log('Error occured on calling `allowance` method');
+      reject(e);
+    });
+});
 
-      const amount = await contract.methods.allowance(account, LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL).call();
-      console.log({ amount });
+export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve, reject) => {
+  const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
+  const spender = getContractAddress('veOlas', chainId);
+
+  contract.methods
+    .approve(spender, maxAmount)
+    .send({ from: account })
+    .then(async (response) => {
+      console.log(response);
+
+      const amount = await contract.methods
+        .allowance(account, LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL)
+        .call();
+      console.log({ amount, maxAmount });
+      resolve();
     })
     .catch((e) => {
       window.console.log('Error occured on approving Olas by owner:');

@@ -5,20 +5,30 @@ import { Button, Form, Typography } from 'antd/lib';
 import { notifyError, notifySuccess } from 'common-util/functions';
 import {
   parseAmount,
-  parseToSeconds,
+  // parseToSeconds,
   FormItemDate,
   FormItemInputNumber,
 } from '../../common';
 import {
-  approveOlasByOwner, createLock, fetchCanCreateLock, fetchVotes,
+  approveOlasByOwner,
+  createLock,
+  fetchCanCreateLock,
+  fetchVotes,
+  cannotApproveTokens,
 } from '../utils';
 import { fetchBalanceOfOlas } from '../TestSection/utils';
 
 const { Title } = Typography;
 
 export const CreateLockComponent = ({ account, chainId }) => {
+  const [isApproveDisable, setIsApproveDisabled] = useState(false);
   const [isDisabled, setIsDisabled] = useState(true);
   const [form] = Form.useForm();
+
+  const approveTokenFn = async () => {
+    const isTrue = await cannotApproveTokens({ account, chainId });
+    setIsApproveDisabled(isTrue);
+  };
 
   useEffect(() => {
     if (account && chainId) {
@@ -28,6 +38,8 @@ export const CreateLockComponent = ({ account, chainId }) => {
           chainId,
         });
         setIsDisabled(cannotCreateLock);
+
+        await approveTokenFn();
       };
       fn();
     }
@@ -60,15 +72,21 @@ export const CreateLockComponent = ({ account, chainId }) => {
     <>
       <Title level={3}>Create Lock</Title>
 
+      {/* Approve can be clicked only once. Meaning, the user
+      will approve the maximum token, and no need to do it again.
+      We can test it by calling the allowance method */}
       <Button
         type="primary"
         style={{ marginBottom: '3rem' }}
-        disabled={!account}
+        disabled={!account || isApproveDisable}
         onClick={async () => {
           await approveOlasByOwner({ account, chainId });
+
+          // button to be disabled once approve is successful
+          await approveTokenFn();
         }}
       >
-        Approve 10000000 By Owner
+        Approve Max
       </Button>
 
       <Form
@@ -118,4 +136,11 @@ export const CreateLock = connect(mapStateToProps, null)(CreateLockComponent);
  * 1. read test cases - understand about the functionality
  * 2. look at the code - check out the comments
  * 3. look at the documentation
+ */
+
+/**
+ * I have tried my best to understand about ERC20 and approve method
+ * 1. First, we will approve the spender to spend the amount
+ * 2. Spender can spend the amount only after the approval
+ *
  */

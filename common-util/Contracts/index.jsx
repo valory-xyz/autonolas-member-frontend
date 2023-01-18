@@ -30,7 +30,7 @@ export const LOCAL_ADDRESSES = {
   BUOLAS_ADDRESS_LOCAL: '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
 };
 
-const getContractAddress = (type, chainId) => {
+export const getContractAddress = (type, chainId) => {
   switch (type) {
     case 'veOlas': {
       if (chainId === LOCAL_CHAIN_ID) {
