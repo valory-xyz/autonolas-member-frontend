@@ -19,3 +19,9 @@ export const setErrorMessage = (errorMessage) => ({
   type: syncTypes.SET_LOGIN_ERROR,
   data: { errorMessage },
 });
+
+// veOlas
+export const setMappedBalances = (data) => ({
+  type: syncTypes.SET_MAPPED_BALANCES,
+  data,
+});

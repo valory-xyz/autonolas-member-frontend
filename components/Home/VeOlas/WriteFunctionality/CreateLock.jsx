@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Alert, Button, Form, Typography,
 } from 'antd/lib';
+import { setMappedBalances } from 'store/setup/actions';
 import { notifyError, notifySuccess } from 'common-util/functions';
 import {
   parseAmount,
@@ -14,7 +14,7 @@ import {
 import {
   cannotApproveTokens,
   approveOlasByOwner,
-  fetchCanCreateLock,
+  fetchMapLockedBalances,
   fetchVotes,
   createLockRequest,
 } from '../utils';
@@ -22,12 +22,26 @@ import { fetchBalanceOfOlas } from '../TestSection/utils';
 
 const { Title } = Typography;
 
-export const CreateLockComponent = ({ account, chainId }) => {
+export const CreateLock = () => {
+  const dispatch = useDispatch();
+  const account = useSelector((state) => state?.setup?.account);
+  const chainId = useSelector((state) => state?.setup?.chainId);
+
   const [isApproveDisable, setIsApproveDisabled] = useState(true);
   const [isSubmitBtnDisabled, setIsDisabled] = useState(true);
   const [form] = Form.useForm();
 
-  const approveTokenFn = async () => {
+  const fetchCanCreateLockHelper = async () => {
+    const data = await fetchMapLockedBalances({
+      account,
+      chainId,
+    });
+    setIsDisabled(!Number(data.amount) === 0);
+
+    dispatch(setMappedBalances(data));
+  };
+
+  const approveTokenHelper = async () => {
     const isTrue = await cannotApproveTokens({ account, chainId });
     setIsApproveDisabled(isTrue);
   };
@@ -35,13 +49,8 @@ export const CreateLockComponent = ({ account, chainId }) => {
   useEffect(() => {
     if (account && chainId) {
       const fn = async () => {
-        const { canCreateLock } = await fetchCanCreateLock({
-          account,
-          chainId,
-        });
-        setIsDisabled(!canCreateLock);
-
-        await approveTokenFn();
+        await fetchCanCreateLockHelper();
+        await approveTokenHelper();
       };
       fn();
     }
@@ -62,6 +71,9 @@ export const CreateLockComponent = ({ account, chainId }) => {
         'Lock created successfully!',
         `Transaction Hash: ${txHash}`,
       );
+
+      // fetch the data again to disable button or show message
+      await fetchCanCreateLockHelper();
     } catch (error) {
       window.console.error(error);
       notifyError('Some error occured');
@@ -83,7 +95,7 @@ export const CreateLockComponent = ({ account, chainId }) => {
           await approveOlasByOwner({ account, chainId });
 
           // button to be disabled once approve is successful
-          await approveTokenFn();
+          await approveTokenHelper();
         }}
       >
         Approve Max
@@ -102,9 +114,9 @@ export const CreateLockComponent = ({ account, chainId }) => {
           <Button
             type="primary"
             htmlType="submit"
-            disabled={!account || isSubmitBtnDisabled}
+            disabled={!account || isSubmitBtnDisabled || !isApproveDisable}
           >
-            Submit
+            Create Lock
           </Button>
         </Form.Item>
       </Form>
@@ -118,40 +130,3 @@ export const CreateLockComponent = ({ account, chainId }) => {
     </>
   );
 };
-
-CreateLockComponent.propTypes = {
-  account: PropTypes.string,
-  chainId: PropTypes.number,
-};
-
-CreateLockComponent.defaultProps = {
-  account: null,
-  chainId: null,
-};
-
-const mapStateToProps = (state) => {
-  const { account, chainId } = state.setup;
-  return { account, chainId };
-};
-
-export const CreateLock = connect(mapStateToProps, null)(CreateLockComponent);
-
-/**
- * if already approved => create lock
- * else ask for approval then create lock
- *
- * approval will be checked by `allowance` method
- *
- * https://docs.ethers.org/v5/api/utils/constants/#constants-MaxUint256
- *
- * 1. read test cases - understand about the functionality
- * 2. look at the code - check out the comments
- * 3. look at the documentation
- */
-
-/**
- * I have tried my best to understand about ERC20 and approve method
- * 1. First, we will approve the spender to spend the amount
- * 2. Spender can spend the amount only after the approval
- *
- */

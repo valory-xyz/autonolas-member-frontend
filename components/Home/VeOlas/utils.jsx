@@ -19,7 +19,7 @@ export const fetchVotes = ({ account, chainId }) => new Promise((resolve, reject
     .getVotes(account)
     .call()
     .then((response) => {
-      console.log('Votes:', response);
+      // console.log('Votes:', response);
       resolve(formatToEth(response));
     })
     .catch((e) => {
@@ -63,26 +63,15 @@ export const fetchMapLockedBalances = ({ account, chainId }) => new Promise((res
     });
 });
 
-export const fetchCanCreateLock = async ({ account, chainId }) => {
-  try {
-    const { amount } = await fetchMapLockedBalances({ account, chainId });
-
-    // amount should be 0 for user to create lock
-    return Promise.resolve({ canCreateLock: Number(amount) === 0 });
-  } catch (error) {
-    return Promise.reject(error);
-  }
-};
-
 // Increase Amount
 export const updateIncreaseAmount = ({ amount, account, chainId }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 
-  console.log({
-    amount,
-    account,
-    chainId,
-  });
+  // console.log({
+  //   amount,
+  //   account,
+  //   chainId,
+  // });
   contract.methods
     .increaseAmount(amount)
     .send({ from: account })

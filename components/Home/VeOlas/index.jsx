@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 import { Radio, Statistic } from 'antd/lib';
+import { useSelector, useDispatch } from 'react-redux';
+import { setMappedBalances } from 'store/setup/actions';
 import { getToken } from '../common';
 import { IncreaseAmount, IncreaseUnlockTime } from './WriteFunctionality';
 import {
@@ -23,12 +23,20 @@ const FORM_TYPE = {
   claim: 'typeClaim',
 };
 
-const VeOlas = ({ account, chainId }) => {
+const VeOlas = () => {
+  const dispatch = useDispatch();
+  const account = useSelector((state) => state?.setup?.account);
+  const chainId = useSelector((state) => state?.setup?.chainId);
+  const mappedAmount = useSelector(
+    (state) => state?.setup?.mappedBalances?.amount || null,
+  );
+  const mappedEndTime = useSelector(
+    (state) => state?.setup?.mappedBalances?.endTime || null,
+  );
+
   const [isLoading, setIsLoading] = useState(true);
   const [votes, setVotesCount] = useState(null);
   const [totalSupplyLocked, setTotalSupplyLocked] = useState(null);
-  const [mappedAmount, setMappedAmount] = useState(null);
-  const [mappedEndTime, setMappedEndTime] = useState(null);
   const [currentFormType, setCurrentFormType] = useState(
     FORM_TYPE.increaseAmount,
   );
@@ -48,12 +56,11 @@ const VeOlas = ({ account, chainId }) => {
           const total = await fetchTotalSupplyLocked({ chainId });
           setTotalSupplyLocked(total);
 
-          const { amount, endTime } = await fetchMapLockedBalances({
+          const data = await fetchMapLockedBalances({
             account,
             chainId,
           });
-          setMappedAmount(amount);
-          setMappedEndTime(endTime);
+          dispatch(setMappedBalances(data));
         } catch (error) {
           window.console.error(error);
         } finally {
@@ -138,22 +145,7 @@ const VeOlas = ({ account, chainId }) => {
   );
 };
 
-VeOlas.propTypes = {
-  account: PropTypes.string,
-  chainId: PropTypes.number,
-};
-
-VeOlas.defaultProps = {
-  account: null,
-  chainId: null,
-};
-
-const mapStateToProps = (state) => {
-  const { account, chainId } = state.setup;
-  return { account, chainId };
-};
-
-export default connect(mapStateToProps, null)(VeOlas);
+export default VeOlas;
 /**
  * mint using Account #0
  *

@@ -3,7 +3,11 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Button } from 'antd/lib';
-import { fetchTotalSupplyOfOlas, mintOlas, fetchBalanceOfOlas } from './utils';
+import {
+  // fetchTotalSupplyOfOlas,
+
+  mintOlas, fetchBalanceOfOlas,
+} from './utils';
 
 export const TestingContainer = styled.div`
   border: 1px solid black;
