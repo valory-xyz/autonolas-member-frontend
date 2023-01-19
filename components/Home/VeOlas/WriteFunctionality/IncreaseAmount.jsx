@@ -1,13 +1,22 @@
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Button, Form, Typography } from 'antd/lib';
-import { notifyError, notifySuccess } from 'common-util/functions';
+import {
+  notifyError,
+  notifySuccess,
+  CannotIncreaseAlert,
+} from 'common-util/functions';
 import { parseAmount, FormItemInputNumber } from '../../common';
 import { updateIncreaseAmount } from '../utils';
 
 const { Title } = Typography;
 
-const IncreaseAmountComponent = ({ account, chainId }) => {
+export const IncreaseAmount = () => {
+  const account = useSelector((state) => state?.setup?.account);
+  const chainId = useSelector((state) => state?.setup?.chainId);
+  const cannotIncreaseAmount = useSelector(
+    (state) => !state?.setup?.mappedBalances?.isMappedAmoutZero,
+  );
+
   const [form] = Form.useForm();
 
   const onFinish = async (e) => {
@@ -40,31 +49,17 @@ const IncreaseAmountComponent = ({ account, chainId }) => {
       >
         <FormItemInputNumber />
         <Form.Item>
-          <Button type="primary" htmlType="submit" disabled={!account}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={!account || cannotIncreaseAmount}
+          >
             Submit
           </Button>
         </Form.Item>
       </Form>
+
+      {cannotIncreaseAmount && <CannotIncreaseAlert />}
     </>
   );
 };
-
-IncreaseAmountComponent.propTypes = {
-  account: PropTypes.string,
-  chainId: PropTypes.number,
-};
-
-IncreaseAmountComponent.defaultProps = {
-  account: null,
-  chainId: null,
-};
-
-const mapStateToProps = (state) => {
-  const { account, chainId } = state.setup;
-  return { account, chainId };
-};
-
-export const IncreaseAmount = connect(
-  mapStateToProps,
-  null,
-)(IncreaseAmountComponent);

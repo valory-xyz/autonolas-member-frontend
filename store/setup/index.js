@@ -8,6 +8,7 @@ const initialState = {
   mappedBalances: {
     amount: null,
     endTime: null,
+    isMappedAmoutZero: true,
   },
 };
 
@@ -29,7 +30,8 @@ export default (state = initialState, action) => {
 
     // veOlas
     case syncTypes.SET_MAPPED_BALANCES: {
-      return { ...state, mappedBalances: { ...data } };
+      const isMappedAmoutZero = Number(data.amount) === 0;
+      return { ...state, mappedBalances: { ...data, isMappedAmoutZero } };
     }
 
     default:

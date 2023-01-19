@@ -1,13 +1,18 @@
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Button, Form, Typography } from 'antd/lib';
-import { notifyError, notifySuccess } from 'common-util/functions';
+import { notifyError, notifySuccess, CannotIncreaseAlert } from 'common-util/functions';
 import { parseToSeconds, FormItemDate } from '../../common';
 import { updateIncreaseUnlockTime } from '../utils';
 
 const { Title } = Typography;
 
-const IncreaseUnlockTimeComponent = ({ account, chainId }) => {
+export const IncreaseUnlockTime = () => {
+  const account = useSelector((state) => state?.setup?.account);
+  const chainId = useSelector((state) => state?.setup?.chainId);
+  const cannotIncreaseAmount = useSelector(
+    (state) => !state?.setup?.mappedBalances?.isMappedAmoutZero,
+  );
+
   const [form] = Form.useForm();
 
   const onFinish = async (e) => {
@@ -40,31 +45,18 @@ const IncreaseUnlockTimeComponent = ({ account, chainId }) => {
       >
         <FormItemDate />
         <Form.Item>
-          <Button type="primary" htmlType="submit" disabled={!account}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={!account || cannotIncreaseAmount}
+          >
             Submit
           </Button>
         </Form.Item>
       </Form>
+
+      {cannotIncreaseAmount && <CannotIncreaseAlert />}
+
     </>
   );
 };
-
-IncreaseUnlockTimeComponent.propTypes = {
-  account: PropTypes.string,
-  chainId: PropTypes.number,
-};
-
-IncreaseUnlockTimeComponent.defaultProps = {
-  account: null,
-  chainId: null,
-};
-
-const mapStateToProps = (state) => {
-  const { account, chainId } = state.setup;
-  return { account, chainId };
-};
-
-export const IncreaseUnlockTime = connect(
-  mapStateToProps,
-  null,
-)(IncreaseUnlockTimeComponent);

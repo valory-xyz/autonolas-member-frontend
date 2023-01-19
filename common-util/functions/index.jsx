@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { notification } from 'antd/lib';
+import { notification, Alert } from 'antd/lib';
 import { COLOR } from 'util/theme';
 
 export const getBalance = (account, p) => new Promise((resolve, reject) => {
@@ -32,3 +32,10 @@ export const notifySuccess = (message = 'Successfull', description = null) => no
   description,
   style: { border: `1px solid ${COLOR.PRIMARY}` },
 });
+
+export const CannotIncreaseAlert = () => (
+  <Alert
+    message="You don't have any amount locked, please lock before increasing amount or unlockTime."
+    type="warning"
+  />
+);

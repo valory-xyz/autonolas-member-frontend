@@ -22,8 +22,8 @@ const { Title } = Typography;
 export const CreateLock = () => {
   const account = useSelector((state) => state?.setup?.account);
   const chainId = useSelector((state) => state?.setup?.chainId);
-  const mappedAmount = useSelector(
-    (state) => state?.setup?.mappedBalances?.amount || 0,
+  const isSubmitBtnDisabled = useSelector(
+    (state) => !state?.setup?.mappedBalances?.isMappedAmoutZero,
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -75,8 +75,6 @@ export const CreateLock = () => {
       notifyError('Some error occured');
     }
   };
-
-  const isSubmitBtnDisabled = Number(mappedAmount) !== 0;
 
   return (
     <>
