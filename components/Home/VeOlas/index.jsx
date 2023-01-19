@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Radio, Statistic } from 'antd/lib';
 import { useSelector, useDispatch } from 'react-redux';
-import { setMappedBalances } from 'store/setup/actions';
+import { fetchMappedBalancesFromActions } from 'store/setup/actions';
 import { getToken } from '../common';
 import { IncreaseAmount, IncreaseUnlockTime } from './WriteFunctionality';
 import {
   fetchVotes,
   fetchTotalSupplyLocked,
-  fetchMapLockedBalances,
   // fetchTotalSupplyOfOlas,
   // mintOlas,
   // fetchBalanceOf,
@@ -56,11 +55,7 @@ const VeOlas = () => {
           const total = await fetchTotalSupplyLocked({ chainId });
           setTotalSupplyLocked(total);
 
-          const data = await fetchMapLockedBalances({
-            account,
-            chainId,
-          });
-          dispatch(setMappedBalances(data));
+          dispatch(fetchMappedBalancesFromActions(account, chainId));
         } catch (error) {
           window.console.error(error);
         } finally {
@@ -80,26 +75,6 @@ const VeOlas = () => {
   return (
     <VeOlasContainer>
       <div className="left-content">
-        {/* TODO: delete below `MiddleContent` it not used - ask Mariapia */}
-        <MiddleContent
-          className="balance-container"
-          style={{ display: 'none' }}
-        >
-          <SectionHeader>veOLAS Balance</SectionHeader>
-          <Sections>
-            {getToken({
-              tokenName: 'Votes',
-              token: votes,
-              isLoading,
-            })}
-            {getToken({
-              tokenName: 'Total Voting power',
-              token: totalSupplyLocked,
-              isLoading,
-            })}
-          </Sections>
-        </MiddleContent>
-
         <MiddleContent className="balance-container">
           <SectionHeader>Locked OLAS</SectionHeader>
           <Sections>
@@ -120,6 +95,22 @@ const VeOlas = () => {
                   )}
                 </>
               ),
+            })}
+          </Sections>
+        </MiddleContent>
+
+        <MiddleContent className="balance-container">
+          <SectionHeader>veOLAS Balance</SectionHeader>
+          <Sections>
+            {getToken({
+              tokenName: 'Votes',
+              token: votes,
+              isLoading,
+            })}
+            {getToken({
+              tokenName: 'Total Voting power',
+              token: totalSupplyLocked,
+              isLoading,
             })}
           </Sections>
         </MiddleContent>

@@ -43,26 +43,6 @@ export const fetchTotalSupplyLocked = ({ chainId }) => new Promise((resolve, rej
     });
 });
 
-export const fetchMapLockedBalances = ({ account, chainId }) => new Promise((resolve, reject) => {
-  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
-
-  contract.methods
-    .mapLockedBalances(account)
-    .call()
-    .then((response) => {
-      resolve({
-        amount: formatToEth(response.amount),
-
-        // multiplied by 1000 to convert to milliseconds
-        endTime: response.endTime * 1000,
-      });
-    })
-    .catch((e) => {
-      window.console.log('Error occured on fetching MapLockedBalances:');
-      reject(e);
-    });
-});
-
 // Increase Amount
 export const updateIncreaseAmount = ({ amount, account, chainId }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);

@@ -35,11 +35,11 @@ export const parseToSeconds = (unlockTime) => {
 };
 
 /**
- * Cannot select days before today and today nor
- * can select more than 4 year
+ * Can select days after 7 days from today & less
+ * than 4 years from today
  */
 export const disableDateForUnlockTime = (current) => {
-  const pastDate = current < moment().endOf('day');
+  const pastDate = current < moment().add(7, 'days').endOf('day');
 
   // do not allow selection for more than 4 years
   const futureDate = current > moment().add(4, 'years');
