@@ -12,6 +12,8 @@ export const syncTypes = {
 
   // veOlas
   SET_MAPPED_BALANCES: `${reducerName}/Set mapped balances`,
+  SET_VOTES: `${reducerName}/Set votes`,
+  SET_TOTAL_SUPPLY_LOCKED: `${reducerName}/Set total supply locked`,
 
   SET_STORE_STATE: `${reducerName}/Set Store State`,
 };

@@ -1,5 +1,6 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Button, Form, Typography } from 'antd/lib';
+import { fetchMappedBalances } from 'store/setup/actions';
 import { notifyError, notifySuccess, CannotIncreaseAlert } from 'common-util/functions';
 import { parseToSeconds, FormItemDate } from '../../common';
 import { updateIncreaseUnlockTime } from '../utils';
@@ -7,10 +8,11 @@ import { updateIncreaseUnlockTime } from '../utils';
 const { Title } = Typography;
 
 export const IncreaseUnlockTime = () => {
+  const dispatch = useDispatch();
   const account = useSelector((state) => state?.setup?.account);
   const chainId = useSelector((state) => state?.setup?.chainId);
-  const cannotIncreaseAmount = useSelector(
-    (state) => !state?.setup?.mappedBalances?.isMappedAmoutZero,
+  const cannotIncreaseTime = useSelector(
+    (state) => state?.setup?.mappedBalances?.isMappedAmountZero,
   );
 
   const [form] = Form.useForm();
@@ -26,6 +28,10 @@ export const IncreaseUnlockTime = () => {
         'Unlock time increased successfully!',
         `Transaction Hash: ${txHash}`,
       );
+
+      // once the unlockTime is increased,
+      // fetch the newly updated mapped balances.
+      dispatch(fetchMappedBalances());
     } catch (error) {
       window.console.error(error);
       notifyError('Some error occured');
@@ -48,14 +54,14 @@ export const IncreaseUnlockTime = () => {
           <Button
             type="primary"
             htmlType="submit"
-            disabled={!account || cannotIncreaseAmount}
+            disabled={!account || cannotIncreaseTime}
           >
             Submit
           </Button>
         </Form.Item>
       </Form>
 
-      {cannotIncreaseAmount && <CannotIncreaseAlert />}
+      {cannotIncreaseTime && <CannotIncreaseAlert />}
 
     </>
   );

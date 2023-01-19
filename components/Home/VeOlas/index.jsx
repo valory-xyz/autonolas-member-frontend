@@ -1,16 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Radio, Statistic } from 'antd/lib';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchMappedBalancesFromActions } from 'store/setup/actions';
+import { fetchMappedBalances, fetchVotes, fetchTotalSupplyLocked } from 'store/setup/actions';
 import { getToken } from '../common';
 import { IncreaseAmount, IncreaseUnlockTime } from './WriteFunctionality';
-import {
-  fetchVotes,
-  fetchTotalSupplyLocked,
-  // fetchTotalSupplyOfOlas,
-  // mintOlas,
-  // fetchBalanceOf,
-} from './utils';
+// import {
+// fetchTotalSupplyOfOlas,
+// mintOlas,
+// fetchBalanceOf,
+// } from './utils';
 import { MiddleContent, SectionHeader, Sections } from '../styles';
 import { VeOlasContainer, WriteFunctionalityContainer } from './styles';
 
@@ -32,10 +30,14 @@ const VeOlas = () => {
   const mappedEndTime = useSelector(
     (state) => state?.setup?.mappedBalances?.endTime || null,
   );
+  const votes = useSelector(
+    (state) => state?.setup?.votes || null,
+  );
+  const totalSupplyLocked = useSelector(
+    (state) => state?.setup?.totalSupplyLocked || null,
+  );
 
   const [isLoading, setIsLoading] = useState(true);
-  const [votes, setVotesCount] = useState(null);
-  const [totalSupplyLocked, setTotalSupplyLocked] = useState(null);
   const [currentFormType, setCurrentFormType] = useState(
     FORM_TYPE.increaseAmount,
   );
@@ -49,13 +51,9 @@ const VeOlas = () => {
           // await mintOlas({ account, chainId });
           // await fetchBalanceOf({ account, chainId });
 
-          const votesResponse = await fetchVotes({ account, chainId });
-          setVotesCount(votesResponse);
-
-          const total = await fetchTotalSupplyLocked({ chainId });
-          setTotalSupplyLocked(total);
-
-          dispatch(fetchMappedBalancesFromActions(account, chainId));
+          dispatch(fetchTotalSupplyLocked());
+          dispatch(fetchVotes());
+          dispatch(fetchMappedBalances());
         } catch (error) {
           window.console.error(error);
         } finally {

@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   Alert, Button, Form, Typography, Modal,
 } from 'antd/lib';
-import { fetchMappedBalancesFromActions } from 'store/setup/actions';
+import { fetchMappedBalances } from 'store/setup/actions';
 import { notifyError, notifySuccess } from 'common-util/functions';
 import {
   parseAmount,
@@ -20,25 +20,19 @@ import {
 const { Title } = Typography;
 
 export const CreateLock = () => {
+  const dispatch = useDispatch();
   const account = useSelector((state) => state?.setup?.account);
   const chainId = useSelector((state) => state?.setup?.chainId);
   const isSubmitBtnDisabled = useSelector(
-    (state) => !state?.setup?.mappedBalances?.isMappedAmoutZero,
+    (state) => !state?.setup?.mappedBalances?.isMappedAmountZero,
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
 
-  const fetchCanCreateLockHelper = async () => {
-    fetchMappedBalancesFromActions(account, chainId);
-  };
-
   useEffect(() => {
     if (account && chainId) {
-      const fn = async () => {
-        await fetchCanCreateLockHelper();
-      };
-      fn();
+      dispatch(fetchMappedBalances());
     }
   }, [account, chainId]);
 
@@ -52,7 +46,7 @@ export const CreateLock = () => {
     notifySuccess('Lock created successfully!', `Transaction Hash: ${txHash}`);
 
     // fetch the data again to disable button or show message
-    await fetchCanCreateLockHelper();
+    dispatch(fetchMappedBalances());
   };
 
   const onFinish = async () => {

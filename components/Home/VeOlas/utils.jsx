@@ -1,6 +1,5 @@
 /* eslint-disable max-len */
 import { ethers } from 'ethers';
-import { formatToEth } from 'common-util/functions';
 import {
   getVeolasContract,
   getOlasContract,
@@ -11,37 +10,6 @@ import {
  * spender = LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL
  */
 const maxAmount = ethers.constants.MaxUint256;
-
-export const fetchVotes = ({ account, chainId }) => new Promise((resolve, reject) => {
-  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
-
-  contract.methods
-    .getVotes(account)
-    .call()
-    .then((response) => {
-      // console.log('Votes:', response);
-      resolve(formatToEth(response));
-    })
-    .catch((e) => {
-      window.console.log('Error occured on fetching balance:');
-      reject(e);
-    });
-});
-
-export const fetchTotalSupplyLocked = ({ chainId }) => new Promise((resolve, reject) => {
-  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
-
-  contract.methods
-    .totalSupplyLocked()
-    .call()
-    .then((response) => {
-      resolve(formatToEth(response));
-    })
-    .catch((e) => {
-      window.console.log('Error occured on fetching balance:');
-      reject(e);
-    });
-});
 
 // Increase Amount
 export const updateIncreaseAmount = ({ amount, account, chainId }) => new Promise((resolve, reject) => {

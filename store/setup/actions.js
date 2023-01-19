@@ -30,7 +30,10 @@ export const setMappedBalances = (data) => ({
   data,
 });
 
-export const fetchMappedBalancesFromActions = (account, chainId) => async (dispatch) => {
+export const fetchMappedBalances = () => async (dispatch, getState) => {
+  const account = getState()?.setup?.account;
+  const chainId = getState()?.setup?.chainId;
+
   try {
     const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
     const response = await contract.methods
@@ -43,6 +46,43 @@ export const fetchMappedBalancesFromActions = (account, chainId) => async (dispa
         amount: formatToEth(response.amount),
         endTime: response.endTime * 1000, // multiplied by 1000 to convert to milliseconds
       },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const fetchVotes = () => async (dispatch, getState) => {
+  const account = getState()?.setup?.account;
+  const chainId = getState()?.setup?.chainId;
+
+  try {
+    const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+    const response = await contract.methods
+      .getVotes(account)
+      .call();
+
+    dispatch({
+      type: syncTypes.SET_VOTES,
+      data: { votes: formatToEth(response) },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const fetchTotalSupplyLocked = () => async (dispatch, getState) => {
+  const chainId = getState()?.setup?.chainId;
+
+  try {
+    const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+    const response = await contract.methods
+      .totalSupplyLocked()
+      .call();
+
+    dispatch({
+      type: syncTypes.SET_TOTAL_SUPPLY_LOCKED,
+      data: { totalSupplyLocked: formatToEth(response) },
     });
   } catch (error) {
     console.error(error);

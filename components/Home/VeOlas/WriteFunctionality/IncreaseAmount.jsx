@@ -1,20 +1,22 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Button, Form, Typography } from 'antd/lib';
 import {
   notifyError,
   notifySuccess,
   CannotIncreaseAlert,
 } from 'common-util/functions';
+import { fetchMappedBalances } from 'store/setup/actions';
 import { parseAmount, FormItemInputNumber } from '../../common';
 import { updateIncreaseAmount } from '../utils';
 
 const { Title } = Typography;
 
 export const IncreaseAmount = () => {
+  const dispatch = useDispatch();
   const account = useSelector((state) => state?.setup?.account);
   const chainId = useSelector((state) => state?.setup?.chainId);
   const cannotIncreaseAmount = useSelector(
-    (state) => !state?.setup?.mappedBalances?.isMappedAmoutZero,
+    (state) => state?.setup?.mappedBalances?.isMappedAmountZero || false,
   );
 
   const [form] = Form.useForm();
@@ -30,6 +32,10 @@ export const IncreaseAmount = () => {
         'Amount increased successfully!',
         `Transaction Hash: ${txHash}`,
       );
+
+      // once the amount is increased,
+      // fetch the newly updated mapped balances.
+      dispatch(fetchMappedBalances());
     } catch (error) {
       window.console.error(error);
       notifyError('Some error occured');
