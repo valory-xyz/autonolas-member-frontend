@@ -3,7 +3,6 @@ import Sale from './Sale';
 import VeOlas from './VeOlas';
 import { CreateLock } from './VeOlas/WriteFunctionality';
 import BuOlas from './BuOlas';
-import TestSection from './VeOlas/TestSection';
 import { CreateLockContainer } from './styles';
 
 const { TabPane } = Tabs;
@@ -13,8 +12,6 @@ const TAB_KEYS = {
   createLock: 'createLock',
   manageLock: 'manageLock',
   buOlas: 'buOlas',
-  // TODO" remove
-  testSection: 'testSection',
 };
 
 const Home = () => (
@@ -37,12 +34,7 @@ const Home = () => (
       <TabPane tab="buOLAS" key={TAB_KEYS.buOlas}>
         <BuOlas />
       </TabPane>
-
-      <TabPane tab="Test" key={TAB_KEYS.testSection}>
-        <TestSection />
-      </TabPane>
     </Tabs>
-
   </>
 );
 
