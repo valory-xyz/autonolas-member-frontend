@@ -77,8 +77,7 @@ export const FormItemDate = () => (
   >
     <DatePicker
       disabledDate={disableDateForUnlockTime}
-      showTime={{ format: 'HH:mm' }}
-      format="MM/DD/YYYY HH:mm"
+      format="MM/DD/YYYY"
       style={fullWidth}
     />
   </Form.Item>
