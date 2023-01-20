@@ -12,6 +12,7 @@ const initialState = {
   },
   votes: null,
   totalSupplyLocked: null,
+  votingPowerInPercentage: null,
 };
 
 export default (state = initialState, action) => {

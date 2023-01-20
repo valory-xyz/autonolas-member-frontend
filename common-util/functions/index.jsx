@@ -39,3 +39,19 @@ export const CannotIncreaseAlert = () => (
     type="warning"
   />
 );
+
+export const getTotalVotesPercentage = (votes, totalSupply) => {
+  if (votes && totalSupply) {
+    const votesInBg = ethers.BigNumber.from(votes);
+    const totalSupplyInBg = ethers.BigNumber.from(totalSupply);
+    const votingPowerInPercentage = votesInBg
+      .div(totalSupplyInBg)
+      .mul(100)
+      .toNumber()
+      .toFixed(2);
+
+    return votingPowerInPercentage;
+  }
+
+  return null;
+};

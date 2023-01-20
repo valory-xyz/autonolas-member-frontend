@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Radio, Statistic } from 'antd/lib';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchMappedBalances, fetchVotes, fetchTotalSupplyLocked } from 'store/setup/actions';
+import { formatToEth, getTotalVotesPercentage } from 'common-util/functions';
 import { getToken } from '../common';
 import { IncreaseAmount, IncreaseUnlockTime } from './WriteFunctionality';
 // import {
@@ -102,12 +103,12 @@ const VeOlas = () => {
           <Sections>
             {getToken({
               tokenName: 'Votes',
-              token: votes,
+              token: formatToEth(votes),
               isLoading,
             })}
             {getToken({
-              tokenName: 'Total Voting power',
-              token: totalSupplyLocked,
+              tokenName: 'Total Voting power %',
+              token: `${getTotalVotesPercentage(votes, totalSupplyLocked)}%`,
               isLoading,
             })}
           </Sections>

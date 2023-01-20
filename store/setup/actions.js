@@ -64,7 +64,7 @@ export const fetchVotes = () => async (dispatch, getState) => {
 
     dispatch({
       type: syncTypes.SET_VOTES,
-      data: { votes: formatToEth(response) },
+      data: { votes: response },
     });
   } catch (error) {
     console.error(error);
@@ -82,7 +82,7 @@ export const fetchTotalSupplyLocked = () => async (dispatch, getState) => {
 
     dispatch({
       type: syncTypes.SET_TOTAL_SUPPLY_LOCKED,
-      data: { totalSupplyLocked: formatToEth(response) },
+      data: { totalSupplyLocked: response },
     });
   } catch (error) {
     console.error(error);
