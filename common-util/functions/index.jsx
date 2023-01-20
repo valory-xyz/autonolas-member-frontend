@@ -1,6 +1,9 @@
 import { ethers } from 'ethers';
 import { notification, Alert } from 'antd/lib';
+import { isNil } from 'lodash';
 import { COLOR } from 'util/theme';
+
+export const MAX_AMOUNT = ethers.constants.MaxUint256;
 
 export const getBalance = (account, p) => new Promise((resolve, reject) => {
   p.eth
@@ -20,7 +23,10 @@ export const getBalance = (account, p) => new Promise((resolve, reject) => {
  * @param {Number} dv Default value to be returned
  * @returns
  */
-export const formatToEth = (value, dv = 0) => (+ethers.utils.formatEther(value)).toFixed(8) || dv;
+export const formatToEth = (value, dv = 0) => {
+  if (isNil(value)) return dv || 0;
+  return (+ethers.utils.formatEther(value)).toFixed(8);
+};
 
 export const notifyError = (message = 'Some error occured') => notification.error({
   message,
@@ -38,6 +44,10 @@ export const CannotIncreaseAlert = () => (
     message="You don't have any amount locked, please lock before increasing amount or unlockTime."
     type="warning"
   />
+);
+
+export const AlreadyAllAmountLocked = () => (
+  <Alert message="You don't have any Olas to lock." type="warning" />
 );
 
 export const getTotalVotesPercentage = (votes, totalSupply) => {

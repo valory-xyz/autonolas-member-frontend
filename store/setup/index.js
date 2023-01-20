@@ -1,10 +1,18 @@
 import { apiTypes, syncTypes } from './_types';
 
+/**
+ * [key]Unformatted: value received from the backend
+ */
 const initialState = {
   account: null,
   balance: null,
   chainId: null,
   errorMessage: null,
+
+  // olas
+  olasBalance: null,
+
+  // others
   mappedBalances: {
     amount: null,
     endTime: null,
@@ -28,6 +36,11 @@ export default (state = initialState, action) => {
     case syncTypes.SET_LOGIN_ERROR:
     case syncTypes.SET_CHAIND_ID:
     case syncTypes.SET_STORE_STATE: {
+      return { ...state, ...data };
+    }
+
+    // olas
+    case syncTypes.SET_OLAS_BALANCE: {
       return { ...state, ...data };
     }
 

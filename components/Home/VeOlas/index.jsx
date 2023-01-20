@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Radio, Statistic } from 'antd/lib';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchMappedBalances, fetchVotes, fetchTotalSupplyLocked } from 'store/setup/actions';
+import {
+  fetchOlasBalance,
+  fetchMappedBalances,
+  fetchVotes,
+  fetchTotalSupplyLocked,
+} from 'store/setup/actions';
 import { formatToEth, getTotalVotesPercentage } from 'common-util/functions';
 import { getToken } from '../common';
 import { IncreaseAmount, IncreaseUnlockTime } from './WriteFunctionality';
@@ -31,9 +36,7 @@ const VeOlas = () => {
   const mappedEndTime = useSelector(
     (state) => state?.setup?.mappedBalances?.endTime || null,
   );
-  const votes = useSelector(
-    (state) => state?.setup?.votes || null,
-  );
+  const votes = useSelector((state) => state?.setup?.votes || null);
   const totalSupplyLocked = useSelector(
     (state) => state?.setup?.totalSupplyLocked || null,
   );
@@ -51,6 +54,8 @@ const VeOlas = () => {
           // await fetchTotalSupplyOfOlas({ chainId });
           // await mintOlas({ account, chainId });
           // await fetchBalanceOf({ account, chainId });
+
+          dispatch(fetchOlasBalance());
 
           dispatch(fetchTotalSupplyLocked());
           dispatch(fetchVotes());

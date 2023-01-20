@@ -1,7 +1,11 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Form, Typography } from 'antd/lib';
 import { fetchMappedBalances } from 'store/setup/actions';
-import { notifyError, notifySuccess, CannotIncreaseAlert } from 'common-util/functions';
+import {
+  notifyError,
+  notifySuccess,
+  CannotIncreaseAlert,
+} from 'common-util/functions';
 import { parseToSeconds, FormItemDate } from '../../common';
 import { updateIncreaseUnlockTime } from '../utils';
 
@@ -62,7 +66,6 @@ export const IncreaseUnlockTime = () => {
       </Form>
 
       {cannotIncreaseTime && <CannotIncreaseAlert />}
-
     </>
   );
 };

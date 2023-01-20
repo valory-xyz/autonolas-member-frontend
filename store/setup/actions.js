@@ -1,6 +1,6 @@
 import { formatToEth } from 'common-util/functions';
 import {
-  getVeolasContract,
+  getVeolasContract, getOlasContract,
 } from 'common-util/Contracts';
 import { syncTypes } from './_types';
 
@@ -23,6 +23,26 @@ export const setErrorMessage = (errorMessage) => ({
   type: syncTypes.SET_LOGIN_ERROR,
   data: { errorMessage },
 });
+
+// olas
+export const fetchOlasBalance = () => async (dispatch, getState) => {
+  const account = getState()?.setup?.account;
+  const chainId = getState()?.setup?.chainId;
+
+  try {
+    const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
+    const response = await contract.methods
+      .balanceOf(account)
+      .call();
+
+    dispatch({
+      type: syncTypes.SET_OLAS_BALANCE,
+      data: { olasBalance: response },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 // veOlas
 export const setMappedBalances = (data) => ({

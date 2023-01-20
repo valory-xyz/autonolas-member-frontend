@@ -1,9 +1,12 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Form, Typography } from 'antd/lib';
+import {
+  Button, Form, Typography, Divider,
+} from 'antd/lib';
 import {
   notifyError,
   notifySuccess,
   CannotIncreaseAlert,
+  AlreadyAllAmountLocked,
 } from 'common-util/functions';
 import { fetchMappedBalances } from 'store/setup/actions';
 import { parseAmount, FormItemInputNumber } from '../../common';
@@ -15,16 +18,24 @@ export const IncreaseAmount = () => {
   const dispatch = useDispatch();
   const account = useSelector((state) => state?.setup?.account);
   const chainId = useSelector((state) => state?.setup?.chainId);
-  const cannotIncreaseAmount = useSelector(
+  const isMappedAmountZero = useSelector(
     (state) => state?.setup?.mappedBalances?.isMappedAmountZero || false,
   );
+  const olasBalance = useSelector((state) => state?.setup?.olasBalance);
+  const hasNoOlasBalance = Number(olasBalance || '0') === 0;
+
+  /**
+   * can increase amount only if the mapped amount is zero (i.e. no lock exists)
+   * or if the user has some olas tokens.
+   */
+  const cannotIncreaseAmount = isMappedAmountZero || hasNoOlasBalance;
 
   const [form] = Form.useForm();
 
-  const onFinish = async (e) => {
+  const onFinish = async ({ amount, sendMaxAmount }) => {
     try {
       const txHash = await updateIncreaseAmount({
-        amount: parseAmount(e.amount),
+        amount: sendMaxAmount ? olasBalance : parseAmount(amount),
         account,
         chainId,
       });
@@ -65,7 +76,21 @@ export const IncreaseAmount = () => {
         </Form.Item>
       </Form>
 
-      {cannotIncreaseAmount && <CannotIncreaseAlert />}
+      <Divider>OR</Divider>
+
+      <Button
+        type="primary"
+        htmlType="submit"
+        disabled={!account || cannotIncreaseAmount}
+        onClick={() => onFinish({ sendMaxAmount: true })}
+      >
+        Lock maximum amount
+      </Button>
+
+      <br />
+      <br />
+      {isMappedAmountZero && <CannotIncreaseAlert />}
+      {hasNoOlasBalance && <AlreadyAllAmountLocked />}
     </>
   );
 };

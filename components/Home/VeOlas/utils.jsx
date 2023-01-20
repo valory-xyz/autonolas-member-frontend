@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 import { ethers } from 'ethers';
+import { MAX_AMOUNT } from 'common-util/functions';
 import {
   getVeolasContract,
   getOlasContract,
@@ -9,7 +10,6 @@ import {
 /**
  * spender = LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL
  */
-const maxAmount = ethers.constants.MaxUint256;
 
 // Increase Amount
 export const updateIncreaseAmount = ({ amount, account, chainId }) => new Promise((resolve, reject) => {
@@ -48,7 +48,7 @@ export const updateIncreaseUnlockTime = ({ time, account, chainId }) => new Prom
 
 /**
  * Check if `Approve` button can be clicked.
- * `allowance` returns 0 or maxAmount if already approved
+ * `allowance` returns 0 or MAX_AMOUNT if already approved
  */
 export const cannotApproveTokens = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
@@ -58,8 +58,8 @@ export const cannotApproveTokens = ({ account, chainId }) => new Promise((resolv
     .allowance(account, spender)
     .call()
     .then(async (response) => {
-      // check if the allowance is equal to maxAmount
-      resolve(ethers.BigNumber.from(response).eq(maxAmount));
+      // check if the allowance is equal to MAX_AMOUNT
+      resolve(ethers.BigNumber.from(response).eq(MAX_AMOUNT));
     })
     .catch((e) => {
       window.console.log('Error occured on calling `allowance` method');
@@ -75,7 +75,7 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
   const spender = getContractAddress('veOlas', chainId);
 
   contract.methods
-    .approve(spender, maxAmount)
+    .approve(spender, MAX_AMOUNT)
     .send({ from: account })
     .then(async (response) => {
       resolve(response);
