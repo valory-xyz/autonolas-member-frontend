@@ -8,7 +8,10 @@ import {
   CannotIncreaseAlert,
   AlreadyAllAmountLocked,
 } from 'common-util/functions';
-import { fetchMappedBalances } from 'store/setup/actions';
+import {
+  fetchMappedBalances,
+  fetchVotesAndTotalSupplyLocked,
+} from 'store/setup/actions';
 import { parseAmount, FormItemInputNumber } from '../../common';
 import { updateIncreaseAmount } from '../utils';
 
@@ -28,7 +31,7 @@ export const IncreaseAmount = () => {
    * can increase amount only if the mapped amount is zero (i.e. no lock exists)
    * or if the user has some olas tokens.
    */
-  const cannotIncreaseAmount = isMappedAmountZero || hasNoOlasBalance;
+  const cannotIncreaseAmount = isMappedAmountZero || hasNoOlasBalance || !account;
 
   const [form] = Form.useForm();
 
@@ -45,8 +48,9 @@ export const IncreaseAmount = () => {
       );
 
       // once the amount is increased,
-      // fetch the newly updated mapped balances.
+      // fetch the newly updated mapped balances & votes.
       dispatch(fetchMappedBalances());
+      dispatch(fetchVotesAndTotalSupplyLocked());
     } catch (error) {
       window.console.error(error);
       notifyError('Some error occured');
@@ -69,7 +73,7 @@ export const IncreaseAmount = () => {
           <Button
             type="primary"
             htmlType="submit"
-            disabled={!account || cannotIncreaseAmount}
+            disabled={cannotIncreaseAmount}
           >
             Submit
           </Button>
@@ -81,7 +85,7 @@ export const IncreaseAmount = () => {
       <Button
         type="primary"
         htmlType="submit"
-        disabled={!account || cannotIncreaseAmount}
+        disabled={cannotIncreaseAmount}
         onClick={() => onFinish({ sendMaxAmount: true })}
       >
         Lock maximum amount
@@ -89,8 +93,12 @@ export const IncreaseAmount = () => {
 
       <br />
       <br />
-      {isMappedAmountZero && <CannotIncreaseAlert />}
-      {hasNoOlasBalance && <AlreadyAllAmountLocked />}
+      {account && (
+        <>
+          {isMappedAmountZero && <CannotIncreaseAlert />}
+          {hasNoOlasBalance && <AlreadyAllAmountLocked />}
+        </>
+      )}
     </>
   );
 };

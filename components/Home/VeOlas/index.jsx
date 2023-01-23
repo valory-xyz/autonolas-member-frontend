@@ -4,17 +4,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   fetchOlasBalance,
   fetchMappedBalances,
-  fetchVotes,
-  fetchTotalSupplyLocked,
+  fetchVotesAndTotalSupplyLocked,
 } from 'store/setup/actions';
 import { formatToEth, getTotalVotesPercentage } from 'common-util/functions';
 import { getToken } from '../common';
 import { IncreaseAmount, IncreaseUnlockTime } from './WriteFunctionality';
-// import {
-// fetchTotalSupplyOfOlas,
-// mintOlas,
-// fetchBalanceOf,
-// } from './utils';
 import { MiddleContent, SectionHeader, Sections } from '../styles';
 import { VeOlasContainer, WriteFunctionalityContainer } from './styles';
 
@@ -41,7 +35,7 @@ const VeOlas = () => {
     (state) => state?.setup?.totalSupplyLocked || null,
   );
 
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(!!account);
   const [currentFormType, setCurrentFormType] = useState(
     FORM_TYPE.increaseAmount,
   );
@@ -51,14 +45,8 @@ const VeOlas = () => {
       if (account && chainId) {
         setIsLoading(true);
         try {
-          // await fetchTotalSupplyOfOlas({ chainId });
-          // await mintOlas({ account, chainId });
-          // await fetchBalanceOf({ account, chainId });
-
           dispatch(fetchOlasBalance());
-
-          dispatch(fetchTotalSupplyLocked());
-          dispatch(fetchVotes());
+          dispatch(fetchVotesAndTotalSupplyLocked());
           dispatch(fetchMappedBalances());
         } catch (error) {
           window.console.error(error);
@@ -70,7 +58,6 @@ const VeOlas = () => {
     fn();
   }, [account, chainId]);
 
-  // Create Lock
   const onChange = (e) => {
     window.console.log('radio checked', e.target.value);
     setCurrentFormType(e.target.value);
@@ -113,7 +100,10 @@ const VeOlas = () => {
             })}
             {getToken({
               tokenName: 'Total Voting power %',
-              token: `${getTotalVotesPercentage(votes, totalSupplyLocked)}%`,
+              token:
+                Number(votes) === 0 || Number(totalSupplyLocked) === 0
+                  ? '--'
+                  : `${getTotalVotesPercentage(votes, totalSupplyLocked)}%`,
               isLoading,
             })}
           </Sections>

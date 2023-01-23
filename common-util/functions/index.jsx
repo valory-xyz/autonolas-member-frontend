@@ -47,7 +47,7 @@ export const CannotIncreaseAlert = () => (
 );
 
 export const AlreadyAllAmountLocked = () => (
-  <Alert message="You don't have any Olas to lock." type="warning" />
+  <Alert message="You don't have any OLAS to lock." type="warning" />
 );
 
 export const getTotalVotesPercentage = (votes, totalSupply) => {

@@ -68,7 +68,7 @@ export const cannotApproveTokens = ({ account, chainId }) => new Promise((resolv
 });
 
 /**
- * Approve amount of Olas to be used
+ * Approve amount of OLAS to be used
  */
 export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
@@ -81,7 +81,7 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
       resolve(response);
     })
     .catch((e) => {
-      window.console.log('Error occured on approving Olas by owner:');
+      window.console.log('Error occured on approving OLAS by owner:');
       reject(e);
     });
 });

@@ -3,7 +3,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import {
   Alert, Button, Form, Typography, Modal,
 } from 'antd/lib';
-import { fetchMappedBalances } from 'store/setup/actions';
+import {
+  fetchMappedBalances,
+  fetchVotesAndTotalSupplyLocked,
+} from 'store/setup/actions';
 import { notifyError, notifySuccess } from 'common-util/functions';
 import {
   parseAmount,
@@ -33,6 +36,7 @@ export const CreateLock = () => {
   useEffect(() => {
     if (account && chainId) {
       dispatch(fetchMappedBalances());
+      dispatch(fetchVotesAndTotalSupplyLocked());
     }
   }, [account, chainId]);
 

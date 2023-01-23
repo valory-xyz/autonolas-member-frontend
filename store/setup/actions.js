@@ -108,3 +108,8 @@ export const fetchTotalSupplyLocked = () => async (dispatch, getState) => {
     console.error(error);
   }
 };
+
+export const fetchVotesAndTotalSupplyLocked = () => async (dispatch) => {
+  dispatch(fetchVotes());
+  dispatch(fetchTotalSupplyLocked());
+};

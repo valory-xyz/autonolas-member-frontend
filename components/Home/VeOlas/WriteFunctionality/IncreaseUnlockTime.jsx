@@ -1,6 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Form, Typography } from 'antd/lib';
-import { fetchMappedBalances } from 'store/setup/actions';
+import {
+  fetchMappedBalances,
+  fetchVotesAndTotalSupplyLocked,
+} from 'store/setup/actions';
 import {
   notifyError,
   notifySuccess,
@@ -34,8 +37,9 @@ export const IncreaseUnlockTime = () => {
       );
 
       // once the unlockTime is increased,
-      // fetch the newly updated mapped balances.
+      // fetch the newly updated mapped balances & votes.
       dispatch(fetchMappedBalances());
+      dispatch(fetchVotesAndTotalSupplyLocked());
     } catch (error) {
       window.console.error(error);
       notifyError('Some error occured');
