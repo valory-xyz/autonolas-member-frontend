@@ -80,6 +80,7 @@ const Login = ({
       // a Web3Provider. This will add on methods and
       // event listeners such as `.on()` will be different.
       const wProvider = new Web3(modalProvider);
+      window.WEB3_PROVIDER = wProvider;
 
       const address = await wProvider.eth.getAccounts();
       const currentChainId = await wProvider.eth.getChainId();
