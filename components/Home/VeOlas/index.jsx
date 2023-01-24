@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-// import dynamic from 'next/dynamic';
+import PropTypes from 'prop-types';
 import { Radio, Statistic, Button } from 'antd/lib';
 import { useSelector, useDispatch } from 'react-redux';
+import { isNil } from 'lodash';
 import {
   fetchOlasBalance,
   fetchMappedBalances,
@@ -13,15 +14,12 @@ import {
   getTotalVotesPercentage,
   notifySuccess,
 } from 'common-util/functions';
+import { TAB_KEYS } from 'common-util/constants';
 import { getToken } from '../common';
 import { IncreaseAmount, IncreaseUnlockTime } from './WriteFunctionality';
 import { withdrawRequest } from './utils';
 import { MiddleContent, SectionHeader, Sections } from '../styles';
 import { VeOlasContainer, WriteFunctionalityContainer } from './styles';
-
-// const { IncreaseAmount, IncreaseUnlockTime } = dynamic(
-//   () => import('./WriteFunctionality/index'),
-// );
 
 const { Countdown } = Statistic;
 
@@ -31,7 +29,7 @@ const FORM_TYPE = {
   claim: 'typeClaim',
 };
 
-const VeOlas = () => {
+const VeOlas = ({ setActiveTab }) => {
   const dispatch = useDispatch();
   const account = useSelector((state) => state?.setup?.account);
   const chainId = useSelector((state) => state?.setup?.chainId);
@@ -46,7 +44,7 @@ const VeOlas = () => {
     (state) => state?.setup?.totalSupplyLocked || null,
   );
   const canWithdrawVeolas = useSelector(
-    (state) => state?.setup?.canWithdrawVeolas || null,
+    (state) => state?.setup?.canWithdrawVeolas,
   );
 
   const [isLoading, setIsLoading] = useState(!!account);
@@ -92,6 +90,7 @@ const VeOlas = () => {
       notifySuccess('Withdrawn successfully');
 
       getData();
+      setActiveTab(TAB_KEYS.createLock);
     } catch (error) {
       window.console.error(error);
     }
@@ -145,28 +144,34 @@ const VeOlas = () => {
       </div>
 
       <WriteFunctionalityContainer>
-        {canWithdrawVeolas ? (
-          <Button type="primary" htmlType="submit" onClick={onWithdraw}>
-            Withdraw
-          </Button>
-        ) : (
+        {!isNil(canWithdrawVeolas) && (
           <>
-            <Radio.Group onChange={onChange} value={currentFormType}>
-              <Radio value={FORM_TYPE.increaseAmount}>Increase Amount</Radio>
-              <Radio value={FORM_TYPE.increaseUnlockTime}>
-                Increase Unlock Time
-              </Radio>
-              {/* <Radio value={FORM_TYPE.claim}>Claim</Radio> */}
-            </Radio.Group>
+            {canWithdrawVeolas ? (
+              <Button type="primary" htmlType="submit" onClick={onWithdraw}>
+                Withdraw
+              </Button>
+            ) : (
+              <>
+                <Radio.Group onChange={onChange} value={currentFormType}>
+                  <Radio value={FORM_TYPE.increaseAmount}>
+                    Increase Amount
+                  </Radio>
+                  <Radio value={FORM_TYPE.increaseUnlockTime}>
+                    Increase Unlock Time
+                  </Radio>
+                  {/* <Radio value={FORM_TYPE.claim}>Claim</Radio> */}
+                </Radio.Group>
 
-            <div className="forms-container">
-              {currentFormType === FORM_TYPE.increaseAmount && (
-                <IncreaseAmount />
-              )}
-              {currentFormType === FORM_TYPE.increaseUnlockTime && (
-                <IncreaseUnlockTime />
-              )}
-            </div>
+                <div className="forms-container">
+                  {currentFormType === FORM_TYPE.increaseAmount && (
+                    <IncreaseAmount />
+                  )}
+                  {currentFormType === FORM_TYPE.increaseUnlockTime && (
+                    <IncreaseUnlockTime />
+                  )}
+                </div>
+              </>
+            )}
           </>
         )}
       </WriteFunctionalityContainer>
@@ -174,14 +179,12 @@ const VeOlas = () => {
   );
 };
 
+VeOlas.propTypes = {
+  setActiveTab: PropTypes.func,
+};
+
+VeOlas.defaultProps = {
+  setActiveTab: () => {},
+};
+
 export default VeOlas;
-/**
- * mint using Account #0
- *
- * mint Olas for account 1
- * switch to account 1 -> do the lock -> by calling the fuction from veOlas
- *
- * check the lock-balance
- *
- * // withdraw for veOlas is pending
- */

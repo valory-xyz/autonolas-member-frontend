@@ -133,10 +133,6 @@ export const fetchIfCanWithdrawVeolas = () => async (dispatch, getState) => {
 
     const canWithdrawVeolas = Number(balance) > 0 && lockedEnd <= blockDetails.timestamp;
 
-    console.log('blockNumber', blockNumber);
-    console.log('blockDetails', blockDetails);
-    console.log('canWithdrawVeolas', canWithdrawVeolas);
-
     dispatch({
       type: syncTypes.SET_CAN_WITHDRAW_VEOLAS,
       data: { canWithdrawVeolas },

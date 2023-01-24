@@ -13,7 +13,7 @@ const initialState = {
   olasBalance: null,
 
   // veOlas
-  canWithdrawVeolas: false,
+  canWithdrawVeolas: null,
 
   // others
   mappedBalances: {
