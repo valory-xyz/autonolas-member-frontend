@@ -110,7 +110,10 @@ export const createLockRequest = ({
     });
 });
 
-export const withdrawRequest = ({ account, chainId }) => new Promise((resolve, reject) => {
+/**
+ * Withdraw VeOlas
+ */
+export const withdrawVeolasRequest = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 
   contract.methods

@@ -37,8 +37,10 @@ export const fetchReleasableAmount = ({ account, chainId }) => new Promise((reso
     });
 });
 
-// Withdraw
-export const withdraw = ({
+/**
+ * Withdraw
+ */
+export const withdrawRequest = ({
   account, chainId,
 }) => new Promise((resolve, reject) => {
   const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);

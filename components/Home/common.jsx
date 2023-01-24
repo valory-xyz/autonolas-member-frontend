@@ -86,6 +86,7 @@ export const FormItemDate = ({ startDate }) => {
       name="unlockTime"
       label="Unlock Time"
       rules={[{ required: true, message: 'Unlock Time is required' }]}
+      tooltip="The date should be minimum 1 week and maximum 4 years"
     >
       <DatePicker
         disabledDate={disableDateForUnlockTime}

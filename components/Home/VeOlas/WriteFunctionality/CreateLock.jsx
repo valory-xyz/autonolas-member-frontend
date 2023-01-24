@@ -127,7 +127,7 @@ export const CreateLock = () => {
               setIsModalOpen(false);
 
               // once approved, create lock
-              createLockFn();
+              await createLockFn();
             }}
           >
             Approve
@@ -137,56 +137,3 @@ export const CreateLock = () => {
     </>
   );
 };
-
-/**
- * 1. point out voting power (getVotes)
- *
- * another box below - YOUR VOTING POWER IS - getVotes
- *
- * 2. show message 1 week minimum and 4 years as maximum
- * - fix the calendar
- * - test by sending less than 1 week
- * - test by sending more than 4 years
- *
- * 3. Try to lock with multiple account
- * 4. Increase lock time and lock amount
- *
- * OR
- *
- * 5. Widthdraw once the lock time expires
- *  - maybe another box
- *
- * To test widthdraw, increase the time using ethers.
- * ==> ethers.provider.send("evm_increaseTime", [200]);
- * ==> ethers.provider.send("evm_mine");
- *
- * - ALSO, check with multi-sig (LATER)
- *
- * 7. Try to widthraw before the lock time expires
- */
-
-/*
-
-Modal.info({
-title: 'Approve?',
-content: (
-  <div>
-    <Alert
-      message="Before creating you lock an approval for veOLAS is required,
-      please approve to proceed"
-      type="warning"
-    />
-  </div>
-),
-okText: 'Approve',
-onOk: async () => {
-  await approveOlasByOwner({ account, chainId });
-  setIsModalOpen(false);
-
-  // once approved, create lock
-  createLockFn();
-},
-visible: isModalOpen,
-onCancel: () => setIsModalOpen(false),
-})
-*/

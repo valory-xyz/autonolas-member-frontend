@@ -17,7 +17,7 @@ import {
 import { TAB_KEYS } from 'common-util/constants';
 import { getToken } from '../common';
 import { IncreaseAmount, IncreaseUnlockTime } from './WriteFunctionality';
-import { withdrawRequest } from './utils';
+import { withdrawVeolasRequest } from './utils';
 import { MiddleContent, SectionHeader, Sections } from '../styles';
 import { VeOlasContainer, WriteFunctionalityContainer } from './styles';
 
@@ -86,7 +86,7 @@ const VeOlas = ({ setActiveTab }) => {
   // on withdraw
   const onWithdraw = async () => {
     try {
-      await withdrawRequest({ account, chainId });
+      await withdrawVeolasRequest({ account, chainId });
       notifySuccess('Withdrawn successfully');
 
       getData();
@@ -124,7 +124,7 @@ const VeOlas = ({ setActiveTab }) => {
         </MiddleContent>
 
         <MiddleContent className="balance-container">
-          <SectionHeader>veOLAS Balance</SectionHeader>
+          <SectionHeader>Voting power</SectionHeader>
           <Sections>
             {getToken({
               tokenName: 'Votes',
