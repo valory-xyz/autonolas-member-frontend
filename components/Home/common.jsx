@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { ethers } from 'ethers';
 import moment from 'moment';
 import { Form, InputNumber, DatePicker } from 'antd/lib';
@@ -35,18 +36,6 @@ export const parseToSeconds = (unlockTime) => {
 };
 
 /**
- * Can select days after 7 days from today & less
- * than 4 years from today
- */
-export const disableDateForUnlockTime = (current) => {
-  const pastDate = current < moment().add(7, 'days').endOf('day');
-
-  // do not allow selection for more than 4 years
-  const futureDate = current > moment().add(4, 'years');
-  return (current && pastDate) || futureDate;
-};
-
-/**
  * @returns Amount Input
  */
 export const FormItemInputNumber = () => (
@@ -69,16 +58,40 @@ export const FormItemInputNumber = () => (
   </Form.Item>
 );
 
-export const FormItemDate = () => (
-  <Form.Item
-    name="unlockTime"
-    label="Unlock Time"
-    rules={[{ required: true, message: 'Unlock Time is required' }]}
-  >
-    <DatePicker
-      disabledDate={disableDateForUnlockTime}
-      format="MM/DD/YYYY"
-      style={fullWidth}
-    />
-  </Form.Item>
-);
+/**
+ * @returns Date Input
+ * @param {Date} startDate - start date from when the user can select the date
+ * and startDate cannot be less than today.
+ * eg. If increased amount to 5th March 2023 and the current date is 20th Janurary 2023
+ * then the user can select ONLY from the date from 5th March 2023
+ */
+export const FormItemDate = ({ startDate }) => {
+  /**
+   * (can select days after 7 days from today OR
+   * can select from startDate + 7 days) AND
+   * less than 4 years from today
+   */
+  const disableDateForUnlockTime = (current) => {
+    const pastDate = startDate
+      ? current < moment(new Date(startDate)).add(6, 'days').endOf('day')
+      : current < moment().add(7, 'days').endOf('day');
+
+    // do not allow selection for more than 4 years
+    const futureDate = current > moment().add(4, 'years');
+    return (current && pastDate) || futureDate;
+  };
+
+  return (
+    <Form.Item
+      name="unlockTime"
+      label="Unlock Time"
+      rules={[{ required: true, message: 'Unlock Time is required' }]}
+    >
+      <DatePicker
+        disabledDate={disableDateForUnlockTime}
+        format="MM/DD/YYYY"
+        style={fullWidth}
+      />
+    </Form.Item>
+  );
+};

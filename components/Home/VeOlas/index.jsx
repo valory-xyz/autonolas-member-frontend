@@ -54,15 +54,19 @@ const VeOlas = () => {
     FORM_TYPE.increaseAmount,
   );
 
+  const getData = () => {
+    dispatch(fetchOlasBalance());
+    dispatch(fetchVotesAndTotalSupplyLocked());
+    dispatch(fetchMappedBalances());
+    dispatch(fetchIfCanWithdrawVeolas());
+  };
+
   useEffect(() => {
     const fn = async () => {
       if (account && chainId) {
         setIsLoading(true);
         try {
-          dispatch(fetchOlasBalance());
-          dispatch(fetchVotesAndTotalSupplyLocked());
-          dispatch(fetchMappedBalances());
-          dispatch(fetchIfCanWithdrawVeolas());
+          getData();
         } catch (error) {
           window.console.error(error);
         } finally {
@@ -74,7 +78,7 @@ const VeOlas = () => {
   }, [account, chainId]);
 
   /**
-   * on radion button changes
+   * on radio button changes
    */
   const onChange = (e) => {
     window.console.log('radio checked', e.target.value);
@@ -87,7 +91,7 @@ const VeOlas = () => {
       await withdrawRequest({ account, chainId });
       notifySuccess('Withdrawn successfully');
 
-      dispatch(fetchVotesAndTotalSupplyLocked());
+      getData();
     } catch (error) {
       window.console.error(error);
     }

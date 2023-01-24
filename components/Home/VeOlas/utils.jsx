@@ -8,10 +8,13 @@ import {
 } from 'common-util/Contracts';
 
 /**
+ * TERMINOLOGY:
  * spender = LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL
  */
 
-// Increase Amount
+/**
+ * Increase Amount
+ */
 export const updateIncreaseAmount = ({ amount, account, chainId }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 
@@ -31,7 +34,9 @@ export const updateIncreaseAmount = ({ amount, account, chainId }) => new Promis
     });
 });
 
-// Increase Unlock time
+/**
+ * Increase Unlock time
+ */
 export const updateIncreaseUnlockTime = ({ time, account, chainId }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 

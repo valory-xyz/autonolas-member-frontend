@@ -36,7 +36,6 @@ export const CreateLock = () => {
   useEffect(() => {
     if (account && chainId) {
       dispatch(fetchMappedBalances());
-      dispatch(fetchVotesAndTotalSupplyLocked());
     }
   }, [account, chainId]);
 
@@ -51,6 +50,7 @@ export const CreateLock = () => {
 
     // fetch the data again to disable button or show message
     dispatch(fetchMappedBalances());
+    dispatch(fetchVotesAndTotalSupplyLocked());
   };
 
   const onFinish = async () => {

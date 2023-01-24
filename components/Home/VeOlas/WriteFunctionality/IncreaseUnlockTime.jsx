@@ -21,6 +21,9 @@ export const IncreaseUnlockTime = () => {
   const cannotIncreaseTime = useSelector(
     (state) => state?.setup?.mappedBalances?.isMappedAmountZero,
   );
+  const mappedEndTime = useSelector(
+    (state) => state?.setup?.mappedBalances?.endTime || null,
+  );
 
   const [form] = Form.useForm();
 
@@ -57,7 +60,7 @@ export const IncreaseUnlockTime = () => {
         name="increase-amount-form"
         onFinish={onFinish}
       >
-        <FormItemDate />
+        <FormItemDate startDate={mappedEndTime} />
         <Form.Item>
           <Button
             type="primary"
