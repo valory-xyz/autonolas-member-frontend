@@ -12,6 +12,9 @@ const initialState = {
   // olas
   olasBalance: null,
 
+  // veOlas
+  canWithdrawVeolas: false,
+
   // others
   mappedBalances: {
     amount: null,
@@ -40,6 +43,7 @@ export default (state = initialState, action) => {
     }
 
     // olas
+    case syncTypes.SET_CAN_WITHDRAW_VEOLAS:
     case syncTypes.SET_OLAS_BALANCE: {
       return { ...state, ...data };
     }

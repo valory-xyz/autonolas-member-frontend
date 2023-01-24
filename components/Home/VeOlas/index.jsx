@@ -1,16 +1,27 @@
 import { useState, useEffect } from 'react';
-import { Radio, Statistic } from 'antd/lib';
+// import dynamic from 'next/dynamic';
+import { Radio, Statistic, Button } from 'antd/lib';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   fetchOlasBalance,
   fetchMappedBalances,
   fetchVotesAndTotalSupplyLocked,
+  fetchIfCanWithdrawVeolas,
 } from 'store/setup/actions';
-import { formatToEth, getTotalVotesPercentage } from 'common-util/functions';
+import {
+  formatToEth,
+  getTotalVotesPercentage,
+  notifySuccess,
+} from 'common-util/functions';
 import { getToken } from '../common';
 import { IncreaseAmount, IncreaseUnlockTime } from './WriteFunctionality';
+import { withdrawRequest } from './utils';
 import { MiddleContent, SectionHeader, Sections } from '../styles';
 import { VeOlasContainer, WriteFunctionalityContainer } from './styles';
+
+// const { IncreaseAmount, IncreaseUnlockTime } = dynamic(
+//   () => import('./WriteFunctionality/index'),
+// );
 
 const { Countdown } = Statistic;
 
@@ -34,6 +45,9 @@ const VeOlas = () => {
   const totalSupplyLocked = useSelector(
     (state) => state?.setup?.totalSupplyLocked || null,
   );
+  const canWithdrawVeolas = useSelector(
+    (state) => state?.setup?.canWithdrawVeolas || null,
+  );
 
   const [isLoading, setIsLoading] = useState(!!account);
   const [currentFormType, setCurrentFormType] = useState(
@@ -48,6 +62,7 @@ const VeOlas = () => {
           dispatch(fetchOlasBalance());
           dispatch(fetchVotesAndTotalSupplyLocked());
           dispatch(fetchMappedBalances());
+          dispatch(fetchIfCanWithdrawVeolas());
         } catch (error) {
           window.console.error(error);
         } finally {
@@ -58,9 +73,24 @@ const VeOlas = () => {
     fn();
   }, [account, chainId]);
 
+  /**
+   * on radion button changes
+   */
   const onChange = (e) => {
     window.console.log('radio checked', e.target.value);
     setCurrentFormType(e.target.value);
+  };
+
+  // on withdraw
+  const onWithdraw = async () => {
+    try {
+      await withdrawRequest({ account, chainId });
+      notifySuccess('Withdrawn successfully');
+
+      dispatch(fetchVotesAndTotalSupplyLocked());
+    } catch (error) {
+      window.console.error(error);
+    }
   };
 
   return (
@@ -111,20 +141,30 @@ const VeOlas = () => {
       </div>
 
       <WriteFunctionalityContainer>
-        <Radio.Group onChange={onChange} value={currentFormType}>
-          <Radio value={FORM_TYPE.increaseAmount}>Increase Amount</Radio>
-          <Radio value={FORM_TYPE.increaseUnlockTime}>
-            Increase Unlock Time
-          </Radio>
-          {/* <Radio value={FORM_TYPE.claim}>Claim</Radio> */}
-        </Radio.Group>
+        {canWithdrawVeolas ? (
+          <Button type="primary" htmlType="submit" onClick={onWithdraw}>
+            Withdraw
+          </Button>
+        ) : (
+          <>
+            <Radio.Group onChange={onChange} value={currentFormType}>
+              <Radio value={FORM_TYPE.increaseAmount}>Increase Amount</Radio>
+              <Radio value={FORM_TYPE.increaseUnlockTime}>
+                Increase Unlock Time
+              </Radio>
+              {/* <Radio value={FORM_TYPE.claim}>Claim</Radio> */}
+            </Radio.Group>
 
-        <div className="forms-container">
-          {currentFormType === FORM_TYPE.increaseAmount && <IncreaseAmount />}
-          {currentFormType === FORM_TYPE.increaseUnlockTime && (
-            <IncreaseUnlockTime />
-          )}
-        </div>
+            <div className="forms-container">
+              {currentFormType === FORM_TYPE.increaseAmount && (
+                <IncreaseAmount />
+              )}
+              {currentFormType === FORM_TYPE.increaseUnlockTime && (
+                <IncreaseUnlockTime />
+              )}
+            </div>
+          </>
+        )}
       </WriteFunctionalityContainer>
     </VeOlasContainer>
   );

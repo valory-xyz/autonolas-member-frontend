@@ -105,6 +105,20 @@ export const createLockRequest = ({
     });
 });
 
+export const withdrawRequest = ({ account, chainId }) => new Promise((resolve, reject) => {
+  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+
+  contract.methods
+    .withdraw()
+    .send({ from: account })
+    .once('transactionHash', (hash) => resolve(hash))
+    .then((response) => resolve(response?.transactionHash))
+    .catch((e) => {
+      window.console.log('Error occured on withdrawing balance');
+      reject(e);
+    });
+});
+
 /**
  * *********************************************
  * functions not used in the UI

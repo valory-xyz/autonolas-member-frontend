@@ -113,3 +113,35 @@ export const fetchVotesAndTotalSupplyLocked = () => async (dispatch) => {
   dispatch(fetchVotes());
   dispatch(fetchTotalSupplyLocked());
 };
+
+export const fetchIfCanWithdrawVeolas = () => async (dispatch, getState) => {
+  const account = getState()?.setup?.account;
+  const chainId = getState()?.setup?.chainId;
+
+  try {
+    const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+    const balance = await contract.methods
+      .balanceOf(account)
+      .call();
+
+    const lockedEnd = await contract.methods
+      .lockedEnd(account)
+      .call();
+
+    const blockNumber = await window?.WEB3_PROVIDER.eth.getBlockNumber();
+    const blockDetails = await window?.WEB3_PROVIDER.eth.getBlock(blockNumber);
+
+    const canWithdrawVeolas = Number(balance) > 0 && lockedEnd <= blockDetails.timestamp;
+
+    console.log('blockNumber', blockNumber);
+    console.log('blockDetails', blockDetails);
+    console.log('canWithdrawVeolas', canWithdrawVeolas);
+
+    dispatch({
+      type: syncTypes.SET_CAN_WITHDRAW_VEOLAS,
+      data: { canWithdrawVeolas },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};

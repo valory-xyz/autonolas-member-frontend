@@ -49,7 +49,7 @@ export const withdraw = ({
     .once('transactionHash', (hash) => resolve(hash))
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
-      window.console.log('Error occured on creating lock:');
+      window.console.log('Error occured on withdrawing balance');
       reject(e);
     });
 });

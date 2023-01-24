@@ -17,6 +17,7 @@ export const syncTypes = {
   SET_MAPPED_BALANCES: `${reducerName}/Set mapped balances`,
   SET_VOTES: `${reducerName}/Set votes`,
   SET_TOTAL_SUPPLY_LOCKED: `${reducerName}/Set total supply locked`,
+  SET_CAN_WITHDRAW_VEOLAS: `${reducerName}/Set Can Withdraw veOlas`,
 
   SET_STORE_STATE: `${reducerName}/Set Store State`,
 };
