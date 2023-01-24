@@ -91,42 +91,6 @@ export const IncreaseAmount = () => {
         Lock maximum amount
       </Button>
 
-      {/* ========== widthdraw - start==========  */}
-
-      <Button
-        style={{ marginTop: '1rem' }}
-        type="ghost"
-        htmlType="submit"
-        onClick={async () => {
-          console.log('Increase time');
-
-          const oneWeek = 7 * 86400;
-          // ethers.providers.send('evm_increaseTime', [oneWeek]);
-
-          await window.WEB3_PROVIDER.currentProvider.send({
-            jsonrpc: '2.0',
-            method: 'evm_increaseTime',
-            params: [oneWeek],
-            id: 0,
-          }, (e, result) => {
-            if (e) {
-              console.log('error');
-              console.log(e.message);
-              console.log(e.stack);
-            } else {
-              console.log('result', result);
-            }
-          });
-
-          // dispatch(fetchMappedBalances());
-          // dispatch(fetchVotesAndTotalSupplyLocked());
-        }}
-      >
-        Increase time
-      </Button>
-
-      {/* ========== widthdraw - end==========  */}
-
       <br />
       <br />
       {account && (
