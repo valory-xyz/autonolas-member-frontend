@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
-import { Button, Form, Typography } from 'antd/lib';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+  Alert, Button, Form, Typography, Modal,
+} from 'antd/lib';
+import {
+  fetchMappedBalances,
+  fetchVotesAndTotalSupplyLocked,
+} from 'store/setup/actions';
 import { notifyError, notifySuccess } from 'common-util/functions';
 import {
   parseAmount,
@@ -9,39 +14,60 @@ import {
   FormItemDate,
   FormItemInputNumber,
 } from '../../common';
-import { createLock, fetchCanCreateLock } from '../utils';
+import {
+  cannotApproveTokens,
+  approveOlasByOwner,
+  createLockRequest,
+} from '../utils';
 
 const { Title } = Typography;
 
-export const CreateLockComponent = ({ account, chainId }) => {
-  const [isDisabled, setIsDisabled] = useState(true);
+export const CreateLock = () => {
+  const dispatch = useDispatch();
+  const account = useSelector((state) => state?.setup?.account);
+  const chainId = useSelector((state) => state?.setup?.chainId);
+  const isSubmitBtnDisabled = useSelector(
+    (state) => !state?.setup?.mappedBalances?.isMappedAmountZero,
+  );
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm();
 
   useEffect(() => {
     if (account && chainId) {
-      const fn = async () => {
-        const { cannotCreateLock } = await fetchCanCreateLock({
-          account,
-          chainId,
-        });
-        setIsDisabled(cannotCreateLock);
-      };
-      fn();
+      dispatch(fetchMappedBalances());
     }
   }, [account, chainId]);
 
-  const onFinish = async (e) => {
+  const createLockHelper = async () => {
+    const txHash = await createLockRequest({
+      amount: parseAmount(form.getFieldValue('amount')),
+      unlockTime: parseToSeconds(form.getFieldValue('unlockTime')),
+      account,
+      chainId,
+    });
+    notifySuccess('Lock created successfully!', `Transaction Hash: ${txHash}`);
+
+    // fetch the data again to disable button or show message
+    dispatch(fetchMappedBalances());
+    dispatch(fetchVotesAndTotalSupplyLocked());
+  };
+
+  const onFinish = async () => {
     try {
-      const txHash = await createLock({
-        amount: parseAmount(e.amount),
-        unlockTime: parseToSeconds(e.unlockTime),
+      const hasSufficientTokes = await cannotApproveTokens({
         account,
         chainId,
       });
-      notifySuccess(
-        'Lock created successfully!',
-        `Transaction Hash: ${txHash}`,
-      );
+
+      // Approve can be clicked only once. Meaning, the user
+      // will approve the maximum token, and no need to do it again.
+      // Hence, if user has sufficient tokens, create lock without approval
+      if (hasSufficientTokes) {
+        createLockHelper();
+      } else {
+        setIsModalOpen(true);
+      }
     } catch (error) {
       window.console.error(error);
       notifyError('Some error occured');
@@ -62,28 +88,52 @@ export const CreateLockComponent = ({ account, chainId }) => {
         <FormItemInputNumber />
         <FormItemDate />
         <Form.Item>
-          <Button type="primary" htmlType="submit" disabled={isDisabled}>
-            Submit
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={!account || isSubmitBtnDisabled}
+          >
+            Create Lock
           </Button>
         </Form.Item>
       </Form>
+
+      {isSubmitBtnDisabled && (
+        <Alert
+          message="Amount already locked, please wait until the lock expires."
+          type="warning"
+        />
+      )}
+
+      {isModalOpen && (
+        <Modal
+          title="Approve veOlas"
+          visible={isModalOpen}
+          footer={null}
+          onCancel={() => setIsModalOpen(false)}
+        >
+          <Alert
+            message="Before creating lock an approval for veOLAS is required, please approve to proceed"
+            type="warning"
+          />
+
+          <br />
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ right: 'calc(-100% + 100px)', position: 'relative' }}
+            onClick={async () => {
+              await approveOlasByOwner({ account, chainId });
+              setIsModalOpen(false);
+
+              // once approved, create lock
+              await createLockHelper();
+            }}
+          >
+            Approve
+          </Button>
+        </Modal>
+      )}
     </>
   );
 };
-
-CreateLockComponent.propTypes = {
-  account: PropTypes.string,
-  chainId: PropTypes.number,
-};
-
-CreateLockComponent.defaultProps = {
-  account: null,
-  chainId: null,
-};
-
-const mapStateToProps = (state) => {
-  const { account, chainId } = state.setup;
-  return { account, chainId };
-};
-
-export const CreateLock = connect(mapStateToProps, null)(CreateLockComponent);

@@ -1,4 +1,5 @@
-export * from './olasContract';
+export * from './olasContractMainnet';
+export * from './olasContractGoerli';
 export * from './saleContractGoerli';
 export * from './saleContractMainnet';
 export * from './buOlasContractGoerli';

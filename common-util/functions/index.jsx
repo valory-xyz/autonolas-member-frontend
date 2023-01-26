@@ -1,6 +1,12 @@
 import { ethers } from 'ethers';
-import { notification } from 'antd/lib';
+import { notification, Alert } from 'antd/lib';
+import { isNil } from 'lodash';
 import { COLOR } from 'util/theme';
+
+/**
+ * https://docs.ethers.org/v5/api/utils/constants/#constants-MaxUint256
+ */
+export const MAX_AMOUNT = ethers.constants.MaxUint256;
 
 export const getBalance = (account, p) => new Promise((resolve, reject) => {
   p.eth
@@ -20,7 +26,10 @@ export const getBalance = (account, p) => new Promise((resolve, reject) => {
  * @param {Number} dv Default value to be returned
  * @returns
  */
-export const formatToEth = (value, dv = 0) => (+ethers.utils.formatEther(value)).toFixed(4) || dv;
+export const formatToEth = (value, dv = 0) => {
+  if (isNil(value)) return dv || 0;
+  return (+ethers.utils.formatEther(value)).toFixed(8);
+};
 
 export const notifyError = (message = 'Some error occured') => notification.error({
   message,
@@ -32,3 +41,30 @@ export const notifySuccess = (message = 'Successfull', description = null) => no
   description,
   style: { border: `1px solid ${COLOR.PRIMARY}` },
 });
+
+export const CannotIncreaseAlert = () => (
+  <Alert
+    message="You don't have any amount locked, please lock before increasing amount or unlockTime."
+    type="warning"
+  />
+);
+
+export const AlreadyAllAmountLocked = () => (
+  <Alert message="You don't have any OLAS to lock." type="warning" />
+);
+
+export const getTotalVotesPercentage = (votes, totalSupply) => {
+  if (votes && totalSupply) {
+    const votesInBg = ethers.BigNumber.from(votes);
+    const totalSupplyInBg = ethers.BigNumber.from(totalSupply);
+    const votingPowerInPercentage = votesInBg
+      .div(totalSupplyInBg)
+      .mul(100)
+      .toNumber()
+      .toFixed(2);
+
+    return votingPowerInPercentage;
+  }
+
+  return null;
+};

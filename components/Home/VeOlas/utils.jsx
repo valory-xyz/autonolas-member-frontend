@@ -1,100 +1,21 @@
-import { getVeolasContract } from 'common-util/Contracts';
-import { formatToEth } from 'common-util/functions';
+/* eslint-disable max-len */
+import { ethers } from 'ethers';
+import { MAX_AMOUNT } from 'common-util/functions';
+import {
+  getVeolasContract,
+  getOlasContract,
+  getContractAddress,
+} from 'common-util/Contracts';
 
-export const fetchBalanceOf = ({ account, chainId }) => new Promise((resolve, reject) => {
-  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+/**
+ * TERMINOLOGY:
+ * spender = LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL
+ */
 
-  contract.methods
-    .balanceOf(account)
-    .call()
-    .then((response) => {
-      resolve(formatToEth(response));
-    })
-    .catch((e) => {
-      window.console.log('Error occured on fetching balance:');
-      reject(e);
-    });
-});
-
-export const fetchVotes = ({ account, chainId }) => new Promise((resolve, reject) => {
-  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
-
-  contract.methods
-    .getVotes(account)
-    .call()
-    .then((response) => {
-      resolve(formatToEth(response));
-    })
-    .catch((e) => {
-      window.console.log('Error occured on fetching balance:');
-      reject(e);
-    });
-});
-
-export const fetchTotalSupplyLocked = ({ chainId }) => new Promise((resolve, reject) => {
-  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
-
-  contract.methods
-    .totalSupplyLocked()
-    .call()
-    .then((response) => {
-      resolve(formatToEth(response));
-    })
-    .catch((e) => {
-      window.console.log('Error occured on fetching balance:');
-      reject(e);
-    });
-});
-
-export const fetchMapLockedBalances = ({ account, chainId }) => new Promise((resolve, reject) => {
-  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
-
-  contract.methods
-    .mapLockedBalances(account)
-    .call()
-    .then((response) => {
-      // multiplied by 1000 to convert to milliseconds
-      resolve({
-        amount: formatToEth(response.amount),
-        endTime: response.endTime * 1000,
-      });
-    })
-    .catch((e) => {
-      window.console.log('Error occured on fetching MapLockedBalances:');
-      reject(e);
-    });
-});
-
-export const fetchCanCreateLock = async ({ account, chainId }) => {
-  try {
-    const { amount } = await fetchMapLockedBalances({ account, chainId });
-    return Promise.resolve({
-      cannotCreateLock: !!(amount && Number(amount) !== 0),
-    });
-  } catch (error) {
-    return Promise.reject(error);
-  }
-};
-
-// Create lock
-export const createLock = ({
-  amount, unlockTime, account, chainId,
-}) => new Promise((resolve, reject) => {
-  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
-
-  contract.methods
-    .createLock(amount, unlockTime)
-    .send({ from: account })
-    .once('transactionHash', (hash) => resolve(hash))
-    .then((response) => resolve(response?.transactionHash))
-    .catch((e) => {
-      window.console.log('Error occured on creating lock:');
-      reject(e);
-    });
-});
-
-// Increase Amount
-export const increaseAmount = ({ amount, account, chainId }) => new Promise((resolve, reject) => {
+/**
+ * Increase Amount
+ */
+export const updateIncreaseAmount = ({ amount, account, chainId }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 
   contract.methods
@@ -108,8 +29,10 @@ export const increaseAmount = ({ amount, account, chainId }) => new Promise((res
     });
 });
 
-// Increase Unlock time
-export const increaseUnlockTime = ({ time, account, chainId }) => new Promise((resolve, reject) => {
+/**
+ * Increase Unlock time
+ */
+export const updateIncreaseUnlockTime = ({ time, account, chainId }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 
   contract.methods
@@ -118,7 +41,86 @@ export const increaseUnlockTime = ({ time, account, chainId }) => new Promise((r
     .once('transactionHash', (hash) => resolve(hash))
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
-      window.console.log('Error occured on increasing amount:');
+      window.console.log('Error occured on increasing unlock time:');
+      reject(e);
+    });
+});
+
+/**
+ * Check if `Approve` button can be clicked; `allowance` returns 0 or
+ * MAX_AMOUNT if already approved. Can read more
+ * [here](https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#IERC20-allowance-address-address-).
+ */
+export const cannotApproveTokens = ({ account, chainId }) => new Promise((resolve, reject) => {
+  const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
+  const spender = getContractAddress('veOlas', chainId);
+
+  contract.methods
+    .allowance(account, spender)
+    .call()
+    .then((response) => {
+      // check if the allowance is equal to MAX_AMOUNT
+      resolve(ethers.BigNumber.from(response).eq(MAX_AMOUNT));
+    })
+    .catch((e) => {
+      window.console.log('Error occured on calling `allowance` method');
+      reject(e);
+    });
+});
+
+/**
+ * Approve amount of OLAS to be used
+ */
+export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve, reject) => {
+  const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
+  const spender = getContractAddress('veOlas', chainId);
+
+  contract.methods
+    .approve(spender, MAX_AMOUNT)
+    .send({ from: account })
+    .then((response) => {
+      resolve(response);
+    })
+    .catch((e) => {
+      window.console.log('Error occured on approving OLAS by owner:');
+      reject(e);
+    });
+});
+
+/**
+ * Create lock
+ */
+export const createLockRequest = ({
+  amount, unlockTime, account, chainId,
+}) => new Promise((resolve, reject) => {
+  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+
+  contract.methods
+    .createLock(amount, unlockTime)
+    .send({ from: account })
+    .once('transactionHash', (hash) => resolve(hash))
+    .then((response) => {
+      resolve(response?.transactionHash);
+    })
+    .catch((e) => {
+      window.console.log('Error occured on creating lock:');
+      reject(e);
+    });
+});
+
+/**
+ * Withdraw VeOlas
+ */
+export const withdrawVeolasRequest = ({ account, chainId }) => new Promise((resolve, reject) => {
+  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+
+  contract.methods
+    .withdraw()
+    .send({ from: account })
+    .once('transactionHash', (hash) => resolve(hash))
+    .then((response) => resolve(response?.transactionHash))
+    .catch((e) => {
+      window.console.log('Error occured on withdrawing veOlas');
       reject(e);
     });
 });

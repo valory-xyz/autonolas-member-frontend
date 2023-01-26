@@ -37,8 +37,10 @@ export const fetchReleasableAmount = ({ account, chainId }) => new Promise((reso
     });
 });
 
-// Create lock
-export const withdraw = ({
+/**
+ * Withdraw
+ */
+export const withdrawRequest = ({
   account, chainId,
 }) => new Promise((resolve, reject) => {
   const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
@@ -49,7 +51,7 @@ export const withdraw = ({
     .once('transactionHash', (hash) => resolve(hash))
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
-      window.console.log('Error occured on creating lock:');
+      window.console.log('Error occured on withdrawing balance');
       reject(e);
     });
 });

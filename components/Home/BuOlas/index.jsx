@@ -7,7 +7,7 @@ import { getToken } from '../common';
 import {
   fetchMapLockedBalances,
   fetchReleasableAmount,
-  withdraw,
+  withdrawRequest,
 } from './utils';
 import { MiddleContent, SectionHeader, Sections } from '../styles';
 import { BuOlasContainer, WriteFunctionalityContainer } from './styles';
@@ -18,7 +18,6 @@ const BuOlas = ({ account, chainId }) => {
   const [mappedBalances, setMappedBalances] = useState(null);
   const [releasableAmount, setReleasableAmount] = useState(null);
 
-  // withdraw
   const [isWithdrawLoading, setIsWithdrawLoading] = useState(false);
 
   useEffect(() => {
@@ -51,7 +50,7 @@ const BuOlas = ({ account, chainId }) => {
     if (account && chainId) {
       setIsWithdrawLoading(true);
       try {
-        await withdraw({ account, chainId });
+        await withdrawRequest({ account, chainId });
       } catch (error) {
         window.console.error(error);
       } finally {

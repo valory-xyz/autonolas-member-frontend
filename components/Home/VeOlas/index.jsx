@@ -1,14 +1,23 @@
 import { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Radio, Statistic } from 'antd/lib';
+import { Radio, Statistic, Button } from 'antd/lib';
+import { isNil } from 'lodash';
+import {
+  fetchOlasBalance,
+  fetchMappedBalances,
+  fetchVotesAndTotalSupplyLocked,
+  fetchIfCanWithdrawVeolas,
+} from 'store/setup/actions';
+import {
+  formatToEth,
+  getTotalVotesPercentage,
+  notifySuccess,
+} from 'common-util/functions';
+import { TAB_KEYS } from 'common-util/constants';
 import { getToken } from '../common';
 import { IncreaseAmount, IncreaseUnlockTime } from './WriteFunctionality';
-import {
-  fetchVotes,
-  fetchTotalSupplyLocked,
-  fetchMapLockedBalances,
-} from './utils';
+import { withdrawVeolasRequest } from './utils';
 import { MiddleContent, SectionHeader, Sections } from '../styles';
 import { VeOlasContainer, WriteFunctionalityContainer } from './styles';
 
@@ -20,33 +29,42 @@ const FORM_TYPE = {
   claim: 'typeClaim',
 };
 
-const VeOlas = ({ account, chainId }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [votes, setVotesCount] = useState(null);
-  const [totalSupplyLocked, setTotalSupplyLocked] = useState(null);
-  const [mappedAmount, setMappedAmount] = useState(null);
-  const [mappedEndTime, setMappedEndTime] = useState(null);
+const VeOlas = ({ setActiveTab }) => {
+  const dispatch = useDispatch();
+  const account = useSelector((state) => state?.setup?.account);
+  const chainId = useSelector((state) => state?.setup?.chainId);
+  const mappedAmount = useSelector(
+    (state) => state?.setup?.mappedBalances?.amount || null,
+  );
+  const mappedEndTime = useSelector(
+    (state) => state?.setup?.mappedBalances?.endTime || null,
+  );
+  const votes = useSelector((state) => state?.setup?.votes || null);
+  const totalSupplyLocked = useSelector(
+    (state) => state?.setup?.totalSupplyLocked || null,
+  );
+  const canWithdrawVeolas = useSelector(
+    (state) => state?.setup?.canWithdrawVeolas,
+  );
+
+  const [isLoading, setIsLoading] = useState(!!account);
   const [currentFormType, setCurrentFormType] = useState(
     FORM_TYPE.increaseAmount,
   );
+
+  const getData = () => {
+    dispatch(fetchOlasBalance());
+    dispatch(fetchVotesAndTotalSupplyLocked());
+    dispatch(fetchMappedBalances());
+    dispatch(fetchIfCanWithdrawVeolas());
+  };
 
   useEffect(() => {
     const fn = async () => {
       if (account && chainId) {
         setIsLoading(true);
         try {
-          const votesResponse = await fetchVotes({ account, chainId });
-          setVotesCount(votesResponse);
-
-          const total = await fetchTotalSupplyLocked({ chainId });
-          setTotalSupplyLocked(total);
-
-          const { amount, endTime } = await fetchMapLockedBalances({
-            account,
-            chainId,
-          });
-          setMappedAmount(amount);
-          setMappedEndTime(endTime);
+          getData();
         } catch (error) {
           window.console.error(error);
         } finally {
@@ -57,35 +75,30 @@ const VeOlas = ({ account, chainId }) => {
     fn();
   }, [account, chainId]);
 
-  // Create Lock
-  const onChange = (e) => {
-    window.console.log('radio checked', e.target.value);
+  /**
+   * on radio button changes
+   */
+  const onRadioBtnChange = (e) => {
     setCurrentFormType(e.target.value);
+  };
+
+  const onWithdraw = async () => {
+    try {
+      await withdrawVeolasRequest({ account, chainId });
+      notifySuccess('Withdrawn successfully');
+
+      // fetch all the data again to update
+      // amount, time, votes, etc
+      getData();
+      setActiveTab(TAB_KEYS.createLock);
+    } catch (error) {
+      window.console.error(error);
+    }
   };
 
   return (
     <VeOlasContainer>
       <div className="left-content">
-        {/* TODO: delete? */}
-        <MiddleContent
-          className="balance-container"
-          style={{ display: 'none' }}
-        >
-          <SectionHeader>veOLAS Balance</SectionHeader>
-          <Sections>
-            {getToken({
-              tokenName: 'Votes',
-              token: votes,
-              isLoading,
-            })}
-            {getToken({
-              tokenName: 'Total Voting power',
-              token: totalSupplyLocked,
-              isLoading,
-            })}
-          </Sections>
-        </MiddleContent>
-
         <MiddleContent className="balance-container">
           <SectionHeader>Locked OLAS</SectionHeader>
           <Sections>
@@ -97,54 +110,81 @@ const VeOlas = ({ account, chainId }) => {
             {getToken({
               tokenName: 'Unlocking time',
               isLoading,
-              token: (
-                <>
-                  {mappedEndTime ? (
-                    <Countdown value={mappedEndTime} format="MM DD HH:mm:ss" />
-                  ) : (
-                    '--'
-                  )}
-                </>
+              token: mappedEndTime ? (
+                <Countdown value={mappedEndTime} format="MM DD HH:mm:ss" />
+              ) : (
+                '--'
               ),
+            })}
+          </Sections>
+        </MiddleContent>
+
+        <MiddleContent className="balance-container">
+          <SectionHeader>Voting power</SectionHeader>
+          <Sections>
+            {getToken({
+              tokenName: 'Votes',
+              token: formatToEth(votes),
+              isLoading,
+            })}
+            {getToken({
+              tokenName: 'Total Voting power %',
+              token:
+                Number(votes) === 0 || Number(totalSupplyLocked) === 0
+                  ? '--'
+                  : `${getTotalVotesPercentage(votes, totalSupplyLocked)}%`,
+              isLoading,
             })}
           </Sections>
         </MiddleContent>
       </div>
 
       <WriteFunctionalityContainer>
-        <Radio.Group onChange={onChange} value={currentFormType}>
-          <Radio value={FORM_TYPE.increaseAmount}>Increase Amount</Radio>
-          <Radio value={FORM_TYPE.increaseUnlockTime}>
-            Increase Unlock Time
-          </Radio>
-          {/* <Radio value={FORM_TYPE.claim}>Claim</Radio> */}
-        </Radio.Group>
+        {/* to avoid glitch, show the component only if `canWithdrawVeolas`
+        is either true or false (default value is null) */}
+        {!isNil(canWithdrawVeolas) && (
+          <>
+            {canWithdrawVeolas ? (
+              <Button type="primary" htmlType="submit" onClick={onWithdraw}>
+                Withdraw
+              </Button>
+            ) : (
+              <>
+                <Radio.Group
+                  onChange={onRadioBtnChange}
+                  value={currentFormType}
+                >
+                  <Radio value={FORM_TYPE.increaseAmount}>
+                    Increase Amount
+                  </Radio>
+                  <Radio value={FORM_TYPE.increaseUnlockTime}>
+                    Increase Unlock Time
+                  </Radio>
+                </Radio.Group>
 
-        <div className="forms-container">
-          {currentFormType === FORM_TYPE.increaseAmount && <IncreaseAmount />}
-          {currentFormType === FORM_TYPE.increaseUnlockTime && (
-            <IncreaseUnlockTime />
-          )}
-          {currentFormType === FORM_TYPE.claim && <IncreaseAmount />}
-        </div>
+                <div className="forms-container">
+                  {currentFormType === FORM_TYPE.increaseAmount && (
+                    <IncreaseAmount />
+                  )}
+                  {currentFormType === FORM_TYPE.increaseUnlockTime && (
+                    <IncreaseUnlockTime />
+                  )}
+                </div>
+              </>
+            )}
+          </>
+        )}
       </WriteFunctionalityContainer>
     </VeOlasContainer>
   );
 };
 
 VeOlas.propTypes = {
-  account: PropTypes.string,
-  chainId: PropTypes.number,
+  setActiveTab: PropTypes.func,
 };
 
 VeOlas.defaultProps = {
-  account: null,
-  chainId: null,
+  setActiveTab: () => {},
 };
 
-const mapStateToProps = (state) => {
-  const { account, chainId } = state.setup;
-  return { account, chainId };
-};
-
-export default connect(mapStateToProps, null)(VeOlas);
+export default VeOlas;

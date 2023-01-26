@@ -1,18 +1,35 @@
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Button, Form, Typography } from 'antd/lib';
-import { notifyError, notifySuccess } from 'common-util/functions';
+import {
+  fetchMappedBalances,
+  fetchVotesAndTotalSupplyLocked,
+} from 'store/setup/actions';
+import {
+  notifyError,
+  notifySuccess,
+  CannotIncreaseAlert,
+} from 'common-util/functions';
 import { parseToSeconds, FormItemDate } from '../../common';
-import { increaseUnlockTime } from '../utils';
+import { updateIncreaseUnlockTime } from '../utils';
 
 const { Title } = Typography;
 
-const IncreaseUnlockTimeComponent = ({ account, chainId }) => {
+export const IncreaseUnlockTime = () => {
+  const dispatch = useDispatch();
+  const account = useSelector((state) => state?.setup?.account);
+  const chainId = useSelector((state) => state?.setup?.chainId);
+  const cannotIncreaseTime = useSelector(
+    (state) => state?.setup?.mappedBalances?.isMappedAmountZero,
+  );
+  const mappedEndTime = useSelector(
+    (state) => state?.setup?.mappedBalances?.endTime || null,
+  );
+
   const [form] = Form.useForm();
 
   const onFinish = async (e) => {
     try {
-      const txHash = await increaseUnlockTime({
+      const txHash = await updateIncreaseUnlockTime({
         time: parseToSeconds(e.unlockTime),
         account,
         chainId,
@@ -21,9 +38,14 @@ const IncreaseUnlockTimeComponent = ({ account, chainId }) => {
         'Unlock time increased successfully!',
         `Transaction Hash: ${txHash}`,
       );
+
+      // once the unlockTime is increased,
+      // fetch the newly updated mapped balances & votes.
+      dispatch(fetchMappedBalances());
+      dispatch(fetchVotesAndTotalSupplyLocked());
     } catch (error) {
       window.console.error(error);
-      notifyError('Some error occured');
+      notifyError('Some error occured <IncreaseUnlockTime />');
     }
   };
 
@@ -35,36 +57,22 @@ const IncreaseUnlockTimeComponent = ({ account, chainId }) => {
         form={form}
         layout="vertical"
         autoComplete="off"
-        name="increase-amount-form"
+        name="increase-unlock-time-form"
         onFinish={onFinish}
       >
-        <FormItemDate />
+        <FormItemDate startDate={mappedEndTime} />
         <Form.Item>
-          <Button type="primary" htmlType="submit" disabled={!account}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={!account || cannotIncreaseTime}
+          >
             Submit
           </Button>
         </Form.Item>
       </Form>
+
+      {cannotIncreaseTime && <CannotIncreaseAlert />}
     </>
   );
 };
-
-IncreaseUnlockTimeComponent.propTypes = {
-  account: PropTypes.string,
-  chainId: PropTypes.number,
-};
-
-IncreaseUnlockTimeComponent.defaultProps = {
-  account: null,
-  chainId: null,
-};
-
-const mapStateToProps = (state) => {
-  const { account, chainId } = state.setup;
-  return { account, chainId };
-};
-
-export const IncreaseUnlockTime = connect(
-  mapStateToProps,
-  null,
-)(IncreaseUnlockTimeComponent);
