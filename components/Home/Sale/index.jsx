@@ -40,14 +40,14 @@ const Sale = ({
   const [tokens, setTokens] = useState(null);
 
   const getOlasBalance = async () => {
-    const temp = await claimableBalancesRequest({ account, chainId });
-    setTokens(temp);
+    if (account && chainId) {
+      const temp = await claimableBalancesRequest({ account, chainId });
+      setTokens(temp);
+    }
   };
 
   useEffect(() => {
-    if (account && chainId) {
-      getOlasBalance();
-    }
+    getOlasBalance();
   }, [account, chainId]);
 
   const setBalance = async (accountPassed) => {

@@ -5,6 +5,7 @@ export const claimableBalancesRequest = ({ account, chainId }) => new Promise((r
 
   contract.methods
     .claimableBalances(account)
+    .call()
     .then((response) => resolve(response))
     .catch((e) => {
       window.console.log('Error occured on fetching claimableBalances');
