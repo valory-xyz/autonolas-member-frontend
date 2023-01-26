@@ -96,7 +96,7 @@ export const IncreaseAmount = () => {
       {account && (
         <>
           {isMappedAmountZero && <CannotIncreaseAlert />}
-          {hasNoOlasBalance && <AlreadyAllAmountLocked />}
+          {(hasNoOlasBalance && !isMappedAmountZero) && <AlreadyAllAmountLocked />}
         </>
       )}
     </>
