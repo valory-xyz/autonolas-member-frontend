@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -11,11 +11,11 @@ import {
 } from 'store/setup/actions';
 import { CustomButton } from 'common-util/Button';
 import { getBalance } from 'common-util/functions';
-import { DataContext } from 'common-util/context';
 import { getSaleContract } from 'common-util/Contracts';
 import AlertInfo from 'components/AlertInfo';
 import { COLOR } from 'util/theme';
 import { getToken } from '../common';
+import { claimableBalancesRequest } from './utils';
 import {
   BoxContainer,
   MiddleContent,
@@ -34,19 +34,25 @@ const TRANSACTION_STATE = {
 const Sale = ({
   account, chainId, setUserBalance, setErrorMessage,
 }) => {
-  const {
-    web3Provider,
-    olasBalances: tokens,
-    setOlasBalances,
-  } = useContext(DataContext);
-
   const [isClaimLoading, setClaimLoading] = useState(false);
   const [transactionState, setTransactionState] = useState(null);
   const [transactionId, setTransactionId] = useState(null);
+  const [tokens, setTokens] = useState(null);
+
+  const getOlasBalance = async () => {
+    const temp = await claimableBalancesRequest({ account, chainId });
+    setTokens(temp);
+  };
+
+  useEffect(() => {
+    if (account && chainId) {
+      getOlasBalance();
+    }
+  }, [account, chainId]);
 
   const setBalance = async (accountPassed) => {
     try {
-      const result = await getBalance(accountPassed, web3Provider);
+      const result = await getBalance(accountPassed, window.MODAL_PROVIDER);
       setUserBalance(result);
     } catch (error) {
       setErrorMessage(error);
@@ -75,12 +81,7 @@ const Sale = ({
         /* re-fetch tokens, balance after 3 seconds */
         setTimeout(async () => {
           await setBalance(account);
-
-          const balancesAfterClaim = await contract.methods
-            .claimableBalances(account)
-            .call();
-
-          setOlasBalances(balancesAfterClaim);
+          getOlasBalance();
         }, 3000);
       })
       .catch((error) => {
