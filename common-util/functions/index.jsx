@@ -3,6 +3,9 @@ import { notification, Alert } from 'antd/lib';
 import { isNil } from 'lodash';
 import { COLOR } from 'util/theme';
 
+/**
+ * https://docs.ethers.org/v5/api/utils/constants/#constants-MaxUint256
+ */
 export const MAX_AMOUNT = ethers.constants.MaxUint256;
 
 export const getBalance = (account, p) => new Promise((resolve, reject) => {

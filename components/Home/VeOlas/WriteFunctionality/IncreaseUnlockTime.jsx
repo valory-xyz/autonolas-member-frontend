@@ -45,7 +45,7 @@ export const IncreaseUnlockTime = () => {
       dispatch(fetchVotesAndTotalSupplyLocked());
     } catch (error) {
       window.console.error(error);
-      notifyError('Some error occured');
+      notifyError('Some error occured <IncreaseUnlockTime />');
     }
   };
 
@@ -57,7 +57,7 @@ export const IncreaseUnlockTime = () => {
         form={form}
         layout="vertical"
         autoComplete="off"
-        name="increase-amount-form"
+        name="increase-unlock-time-form"
         onFinish={onFinish}
       >
         <FormItemDate startDate={mappedEndTime} />

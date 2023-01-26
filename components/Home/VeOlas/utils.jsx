@@ -18,11 +18,6 @@ import {
 export const updateIncreaseAmount = ({ amount, account, chainId }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 
-  // console.log({
-  //   amount,
-  //   account,
-  //   chainId,
-  // });
   contract.methods
     .increaseAmount(amount)
     .send({ from: account })
@@ -46,14 +41,15 @@ export const updateIncreaseUnlockTime = ({ time, account, chainId }) => new Prom
     .once('transactionHash', (hash) => resolve(hash))
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
-      window.console.log('Error occured on increasing amount:');
+      window.console.log('Error occured on increasing unlock time:');
       reject(e);
     });
 });
 
 /**
- * Check if `Approve` button can be clicked.
- * `allowance` returns 0 or MAX_AMOUNT if already approved
+ * Check if `Approve` button can be clicked; `allowance` returns 0 or
+ * MAX_AMOUNT if already approved. Can read more
+ * [here](https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#IERC20-allowance-address-address-).
  */
 export const cannotApproveTokens = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
@@ -62,7 +58,7 @@ export const cannotApproveTokens = ({ account, chainId }) => new Promise((resolv
   contract.methods
     .allowance(account, spender)
     .call()
-    .then(async (response) => {
+    .then((response) => {
       // check if the allowance is equal to MAX_AMOUNT
       resolve(ethers.BigNumber.from(response).eq(MAX_AMOUNT));
     })
@@ -82,7 +78,7 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
   contract.methods
     .approve(spender, MAX_AMOUNT)
     .send({ from: account })
-    .then(async (response) => {
+    .then((response) => {
       resolve(response);
     })
     .catch((e) => {
@@ -98,10 +94,12 @@ export const createLockRequest = ({
   amount, unlockTime, account, chainId,
 }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+
   contract.methods
     .createLock(amount, unlockTime)
     .send({ from: account })
-    .then(async (response) => {
+    .once('transactionHash', (hash) => resolve(hash))
+    .then((response) => {
       resolve(response?.transactionHash);
     })
     .catch((e) => {
@@ -122,13 +120,7 @@ export const withdrawVeolasRequest = ({ account, chainId }) => new Promise((reso
     .once('transactionHash', (hash) => resolve(hash))
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
-      window.console.log('Error occured on withdrawing balance');
+      window.console.log('Error occured on withdrawing veOlas');
       reject(e);
     });
 });
-
-/**
- * *********************************************
- * functions not used in the UI
- * *********************************************
- */

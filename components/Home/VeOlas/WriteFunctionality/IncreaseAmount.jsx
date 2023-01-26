@@ -28,7 +28,7 @@ export const IncreaseAmount = () => {
   const hasNoOlasBalance = Number(olasBalance || '0') === 0;
 
   /**
-   * can increase amount only if the mapped amount is zero (i.e. no lock exists)
+   * can increase amount only if the mapped amount is zero (ie. no lock exists)
    * or if the user has some olas tokens.
    */
   const cannotIncreaseAmount = isMappedAmountZero || hasNoOlasBalance || !account;

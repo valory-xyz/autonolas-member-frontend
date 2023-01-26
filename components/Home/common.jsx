@@ -18,11 +18,13 @@ export const getToken = ({ tokenName, token, isLoading = false }) => (
   </div>
 );
 
-// multiply by 10^18
+/**
+ * multiplies the amount by 10^18
+ */
 export const parseAmount = (amount) => ethers.utils.parseUnits(`${amount}`, 18).toString();
 
 /**
- * Parses to second by doing the following operation in order
+ * Parses to seconds by doing the following operation in order
  * 1. convert to milliseconds
  * 2. divide by 100 to convert to seconds
  * 3. remove decimals
@@ -62,13 +64,14 @@ export const FormItemInputNumber = () => (
  * @returns Date Input
  * @param {Date} startDate - start date from when the user can select the date
  * and startDate cannot be less than today.
+ *
  * eg. If increased amount to 5th March 2023 and the current date is 20th Janurary 2023
  * then the user can select ONLY from the date from 5th March 2023
  */
 export const FormItemDate = ({ startDate }) => {
   /**
    * (can select days after 7 days from today OR
-   * can select from startDate + 7 days) AND
+   * can select from [startDate + 7 days]) AND
    * less than 4 years from today
    */
   const disableDateForUnlockTime = (current) => {

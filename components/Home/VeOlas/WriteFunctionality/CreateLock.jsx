@@ -39,7 +39,7 @@ export const CreateLock = () => {
     }
   }, [account, chainId]);
 
-  const createLockFn = async () => {
+  const createLockHelper = async () => {
     const txHash = await createLockRequest({
       amount: parseAmount(form.getFieldValue('amount')),
       unlockTime: parseToSeconds(form.getFieldValue('unlockTime')),
@@ -64,7 +64,7 @@ export const CreateLock = () => {
       // will approve the maximum token, and no need to do it again.
       // Hence, if user has sufficient tokens, create lock without approval
       if (hasSufficientTokes) {
-        createLockFn();
+        createLockHelper();
       } else {
         setIsModalOpen(true);
       }
@@ -113,7 +113,7 @@ export const CreateLock = () => {
           onCancel={() => setIsModalOpen(false)}
         >
           <Alert
-            message="Before creating you lock an approval for veOLAS is required, please approve to proceed"
+            message="Before creating lock an approval for veOLAS is required, please approve to proceed"
             type="warning"
           />
 
@@ -127,7 +127,7 @@ export const CreateLock = () => {
               setIsModalOpen(false);
 
               // once approved, create lock
-              await createLockFn();
+              await createLockHelper();
             }}
           >
             Approve

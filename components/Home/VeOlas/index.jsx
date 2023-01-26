@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Radio, Statistic, Button } from 'antd/lib';
-import { useSelector, useDispatch } from 'react-redux';
 import { isNil } from 'lodash';
 import {
   fetchOlasBalance,
@@ -78,17 +78,17 @@ const VeOlas = ({ setActiveTab }) => {
   /**
    * on radio button changes
    */
-  const onChange = (e) => {
-    window.console.log('radio checked', e.target.value);
+  const onRadioBtnChange = (e) => {
     setCurrentFormType(e.target.value);
   };
 
-  // on withdraw
   const onWithdraw = async () => {
     try {
       await withdrawVeolasRequest({ account, chainId });
       notifySuccess('Withdrawn successfully');
 
+      // fetch all the data again to update
+      // amount, time, votes, etc
       getData();
       setActiveTab(TAB_KEYS.createLock);
     } catch (error) {
@@ -110,14 +110,10 @@ const VeOlas = ({ setActiveTab }) => {
             {getToken({
               tokenName: 'Unlocking time',
               isLoading,
-              token: (
-                <>
-                  {mappedEndTime ? (
-                    <Countdown value={mappedEndTime} format="MM DD HH:mm:ss" />
-                  ) : (
-                    '--'
-                  )}
-                </>
+              token: mappedEndTime ? (
+                <Countdown value={mappedEndTime} format="MM DD HH:mm:ss" />
+              ) : (
+                '--'
               ),
             })}
           </Sections>
@@ -144,6 +140,8 @@ const VeOlas = ({ setActiveTab }) => {
       </div>
 
       <WriteFunctionalityContainer>
+        {/* to avoid glitch, show the component only if `canWithdrawVeolas`
+        is either true or false (default value is null) */}
         {!isNil(canWithdrawVeolas) && (
           <>
             {canWithdrawVeolas ? (
@@ -152,14 +150,16 @@ const VeOlas = ({ setActiveTab }) => {
               </Button>
             ) : (
               <>
-                <Radio.Group onChange={onChange} value={currentFormType}>
+                <Radio.Group
+                  onChange={onRadioBtnChange}
+                  value={currentFormType}
+                >
                   <Radio value={FORM_TYPE.increaseAmount}>
                     Increase Amount
                   </Radio>
                   <Radio value={FORM_TYPE.increaseUnlockTime}>
                     Increase Unlock Time
                   </Radio>
-                  {/* <Radio value={FORM_TYPE.claim}>Claim</Radio> */}
                 </Radio.Group>
 
                 <div className="forms-container">
