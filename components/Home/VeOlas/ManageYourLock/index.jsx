@@ -15,10 +15,11 @@ import {
   notifySuccess,
 } from 'common-util/functions';
 import { TAB_KEYS } from 'common-util/constants';
-import { getToken } from '../common';
-import { IncreaseAmount, IncreaseUnlockTime } from './WriteFunctionality';
-import { withdrawVeolasRequest } from './utils';
-import { MiddleContent, SectionHeader, Sections } from '../styles';
+import { getToken } from '../../common';
+import { withdrawVeolasRequest } from '../utils';
+import { IncreaseAmount } from './IncreaseAmount';
+import { IncreaseUnlockTime } from './IncreaseUnlockTime';
+import { MiddleContent, SectionHeader, Sections } from '../../styles';
 import { VeOlasContainer, WriteFunctionalityContainer } from './styles';
 
 const { Countdown } = Statistic;

@@ -19,6 +19,7 @@ import {
   approveOlasByOwner,
   createLockRequest,
 } from '../utils';
+import { CreateLockContainer } from './styles';
 
 const { Title } = Typography;
 
@@ -75,7 +76,7 @@ export const CreateLock = () => {
   };
 
   return (
-    <>
+    <CreateLockContainer>
       <Title level={3}>Create Lock</Title>
 
       <Form
@@ -134,6 +135,6 @@ export const CreateLock = () => {
           </Button>
         </Modal>
       )}
-    </>
+    </CreateLockContainer>
   );
 };
