@@ -59,8 +59,3 @@ export const SectionFooter = styled.div`
   margin-top: 1.25rem;
   color: ${COLOR.GREY_2};
 `;
-
-export const CreateLockContainer = styled.div`
-  max-width: 300px;
-  margin: 0 auto;
-`;

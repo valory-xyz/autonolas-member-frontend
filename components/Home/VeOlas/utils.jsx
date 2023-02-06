@@ -21,7 +21,6 @@ export const updateIncreaseAmount = ({ amount, account, chainId }) => new Promis
   contract.methods
     .increaseAmount(amount)
     .send({ from: account })
-    .once('transactionHash', (hash) => resolve(hash))
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
       window.console.log('Error occured on increasing amount:');
@@ -38,7 +37,6 @@ export const updateIncreaseUnlockTime = ({ time, account, chainId }) => new Prom
   contract.methods
     .increaseUnlockTime(time)
     .send({ from: account })
-    .once('transactionHash', (hash) => resolve(hash))
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
       window.console.log('Error occured on increasing unlock time:');
@@ -98,7 +96,6 @@ export const createLockRequest = ({
   contract.methods
     .createLock(amount, unlockTime)
     .send({ from: account })
-    .once('transactionHash', (hash) => resolve(hash))
     .then((response) => {
       resolve(response?.transactionHash);
     })
@@ -117,7 +114,6 @@ export const withdrawVeolasRequest = ({ account, chainId }) => new Promise((reso
   contract.methods
     .withdraw()
     .send({ from: account })
-    .once('transactionHash', (hash) => resolve(hash))
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
       window.console.log('Error occured on withdrawing veOlas');

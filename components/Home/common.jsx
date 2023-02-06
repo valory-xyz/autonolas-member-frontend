@@ -40,12 +40,12 @@ export const parseToSeconds = (unlockTime) => {
 /**
  * @returns Amount Input
  */
-export const FormItemInputNumber = () => (
+export const FormItemInputNumber = ({ isRequired = true }) => (
   <Form.Item
     name="amount"
     label="Amount"
     rules={[
-      { required: true, message: 'Amount is required' },
+      { required: isRequired, message: 'Amount is required' },
       () => ({
         validator(_, value) {
           if (value === '' || isNil(value)) return Promise.resolve();
@@ -56,7 +56,7 @@ export const FormItemInputNumber = () => (
       }),
     ]}
   >
-    <InputNumber style={fullWidth} placeholder="Add amount" />
+    <InputNumber style={fullWidth} placeholder="Add amount" disabled={!isRequired} />
   </Form.Item>
 );
 
