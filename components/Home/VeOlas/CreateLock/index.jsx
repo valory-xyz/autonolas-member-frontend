@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Alert, Button, Form, Typography, Modal,
+  Alert, Button, Form, Typography, Modal, Checkbox,
 } from 'antd/lib';
 import {
+  fetchOlasBalance,
   fetchMappedBalances,
   fetchVotesAndTotalSupplyLocked,
 } from 'store/setup/actions';
@@ -27,22 +28,32 @@ export const CreateLock = () => {
   const dispatch = useDispatch();
   const account = useSelector((state) => state?.setup?.account);
   const chainId = useSelector((state) => state?.setup?.chainId);
+  const olasBalance = useSelector((state) => state?.setup?.olasBalance);
   const isSubmitBtnDisabled = useSelector(
     (state) => !state?.setup?.mappedBalances?.isMappedAmountZero,
   );
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [canLockMaxAmount, setCheckMaxAmount] = useState(false);
+
   const [form] = Form.useForm();
 
   useEffect(() => {
     if (account && chainId) {
+      dispatch(fetchOlasBalance());
       dispatch(fetchMappedBalances());
     }
   }, [account, chainId]);
 
+  const onCheckboxChange = (e) => {
+    setCheckMaxAmount(e.target.checked);
+  };
+
   const createLockHelper = async () => {
     const txHash = await createLockRequest({
-      amount: parseAmount(form.getFieldValue('amount')),
+      amount: canLockMaxAmount
+        ? olasBalance
+        : parseAmount(form.getFieldValue('amount')),
       unlockTime: parseToSeconds(form.getFieldValue('unlockTime')),
       account,
       chainId,
@@ -56,6 +67,7 @@ export const CreateLock = () => {
 
   const onFinish = async () => {
     try {
+      await form.validateFields();
       const hasSufficientTokes = await cannotApproveTokens({
         account,
         chainId,
@@ -86,7 +98,12 @@ export const CreateLock = () => {
         name="create-lock-form"
         onFinish={onFinish}
       >
-        <FormItemInputNumber />
+        <FormItemInputNumber isRequired={!canLockMaxAmount} />
+        <Form.Item>
+          <Checkbox checked={canLockMaxAmount} onChange={onCheckboxChange}>
+            Lock maximum amount
+          </Checkbox>
+        </Form.Item>
         <FormItemDate />
         <Form.Item>
           <Button

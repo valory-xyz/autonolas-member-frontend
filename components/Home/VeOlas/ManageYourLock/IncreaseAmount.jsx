@@ -102,8 +102,3 @@ export const IncreaseAmount = () => {
     </>
   );
 };
-
-/**
- * 1. lock maximum amount in main page
- * 2. locking time to be reflected
- */
