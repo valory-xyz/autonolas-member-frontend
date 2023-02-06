@@ -106,6 +106,4 @@ export const IncreaseAmount = () => {
 /**
  * 1. lock maximum amount in main page
  * 2. locking time to be reflected
- * 3. unlocking time to be more readable
- * 4. delete SALE
  */

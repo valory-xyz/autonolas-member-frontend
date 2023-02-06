@@ -48,7 +48,6 @@ export const withdrawRequest = ({
   contract.methods
     .withdraw()
     .send({ from: account })
-    .once('transactionHash', (hash) => resolve(hash))
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
       window.console.log('Error occured on withdrawing balance');
