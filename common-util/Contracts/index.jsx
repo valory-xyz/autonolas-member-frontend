@@ -1,10 +1,5 @@
 import Web3 from 'web3';
 import {
-  SALE_ADDRESS_MAINNET,
-  SALE_ABI_MAINNET,
-  SALE_ADDRESS_GOERLI,
-  SALE_ABI_GOERLI,
-
   // Olas
   OLAS_ABI_GOERLI,
   OLAS_ADDRESS_GOERLI,
@@ -63,17 +58,6 @@ export const getContractAddress = (type, chainId) => {
       return OLAS_ADDRESS_MAINNET;
     }
   }
-};
-
-export const getSaleContract = (p, chainId) => {
-  const web3 = new Web3(p);
-
-  // Goerli has separate contract
-  const contract = new web3.eth.Contract(
-    chainId === 5 ? SALE_ABI_GOERLI : SALE_ABI_MAINNET,
-    chainId === 5 ? SALE_ADDRESS_GOERLI : SALE_ADDRESS_MAINNET,
-  );
-  return contract;
 };
 
 export const getOlasContract = (p, chainId) => {
