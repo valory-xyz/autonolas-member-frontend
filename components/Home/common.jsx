@@ -24,6 +24,11 @@ export const getToken = ({ tokenName, token, isLoading = false }) => (
 export const parseAmount = (amount) => ethers.utils.parseUnits(`${amount}`, 18).toString();
 
 /**
+ * parse eth
+ */
+export const parseEther = (n) => ethers.utils.parseEther(`${n}`);
+
+/**
  * Parse to Eth
  * eg. 1000000000000000000 => 1
  */

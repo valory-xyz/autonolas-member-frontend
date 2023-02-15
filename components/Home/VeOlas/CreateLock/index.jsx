@@ -25,7 +25,7 @@ import { CreateLockContainer } from './styles';
 
 const { Title } = Typography;
 
-export const CreateLock = () => {
+export const VeolasCreateLock = () => {
   const dispatch = useDispatch();
   const account = useSelector((state) => state?.setup?.account);
   const chainId = useSelector((state) => state?.setup?.chainId);

@@ -30,7 +30,7 @@ const FORM_TYPE = {
   claim: 'typeClaim',
 };
 
-const VeOlas = ({ setActiveTab }) => {
+export const VeolasManage = ({ setActiveTab }) => {
   const dispatch = useDispatch();
   const account = useSelector((state) => state?.setup?.account);
   const chainId = useSelector((state) => state?.setup?.chainId);
@@ -180,12 +180,10 @@ const VeOlas = ({ setActiveTab }) => {
   );
 };
 
-VeOlas.propTypes = {
+VeolasManage.propTypes = {
   setActiveTab: PropTypes.func,
 };
 
-VeOlas.defaultProps = {
+VeolasManage.defaultProps = {
   setActiveTab: () => {},
 };
-
-export default VeOlas;

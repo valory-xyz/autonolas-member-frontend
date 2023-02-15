@@ -7,12 +7,12 @@ import {
   fetchMapLockedBalances,
   fetchLockedEnd,
 } from 'store/setup/actions';
-import { getToken } from '../common';
+import { getToken } from '../../common';
 import { withdrawRequest } from './utils';
-import { MiddleContent, SectionHeader, Sections } from '../styles';
-import { BuOlasContainer, WriteFunctionalityContainer } from './styles';
+import { MiddleContent, SectionHeader, Sections } from '../../styles';
+import { BuOlasContainer, WriteFunctionalityContainer } from '../styles';
 
-const BuOlas = () => {
+export const BuolasManage = () => {
   const dispatch = useDispatch();
   const account = useSelector((state) => state?.setup?.account);
   const chainId = useSelector((state) => state?.setup?.chainId);
@@ -123,5 +123,3 @@ const BuOlas = () => {
     </BuOlasContainer>
   );
 };
-
-export default BuOlas;
