@@ -8,7 +8,8 @@ import BuOlas from './BuOlas';
 const { TabPane } = Tabs;
 
 const Home = () => {
-  const [activeKey, setActiveKey] = useState(TAB_KEYS.createLock);
+  // const [activeKey, setActiveKey] = useState(TAB_KEYS.createLock);
+  const [activeKey, setActiveKey] = useState(TAB_KEYS.buOlas);
 
   return (
     <>
