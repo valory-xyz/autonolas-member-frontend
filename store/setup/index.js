@@ -28,6 +28,12 @@ const initialState = {
   // buOlas
   buolasBalance: null,
   buolasReleasableAmount: null,
+  buolasMappedBalances: {
+    amount: null,
+    startTime: null,
+    endTime: null,
+    transferredAmount: null,
+  },
 };
 
 export default (state = initialState, action) => {
@@ -64,7 +70,8 @@ export default (state = initialState, action) => {
 
     // buOlas
     case syncTypes.SET_BUOLAS_BALANCEOF:
-    case syncTypes.SET_BUOLAS_RELEASABLE_AMOUNT: {
+    case syncTypes.SET_BUOLAS_RELEASABLE_AMOUNT:
+    case syncTypes.SET_BUOLAS_MAPPED_BALANCES: {
       return { ...state, ...data };
     }
     default:

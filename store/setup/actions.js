@@ -178,7 +178,35 @@ export const fetchReleasableAmount = () => async (dispatch, getState) => {
       data: { buolasReleasableAmount: formatToEth(response) },
     });
   } catch (error) {
-    window.console.log('Error occured on fetching buOla ReleasableAmount');
+    window.console.log('Error occured on fetching buOlas ReleasableAmount');
+    console.error(error);
+  }
+};
+
+export const fetchMapLockedBalances = () => async (dispatch, getState) => {
+  const account = getState()?.setup?.account;
+  const chainId = getState()?.setup?.chainId;
+
+  try {
+    const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
+    const response = await contract.methods
+      .mapLockedBalances(account)
+      .call();
+
+    dispatch({
+      type: syncTypes.SET_BUOLAS_MAPPED_BALANCES,
+      data: {
+        // multiplied by 1000 to convert to milliseconds
+        buolasMappedBalances: {
+          amount: formatToEth(response.totalAmount),
+          startTime: response.startTime * 1000,
+          endTime: response.endTime * 1000,
+          transferredAmount: response.transferredAmount,
+        },
+      },
+    });
+  } catch (error) {
+    window.console.log('Error occured on fetching buOlas MapLockedBalances');
     console.error(error);
   }
 };

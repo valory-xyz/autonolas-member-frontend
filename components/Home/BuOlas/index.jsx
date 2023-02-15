@@ -1,20 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'antd/lib';
-// import get from 'lodash/get';
 import {
   fetchBuolasBalance,
   fetchReleasableAmount,
-  // fetchMappedBalances,
-  // fetchVotesAndTotalSupplyLocked,
+  fetchMapLockedBalances,
 } from 'store/setup/actions';
 import { getToken } from '../common';
-import {
-  fetchMapLockedBalances,
-  withdrawRequest,
-} from './utils';
+import { withdrawRequest } from './utils';
 import { MiddleContent, SectionHeader, Sections } from '../styles';
 import { BuOlasContainer, WriteFunctionalityContainer } from './styles';
+
+const isLoading = false;
 
 const BuOlas = () => {
   const dispatch = useDispatch();
@@ -26,34 +23,19 @@ const BuOlas = () => {
   const buolasReleasableAmount = useSelector(
     (state) => state?.setup?.buolasReleasableAmount || null,
   );
+  const mappedBalances = useSelector(
+    (state) => state?.setup?.buolasMappedBalances || null,
+  );
 
   // balances
-  const [isLoading, setIsLoading] = useState(true);
-  const [mappedBalances, setMappedBalances] = useState(null);
-
   const [isWithdrawLoading, setIsWithdrawLoading] = useState(false);
 
   useEffect(() => {
-    const fn = async () => {
-      if (account && chainId) {
-        dispatch(fetchBuolasBalance());
-        dispatch(fetchReleasableAmount());
-
-        setIsLoading(true);
-        try {
-          const values = await fetchMapLockedBalances({
-            account,
-            chainId,
-          });
-          setMappedBalances(values);
-        } catch (error) {
-          window.console.error(error);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-    };
-    fn();
+    if (account && chainId) {
+      dispatch(fetchBuolasBalance());
+      dispatch(fetchMapLockedBalances());
+      dispatch(fetchReleasableAmount());
+    }
   }, [account, chainId]);
 
   const onWithdraw = async () => {
@@ -115,13 +97,12 @@ const BuOlas = () => {
               isLoading,
             })}
             {getToken({
-              tokenName: 'Eend Time',
+              tokenName: 'End Time',
               token: endTime ? new Date(endTime).toLocaleString() : '--',
               isLoading,
             })}
           </Sections>
         </MiddleContent>
-
       </div>
 
       <WriteFunctionalityContainer>
