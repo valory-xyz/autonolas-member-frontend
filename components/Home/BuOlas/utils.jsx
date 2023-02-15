@@ -22,21 +22,6 @@ export const fetchMapLockedBalances = ({ account, chainId }) => new Promise((res
     });
 });
 
-export const fetchReleasableAmount = ({ account, chainId }) => new Promise((resolve, reject) => {
-  const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
-
-  contract.methods
-    .releasableAmount(account)
-    .call()
-    .then((response) => {
-      resolve(formatToEth(response));
-    })
-    .catch((e) => {
-      window.console.log('Error occured on fetching ReleasableAmount:');
-      reject(e);
-    });
-});
-
 /**
  * Withdraw
  */

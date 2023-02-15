@@ -1,6 +1,6 @@
 import { formatToEth } from 'common-util/functions';
 import {
-  getVeolasContract, getOlasContract,
+  getVeolasContract, getOlasContract, getBuolasContract,
 } from 'common-util/Contracts';
 import { syncTypes } from './_types';
 
@@ -139,6 +139,46 @@ export const fetchIfCanWithdrawVeolas = () => async (dispatch, getState) => {
       data: { canWithdrawVeolas },
     });
   } catch (error) {
+    console.error(error);
+  }
+};
+
+// buOlas
+export const fetchBuolasBalance = () => async (dispatch, getState) => {
+  const account = getState()?.setup?.account;
+  const chainId = getState()?.setup?.chainId;
+
+  try {
+    const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
+    const response = await contract.methods
+      .balanceOf(account)
+      .call();
+
+    dispatch({
+      type: syncTypes.SET_BUOLAS_BALANCEOF,
+      data: { buolasBalance: response },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const fetchReleasableAmount = () => async (dispatch, getState) => {
+  const account = getState()?.setup?.account;
+  const chainId = getState()?.setup?.chainId;
+
+  try {
+    const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
+    const response = await contract.methods
+      .releasableAmount(account)
+      .call();
+
+    dispatch({
+      type: syncTypes.SET_BUOLAS_RELEASABLE_AMOUNT,
+      data: { buolasReleasableAmount: formatToEth(response) },
+    });
+  } catch (error) {
+    window.console.log('Error occured on fetching buOla ReleasableAmount');
     console.error(error);
   }
 };

@@ -14,10 +14,14 @@ export const syncTypes = {
   SET_OLAS_BALANCE: `${reducerName}/OLAS - balance`,
 
   // veOlas
-  SET_MAPPED_BALANCES: `${reducerName}/Set mapped balances`,
-  SET_VOTES: `${reducerName}/Set votes`,
-  SET_TOTAL_SUPPLY_LOCKED: `${reducerName}/Set total supply locked`,
-  SET_CAN_WITHDRAW_VEOLAS: `${reducerName}/Set Can Withdraw veOlas`,
+  SET_MAPPED_BALANCES: `${reducerName}/Set veOlas - mapped balances`,
+  SET_VOTES: `${reducerName}/Set veOlas - votes`,
+  SET_TOTAL_SUPPLY_LOCKED: `${reducerName}/Set veOlas - total supply locked`,
+  SET_CAN_WITHDRAW_VEOLAS: `${reducerName}/Set veOlas - Can Withdraw veOlas`,
+
+  // buOlas
+  SET_BUOLAS_BALANCEOF: `${reducerName}/Set buOlas - balanceOf`,
+  SET_BUOLAS_RELEASABLE_AMOUNT: `${reducerName}/Set buOlas - releasable amount`,
 
   SET_STORE_STATE: `${reducerName}/Set Store State`,
 };

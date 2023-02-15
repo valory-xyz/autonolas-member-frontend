@@ -1,28 +1,44 @@
 import { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Button } from 'antd/lib';
-import PropTypes from 'prop-types';
 // import get from 'lodash/get';
+import {
+  fetchBuolasBalance,
+  fetchReleasableAmount,
+  // fetchMappedBalances,
+  // fetchVotesAndTotalSupplyLocked,
+} from 'store/setup/actions';
 import { getToken } from '../common';
 import {
   fetchMapLockedBalances,
-  fetchReleasableAmount,
   withdrawRequest,
 } from './utils';
 import { MiddleContent, SectionHeader, Sections } from '../styles';
 import { BuOlasContainer, WriteFunctionalityContainer } from './styles';
 
-const BuOlas = ({ account, chainId }) => {
+const BuOlas = () => {
+  const dispatch = useDispatch();
+  const account = useSelector((state) => state?.setup?.account);
+  const chainId = useSelector((state) => state?.setup?.chainId);
+  const buOlasBalance = useSelector(
+    (state) => state?.setup?.buolasBalance || null,
+  );
+  const buolasReleasableAmount = useSelector(
+    (state) => state?.setup?.buolasReleasableAmount || null,
+  );
+
   // balances
   const [isLoading, setIsLoading] = useState(true);
   const [mappedBalances, setMappedBalances] = useState(null);
-  const [releasableAmount, setReleasableAmount] = useState(null);
 
   const [isWithdrawLoading, setIsWithdrawLoading] = useState(false);
 
   useEffect(() => {
     const fn = async () => {
       if (account && chainId) {
+        dispatch(fetchBuolasBalance());
+        dispatch(fetchReleasableAmount());
+
         setIsLoading(true);
         try {
           const values = await fetchMapLockedBalances({
@@ -30,12 +46,6 @@ const BuOlas = ({ account, chainId }) => {
             chainId,
           });
           setMappedBalances(values);
-
-          const rAmount = await fetchReleasableAmount({
-            account,
-            chainId,
-          });
-          setReleasableAmount(rAmount);
         } catch (error) {
           window.console.error(error);
         } finally {
@@ -67,6 +77,26 @@ const BuOlas = ({ account, chainId }) => {
     <BuOlasContainer>
       <div className="left-content">
         <MiddleContent className="balance-container">
+          <SectionHeader>Balance Of</SectionHeader>
+          <Sections>
+            {getToken({
+              tokenName: 'Balance Of',
+              token: buOlasBalance || '--',
+            })}
+          </Sections>
+        </MiddleContent>
+
+        <MiddleContent className="balance-container">
+          <SectionHeader>Releasable Amount</SectionHeader>
+          <Sections>
+            {getToken({
+              tokenName: 'Amount',
+              token: buolasReleasableAmount || '--',
+            })}
+          </Sections>
+        </MiddleContent>
+
+        <MiddleContent className="balance-container">
           <SectionHeader>Locked Balances</SectionHeader>
           <Sections>
             {getToken({
@@ -92,16 +122,6 @@ const BuOlas = ({ account, chainId }) => {
           </Sections>
         </MiddleContent>
 
-        <MiddleContent className="balance-container">
-          <SectionHeader>Releasable Amount</SectionHeader>
-          <Sections>
-            {getToken({
-              tokenName: 'Amount',
-              token: releasableAmount || '--',
-              isLoading,
-            })}
-          </Sections>
-        </MiddleContent>
       </div>
 
       <WriteFunctionalityContainer>
@@ -113,19 +133,4 @@ const BuOlas = ({ account, chainId }) => {
   );
 };
 
-BuOlas.propTypes = {
-  account: PropTypes.string,
-  chainId: PropTypes.number,
-};
-
-BuOlas.defaultProps = {
-  account: null,
-  chainId: null,
-};
-
-const mapStateToProps = (state) => {
-  const { account, chainId } = state.setup;
-  return { account, chainId };
-};
-
-export default connect(mapStateToProps, null)(BuOlas);
+export default BuOlas;

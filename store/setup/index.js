@@ -24,6 +24,10 @@ const initialState = {
   votes: null,
   totalSupplyLocked: null,
   votingPowerInPercentage: null,
+
+  // buOlas
+  buolasBalance: null,
+  buolasReleasableAmount: null,
 };
 
 export default (state = initialState, action) => {
@@ -58,6 +62,11 @@ export default (state = initialState, action) => {
       return { ...state, ...data };
     }
 
+    // buOlas
+    case syncTypes.SET_BUOLAS_BALANCEOF:
+    case syncTypes.SET_BUOLAS_RELEASABLE_AMOUNT: {
+      return { ...state, ...data };
+    }
     default:
       return state;
   }
