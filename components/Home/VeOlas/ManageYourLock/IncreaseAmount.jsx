@@ -12,7 +12,7 @@ import {
   fetchMappedBalances,
   fetchVotesAndTotalSupplyLocked,
 } from 'store/setup/actions';
-import { parseAmount, FormItemInputNumber } from '../../common';
+import { parseAmount, FormItemInputNumber, parseToEth } from '../../common';
 import { updateIncreaseAmount } from '../utils';
 
 const { Title } = Typography;
@@ -68,7 +68,7 @@ export const IncreaseAmount = () => {
         name="increase-amount-form"
         onFinish={onFinish}
       >
-        <FormItemInputNumber />
+        <FormItemInputNumber maxAmount={parseToEth(olasBalance)} />
         <Form.Item>
           <Button
             type="primary"
@@ -96,7 +96,9 @@ export const IncreaseAmount = () => {
       {account && (
         <>
           {isMappedAmountZero && <CannotIncreaseAlert />}
-          {(hasNoOlasBalance && !isMappedAmountZero) && <AlreadyAllAmountLocked />}
+          {hasNoOlasBalance && !isMappedAmountZero && (
+            <AlreadyAllAmountLocked />
+          )}
         </>
       )}
     </>

@@ -110,6 +110,7 @@ export const fetchTotalSupplyLocked = () => async (dispatch, getState) => {
 };
 
 export const fetchVotesAndTotalSupplyLocked = () => async (dispatch) => {
+  dispatch(fetchOlasBalance());
   dispatch(fetchVotes());
   dispatch(fetchTotalSupplyLocked());
 };
