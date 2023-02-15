@@ -24,6 +24,12 @@ export const getToken = ({ tokenName, token, isLoading = false }) => (
 export const parseAmount = (amount) => ethers.utils.parseUnits(`${amount}`, 18).toString();
 
 /**
+ * Parse to Eth
+ * eg. 1000000000000000000 => 1
+ */
+export const parseToEth = (amount) => (amount ? ethers.utils.formatEther(`${amount}`) : 0);
+
+/**
  * Parses to seconds by doing the following operation in order
  * 1. convert to milliseconds
  * 2. divide by 100 to convert to seconds
@@ -40,7 +46,7 @@ export const parseToSeconds = (unlockTime) => {
 /**
  * @returns Amount Input
  */
-export const FormItemInputNumber = ({ isRequired = true }) => (
+export const FormItemInputNumber = ({ isRequired = true, maxAmount }) => (
   <Form.Item
     name="amount"
     label="Amount"
@@ -49,14 +55,24 @@ export const FormItemInputNumber = ({ isRequired = true }) => (
       () => ({
         validator(_, value) {
           if (value === '' || isNil(value)) return Promise.resolve();
-          return value <= 1
-            ? Promise.reject(new Error('Please input a valid amount'))
-            : Promise.resolve();
+          if (value <= 1) {
+            return Promise.reject(new Error('Please input a valid amount'));
+          }
+          if (maxAmount && value > maxAmount) {
+            return Promise.reject(
+              new Error('Amount cannot be greater than the balance'),
+            );
+          }
+          return Promise.resolve();
         },
       }),
     ]}
   >
-    <InputNumber style={fullWidth} placeholder="Add amount" disabled={!isRequired} />
+    <InputNumber
+      style={fullWidth}
+      placeholder="Add amount"
+      disabled={!isRequired}
+    />
   </Form.Item>
 );
 

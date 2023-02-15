@@ -11,6 +11,7 @@ import {
 import { notifyError, notifySuccess } from 'common-util/functions';
 import {
   parseAmount,
+  parseToEth,
   parseToSeconds,
   FormItemDate,
   FormItemInputNumber,
@@ -98,7 +99,10 @@ export const CreateLock = () => {
         name="create-lock-form"
         onFinish={onFinish}
       >
-        <FormItemInputNumber isRequired={!canLockMaxAmount} />
+        <FormItemInputNumber
+          isRequired={!canLockMaxAmount}
+          maxAmount={parseToEth(olasBalance)}
+        />
         <Form.Item>
           <Checkbox checked={canLockMaxAmount} onChange={onCheckboxChange}>
             Lock maximum amount
