@@ -210,3 +210,23 @@ export const fetchMapLockedBalances = () => async (dispatch, getState) => {
     console.error(error);
   }
 };
+
+export const fetchLockedEnd = () => async (dispatch, getState) => {
+  const account = getState()?.setup?.account;
+  const chainId = getState()?.setup?.chainId;
+
+  try {
+    const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
+    const response = await contract.methods
+      .lockedEnd(account)
+      .call();
+
+    dispatch({
+      type: syncTypes.SET_BUOLAS_LOCKED_END,
+      data: { buolasLockedEnd: response },
+    });
+  } catch (error) {
+    window.console.log('Error occured on fetching buOlas lockedEnd');
+    console.error(error);
+  }
+};

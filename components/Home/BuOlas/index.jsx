@@ -5,13 +5,12 @@ import {
   fetchBuolasBalance,
   fetchReleasableAmount,
   fetchMapLockedBalances,
+  fetchLockedEnd,
 } from 'store/setup/actions';
 import { getToken } from '../common';
 import { withdrawRequest } from './utils';
 import { MiddleContent, SectionHeader, Sections } from '../styles';
 import { BuOlasContainer, WriteFunctionalityContainer } from './styles';
-
-const isLoading = false;
 
 const BuOlas = () => {
   const dispatch = useDispatch();
@@ -19,6 +18,9 @@ const BuOlas = () => {
   const chainId = useSelector((state) => state?.setup?.chainId);
   const buOlasBalance = useSelector(
     (state) => state?.setup?.buolasBalance || null,
+  );
+  const lockedEnd = useSelector(
+    (state) => state?.setup?.buolasLockedEnd || null,
   );
   const buolasReleasableAmount = useSelector(
     (state) => state?.setup?.buolasReleasableAmount || null,
@@ -35,6 +37,7 @@ const BuOlas = () => {
       dispatch(fetchBuolasBalance());
       dispatch(fetchMapLockedBalances());
       dispatch(fetchReleasableAmount());
+      dispatch(fetchLockedEnd());
     }
   }, [account, chainId]);
 
@@ -59,11 +62,15 @@ const BuOlas = () => {
     <BuOlasContainer>
       <div className="left-content">
         <MiddleContent className="balance-container">
-          <SectionHeader>Balance Of</SectionHeader>
+          <SectionHeader>Balance Of & Locked End</SectionHeader>
           <Sections>
             {getToken({
               tokenName: 'Balance Of',
               token: buOlasBalance || '--',
+            })}
+            {getToken({
+              tokenName: 'Locked End',
+              token: lockedEnd || '--',
             })}
           </Sections>
         </MiddleContent>
@@ -84,32 +91,35 @@ const BuOlas = () => {
             {getToken({
               tokenName: 'Amount',
               token: amount || '--',
-              isLoading,
             })}
             {getToken({
               tokenName: 'Transferred Amount',
               token: transferredAmount || '--',
-              isLoading,
             })}
             {getToken({
               tokenName: 'Start Time',
               token: startTime ? new Date(startTime).toLocaleString() : '--',
-              isLoading,
             })}
             {getToken({
               tokenName: 'End Time',
               token: endTime ? new Date(endTime).toLocaleString() : '--',
-              isLoading,
             })}
           </Sections>
         </MiddleContent>
       </div>
 
-      <WriteFunctionalityContainer>
-        <Button type="primary" onClick={onWithdraw} loading={isWithdrawLoading}>
-          Withdraw
-        </Button>
-      </WriteFunctionalityContainer>
+      {/* show Withdraw button only if releaseable amount > 0 */}
+      {buolasReleasableAmount > 0 && (
+        <WriteFunctionalityContainer>
+          <Button
+            type="primary"
+            onClick={onWithdraw}
+            loading={isWithdrawLoading}
+          >
+            Withdraw
+          </Button>
+        </WriteFunctionalityContainer>
+      )}
     </BuOlasContainer>
   );
 };
