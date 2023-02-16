@@ -29,12 +29,6 @@ export const parseAmount = (amount) => ethers.utils.parseUnits(`${amount}`, 18).
 export const parseEther = (n) => ethers.utils.parseEther(`${n}`);
 
 /**
- * Parse to Eth
- * eg. 1000000000000000000 => 1
- */
-export const parseToEth = (amount) => (amount ? ethers.utils.formatEther(`${amount}`) : 0);
-
-/**
  * Parses to seconds by doing the following operation in order
  * 1. convert to milliseconds
  * 2. divide by 100 to convert to seconds

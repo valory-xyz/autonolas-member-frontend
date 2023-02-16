@@ -1,6 +1,7 @@
 import { getContractAddress, getBuolasContract, getOlasContract } from 'common-util/Contracts';
 import { MAX_AMOUNT } from 'common-util/functions';
 import { parseEther } from 'components/Home/common';
+// import { parseAmount } from 'components/Home/common';
 
 export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
@@ -26,7 +27,8 @@ export const createBuolasLockRequest = ({ account, chainId }) => new Promise((re
   const signer = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8';
   const values = {
     signer,
-    amount: parseEther(1),
+    amount: parseEther(100),
+    // amount: parseAmount(100),
     numSteps: 4,
   };
 

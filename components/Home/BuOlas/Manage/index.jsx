@@ -16,7 +16,7 @@ export const BuolasManage = () => {
   const dispatch = useDispatch();
   const account = useSelector((state) => state?.setup?.account);
   const chainId = useSelector((state) => state?.setup?.chainId);
-  const buOlasBalance = useSelector(
+  const buolasBalance = useSelector(
     (state) => state?.setup?.buolasBalance || null,
   );
   const lockedEnd = useSelector(
@@ -66,7 +66,7 @@ export const BuolasManage = () => {
           <Sections>
             {getToken({
               tokenName: 'Balance Of',
-              token: buOlasBalance || '--',
+              token: buolasBalance || '--',
             })}
             {getToken({
               tokenName: 'Locked End',
@@ -98,11 +98,11 @@ export const BuolasManage = () => {
             })}
             {getToken({
               tokenName: 'Start Time',
-              token: startTime ? new Date(startTime).toLocaleString() : '--',
+              token: startTime ? new Date(startTime).toLocaleDateString() : '--',
             })}
             {getToken({
               tokenName: 'End Time',
-              token: endTime ? new Date(endTime).toLocaleString() : '--',
+              token: endTime ? new Date(endTime).toLocaleDateString() : '--',
             })}
           </Sections>
         </MiddleContent>

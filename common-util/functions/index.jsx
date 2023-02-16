@@ -31,6 +31,12 @@ export const formatToEth = (value, dv = 0) => {
   return (+ethers.utils.formatEther(value)).toFixed(8);
 };
 
+/**
+ * Same as `formatToEth` but doesn't fixes the decimal to 8
+ * eg. 1000000000000000000 => 1
+ */
+export const parseToEth = (amount) => (amount ? ethers.utils.formatEther(`${amount}`) : 0);
+
 export const notifyError = (message = 'Some error occured') => notification.error({
   message,
   style: { border: `1px solid ${COLOR.PRIMARY}` },

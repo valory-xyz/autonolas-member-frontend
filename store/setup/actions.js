@@ -156,7 +156,7 @@ export const fetchBuolasBalance = () => async (dispatch, getState) => {
 
     dispatch({
       type: syncTypes.SET_BUOLAS_BALANCEOF,
-      data: { buolasBalance: response },
+      data: { buolasBalance: formatToEth(response) },
     });
   } catch (error) {
     console.error(error);

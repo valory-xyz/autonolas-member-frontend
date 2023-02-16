@@ -8,10 +8,9 @@ import {
   fetchMappedBalances,
   fetchVotesAndTotalSupplyLocked,
 } from 'store/setup/actions';
-import { notifyError, notifySuccess } from 'common-util/functions';
+import { parseToEth, notifyError, notifySuccess } from 'common-util/functions';
 import {
   parseAmount,
-  parseToEth,
   parseToSeconds,
   FormItemDate,
   FormItemInputNumber,

@@ -3,6 +3,7 @@ import {
   Button, Form, Typography, Divider,
 } from 'antd/lib';
 import {
+  parseToEth,
   notifyError,
   notifySuccess,
   CannotIncreaseAlert,
@@ -12,7 +13,7 @@ import {
   fetchMappedBalances,
   fetchVotesAndTotalSupplyLocked,
 } from 'store/setup/actions';
-import { parseAmount, FormItemInputNumber, parseToEth } from '../../common';
+import { parseAmount, FormItemInputNumber } from '../../common';
 import { updateIncreaseAmount } from '../utils';
 
 const { Title } = Typography;
