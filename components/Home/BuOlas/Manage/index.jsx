@@ -16,18 +16,13 @@ export const BuolasManage = () => {
   const buolasBalance = useSelector(
     (state) => state?.setup?.buolasBalance || null,
   );
-  const lockedEnd = useSelector(
-    (state) => state?.setup?.buolasLockedEnd || null,
-  );
   const buolasReleasableAmount = useSelector(
     (state) => state?.setup?.buolasReleasableAmount || null,
   );
-  // const buolasReleasableAmount = '0.0';
   const mappedBalances = useSelector(
     (state) => state?.setup?.buolasMappedBalances || null,
   );
 
-  // balances
   const [isWithdrawLoading, setIsWithdrawLoading] = useState(false);
 
   useEffect(() => {
@@ -50,55 +45,27 @@ export const BuolasManage = () => {
     }
   };
 
-  const {
-    amount, startTime, endTime, transferredAmount,
-  } = mappedBalances || {};
-
   return (
     <BuOlasContainer>
       <div className="left-content">
         <MiddleContent className="balance-container">
-          <SectionHeader>Balance Of & Locked End</SectionHeader>
+          <SectionHeader>Locked Balances</SectionHeader>
           <Sections>
             {getToken({
               tokenName: 'Balance Of',
               token: buolasBalance || '--',
             })}
             {getToken({
-              tokenName: 'Locked End',
-              token: getTime(lockedEnd),
-            })}
-          </Sections>
-        </MiddleContent>
-
-        <MiddleContent className="balance-container">
-          <SectionHeader>Releasable Amount</SectionHeader>
-          <Sections>
-            {getToken({
               tokenName: 'Amount',
               token: buolasReleasableAmount || '--',
             })}
-          </Sections>
-        </MiddleContent>
-
-        <MiddleContent className="balance-container">
-          <SectionHeader>Locked Balances</SectionHeader>
-          <Sections>
             {getToken({
-              tokenName: 'Amount',
-              token: amount || '--',
+              tokenName: 'Lock Time',
+              token: getTime(mappedBalances?.startTime),
             })}
             {getToken({
-              tokenName: 'Transferred Amount',
-              token: transferredAmount || '--',
-            })}
-            {getToken({
-              tokenName: 'Start Time',
-              token: getTime(startTime),
-            })}
-            {getToken({
-              tokenName: 'End Time',
-              token: getTime(endTime),
+              tokenName: 'Unlock Time',
+              token: getTime(mappedBalances?.endTime),
             })}
           </Sections>
         </MiddleContent>
