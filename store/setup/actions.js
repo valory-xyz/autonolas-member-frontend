@@ -201,7 +201,7 @@ export const fetchMapLockedBalances = () => async (dispatch, getState) => {
           amount: formatToEth(response.totalAmount),
           startTime: response.startTime * 1000,
           endTime: response.endTime * 1000,
-          transferredAmount: response.transferredAmount,
+          transferredAmount: formatToEth(response.transferredAmount),
         },
       },
     });

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button } from 'antd/lib';
+import { Button, Alert } from 'antd/lib';
 import {
   fetchBuolasBalance,
   fetchReleasableAmount,
@@ -25,6 +25,7 @@ export const BuolasManage = () => {
   const buolasReleasableAmount = useSelector(
     (state) => state?.setup?.buolasReleasableAmount || null,
   );
+  // const buolasReleasableAmount = '0.0';
   const mappedBalances = useSelector(
     (state) => state?.setup?.buolasMappedBalances || null,
   );
@@ -32,12 +33,16 @@ export const BuolasManage = () => {
   // balances
   const [isWithdrawLoading, setIsWithdrawLoading] = useState(false);
 
+  const fetchBuolasDetails = () => {
+    dispatch(fetchBuolasBalance());
+    dispatch(fetchMapLockedBalances());
+    dispatch(fetchReleasableAmount());
+    dispatch(fetchLockedEnd());
+  };
+
   useEffect(() => {
     if (account && chainId) {
-      dispatch(fetchBuolasBalance());
-      dispatch(fetchMapLockedBalances());
-      dispatch(fetchReleasableAmount());
-      dispatch(fetchLockedEnd());
+      fetchBuolasDetails();
     }
   }, [account, chainId]);
 
@@ -46,6 +51,7 @@ export const BuolasManage = () => {
       setIsWithdrawLoading(true);
       try {
         await withdrawRequest({ account, chainId });
+        fetchBuolasDetails();
       } catch (error) {
         window.console.error(error);
       } finally {
@@ -98,7 +104,9 @@ export const BuolasManage = () => {
             })}
             {getToken({
               tokenName: 'Start Time',
-              token: startTime ? new Date(startTime).toLocaleDateString() : '--',
+              token: startTime
+                ? new Date(startTime).toLocaleDateString()
+                : '--',
             })}
             {getToken({
               tokenName: 'End Time',
@@ -109,17 +117,22 @@ export const BuolasManage = () => {
       </div>
 
       {/* show Withdraw button only if releaseable amount > 0 */}
-      {buolasReleasableAmount > 0 && (
-        <WriteFunctionalityContainer>
-          <Button
-            type="primary"
-            onClick={onWithdraw}
-            loading={isWithdrawLoading}
-          >
-            Withdraw
-          </Button>
-        </WriteFunctionalityContainer>
-      )}
+      <WriteFunctionalityContainer>
+        <Button
+          type="primary"
+          disabled={isWithdrawLoading || buolasReleasableAmount <= 0}
+          onClick={onWithdraw}
+          loading={isWithdrawLoading}
+        >
+          Withdraw
+        </Button>
+        {buolasReleasableAmount <= 0 && (
+          <Alert
+            message="You have no releasable amount to withdraw"
+            type="warning"
+          />
+        )}
+      </WriteFunctionalityContainer>
     </BuOlasContainer>
   );
 };
