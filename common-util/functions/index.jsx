@@ -37,6 +37,11 @@ export const formatToEth = (value, dv = 0) => {
  */
 export const parseToEth = (amount) => (amount ? ethers.utils.formatEther(`${amount}`) : 0);
 
+export const getBlockTimestamp = async () => {
+  const temp = await window?.WEB3_PROVIDER.eth.getBlock('latest');
+  return temp.timestamp * 1000;
+};
+
 export const notifyError = (message = 'Some error occured') => notification.error({
   message,
   style: { border: `1px solid ${COLOR.PRIMARY}` },

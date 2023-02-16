@@ -1,7 +1,8 @@
-import { formatToEth } from 'common-util/functions';
+import { formatToEth, getBlockTimestamp } from 'common-util/functions';
 import {
   getVeolasContract, getOlasContract, getBuolasContract,
 } from 'common-util/Contracts';
+import { getNextReleasableAmount } from './utils';
 import { syncTypes } from './_types';
 
 export const setUserAccount = (account) => ({
@@ -193,6 +194,9 @@ export const fetchMapLockedBalances = () => async (dispatch, getState) => {
       .mapLockedBalances(account)
       .call();
 
+    const blockTimestamp = await getBlockTimestamp();
+    const nextValues = getNextReleasableAmount(response, blockTimestamp);
+
     dispatch({
       type: syncTypes.SET_BUOLAS_MAPPED_BALANCES,
       data: {
@@ -203,6 +207,7 @@ export const fetchMapLockedBalances = () => async (dispatch, getState) => {
           endTime: response.endTime * 1000,
           transferredAmount: formatToEth(response.transferredAmount),
         },
+        ...nextValues,
       },
     });
   } catch (error) {
@@ -232,43 +237,10 @@ export const fetchLockedEnd = () => async (dispatch, getState) => {
   }
 };
 
-export const fetchNextReleasableAmount = () => async (dispatch, getState) => {
-  const lockedBalance = getState()?.setup?.buolasMappedBalances;
-  let buolasNextReleasableTime = null;
-  let buolasNextReleasableAmount = null;
-  console.log(lockedBalance);
-
-  // This means that the revoke has been applied
-  if (lockedBalance.endTime === 0) {
-    buolasNextReleasableTime = new Date();
-    buolasNextReleasableAmount = lockedBalance.transferredAmount;
-  } else {
-    // // Else follow the calculation of what is currently left
-    // const totalNumSteps = (lockedBalance.endTime - lockedBalance.startTime) / STEP_TIME;
-    // const releasedSteps = (block.timestamp - lockedBalance.startTime) / STEP_TIME;
-    // const numNextStep = releasedSteps + 1;
-    // buolasNextReleasableTime = startTime + STEP_TIME * numNextStep;
-    // if (numNextStep >= totalNumSteps) {
-    //   buolasNextReleasableAmount = lockedBalance.totalAmount - lockedBalance.transferredAmount;
-    // } else {
-    //   buolasNextReleasableAmount = (lockedBalance.totalAmount * numNextStep) / numSteps - lockedBalance.transferredAmount;
-    // }
-  }
-
-  dispatch({
-    type: syncTypes.SET_BUOLAS_NEXT_AMOUNT_AND_TIME,
-    data: {
-      buolasNextReleasableTime: new Date(),
-      buolasNextReleasableAmount: '100000000',
-    },
-  });
-};
-
 export const fetchBuolasDetails = () => async (dispatch) => {
   dispatch(fetchOlasBalance());
   dispatch(fetchBuolasBalance());
   dispatch(fetchReleasableAmount());
   dispatch(fetchMapLockedBalances());
   dispatch(fetchLockedEnd());
-  dispatch(fetchNextReleasableAmount());
 };
