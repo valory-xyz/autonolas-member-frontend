@@ -1,11 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Typography } from 'antd/lib';
-import {
-  fetchOlasBalance,
-  fetchMappedBalances,
-  fetchVotesAndTotalSupplyLocked,
-} from 'store/setup/actions';
+import { fetchBuolasDetails } from 'store/setup/actions';
 import { notifyError, notifySuccess } from 'common-util/functions';
 import { createBuolasLockRequest, approveOlasByOwner } from './utils';
 import { CreateLockContainer } from './styles';
@@ -16,14 +12,10 @@ export const BuolasCreateLock = () => {
   const dispatch = useDispatch();
   const account = useSelector((state) => state?.setup?.account);
   const chainId = useSelector((state) => state?.setup?.chainId);
-  const isSubmitBtnDisabled = useSelector(
-    (state) => !state?.setup?.mappedBalances?.isMappedAmountZero,
-  );
 
   useEffect(() => {
     if (account && chainId) {
-      dispatch(fetchOlasBalance());
-      dispatch(fetchMappedBalances());
+      dispatch(fetchBuolasDetails());
     }
   }, [account, chainId]);
 
@@ -40,9 +32,8 @@ export const BuolasCreateLock = () => {
         `Transaction Hash: ${txHash}`,
       );
 
-      // fetch the data again to disable button or show message
-      dispatch(fetchMappedBalances());
-      dispatch(fetchVotesAndTotalSupplyLocked());
+      // fetch the data again
+      dispatch(fetchBuolasDetails());
     } catch (error) {
       window.console.error(error);
       notifyError('Some error occured');
@@ -56,7 +47,7 @@ export const BuolasCreateLock = () => {
       <Button
         type="primary"
         htmlType="submit"
-        disabled={!account || isSubmitBtnDisabled}
+        disabled={!account}
         onClick={onFinish}
       >
         Create Lock

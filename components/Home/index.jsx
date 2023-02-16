@@ -9,8 +9,7 @@ import { BuolasManage } from './BuOlas/Manage';
 const { TabPane } = Tabs;
 
 const Home = () => {
-  // const [activeKey, setActiveKey] = useState(TAB_KEYS.createLock);
-  const [activeKey, setActiveKey] = useState(TAB_KEYS.createBuOlas);
+  const [activeKey, setActiveKey] = useState(TAB_KEYS.createLock);
 
   return (
     <>
@@ -23,11 +22,11 @@ const Home = () => {
           <VeolasManage setActiveTab={setActiveKey} />
         </TabPane>
 
-        <TabPane tab="Create buOLAS" key={TAB_KEYS.createBuOlas}>
+        <TabPane tab="Create buOLAS" key={TAB_KEYS.createBuolasLock}>
           <BuolasCreateLock />
         </TabPane>
 
-        <TabPane tab="Manage buOlas" key={TAB_KEYS.manageBuOlas}>
+        <TabPane tab="Manage buOlas" key={TAB_KEYS.manageBuolas}>
           <BuolasManage />
         </TabPane>
       </Tabs>

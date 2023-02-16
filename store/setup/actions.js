@@ -223,10 +223,19 @@ export const fetchLockedEnd = () => async (dispatch, getState) => {
 
     dispatch({
       type: syncTypes.SET_BUOLAS_LOCKED_END,
-      data: { buolasLockedEnd: response },
+      // multiplied by 1000 to convert to milliseconds
+      data: { buolasLockedEnd: response * 1000 },
     });
   } catch (error) {
     window.console.log('Error occured on fetching buOlas lockedEnd');
     console.error(error);
   }
+};
+
+export const fetchBuolasDetails = () => async (dispatch) => {
+  dispatch(fetchOlasBalance());
+  dispatch(fetchBuolasBalance());
+  dispatch(fetchReleasableAmount());
+  dispatch(fetchMapLockedBalances());
+  dispatch(fetchLockedEnd());
 };

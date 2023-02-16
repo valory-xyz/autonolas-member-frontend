@@ -17,7 +17,7 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
       resolve(response);
     })
     .catch((e) => {
-      window.console.log('Error occured on approving veOLAS by owner:');
+      window.console.log('Error occured on approving buOLAS by owner');
       reject(e);
     });
 });
@@ -40,7 +40,7 @@ export const createBuolasLockRequest = ({ account, chainId }) => new Promise((re
     .send({ from: account })
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
-      window.console.log('Error occured on withdrawing balance');
+      window.console.log('Error occured on creating buOlas lock');
       reject(e);
     });
 });

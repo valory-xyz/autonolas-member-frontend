@@ -13,7 +13,7 @@ export const withdrawRequest = ({
     .send({ from: account })
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
-      window.console.log('Error occured on withdrawing balance');
+      window.console.log('Error occured on withdrawing buOlas balance');
       reject(e);
     });
 });
