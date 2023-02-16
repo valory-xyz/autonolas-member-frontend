@@ -4,7 +4,7 @@ import { Button, Alert } from 'antd/lib';
 import { fetchBuolasDetails } from 'store/setup/actions';
 import { getToken } from '../../common';
 import { withdrawRequest } from './utils';
-import { MiddleContent, SectionHeader, Sections } from '../../styles';
+import { MiddleContent, Sections } from '../../styles';
 import { BuOlasContainer, WriteFunctionalityContainer } from '../styles';
 
 const getTime = (seconds) => (seconds ? new Date(seconds).toLocaleDateString() : '--');
@@ -21,6 +21,12 @@ export const BuolasManage = () => {
   );
   const mappedBalances = useSelector(
     (state) => state?.setup?.buolasMappedBalances || null,
+  );
+  const buolasNextReleasableAmount = useSelector(
+    (state) => state?.setup?.buolasNextReleasableAmount || null,
+  );
+  const buolasNextReleasableTime = useSelector(
+    (state) => state?.setup?.buolasNextReleasableTime || null,
   );
 
   const [isWithdrawLoading, setIsWithdrawLoading] = useState(false);
@@ -49,7 +55,6 @@ export const BuolasManage = () => {
     <BuOlasContainer>
       <div className="left-content">
         <MiddleContent className="balance-container">
-          <SectionHeader>Locked Balances</SectionHeader>
           <Sections>
             {getToken({
               tokenName: 'Balance',
@@ -66,6 +71,19 @@ export const BuolasManage = () => {
             {getToken({
               tokenName: 'Vested amount',
               token: buolasReleasableAmount || '--',
+            })}
+          </Sections>
+        </MiddleContent>
+
+        <MiddleContent className="balance-container">
+          <Sections>
+            {getToken({
+              tokenName: 'Next Vesting amount',
+              token: buolasNextReleasableAmount || '--',
+            })}
+            {getToken({
+              tokenName: 'Next Vesting time',
+              token: getTime(buolasNextReleasableTime),
             })}
           </Sections>
         </MiddleContent>
