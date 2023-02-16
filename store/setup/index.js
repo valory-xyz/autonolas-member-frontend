@@ -75,8 +75,7 @@ export default (state = initialState, action) => {
     case syncTypes.SET_BUOLAS_BALANCEOF:
     case syncTypes.SET_BUOLAS_RELEASABLE_AMOUNT:
     case syncTypes.SET_BUOLAS_LOCKED_END:
-    case syncTypes.SET_BUOLAS_MAPPED_BALANCES:
-    case syncTypes.SET_BUOLAS_NEXT_AMOUNT_AND_TIME: {
+    case syncTypes.SET_BUOLAS_MAPPED_BALANCES: {
       return { ...state, ...data };
     }
     default:

@@ -24,7 +24,6 @@ export const syncTypes = {
   SET_BUOLAS_LOCKED_END: `${reducerName}/Set buOlas - locked end`,
   SET_BUOLAS_RELEASABLE_AMOUNT: `${reducerName}/Set buOlas - releasable amount`,
   SET_BUOLAS_MAPPED_BALANCES: `${reducerName}/Set buOlas - mapped balance`,
-  SET_BUOLAS_NEXT_AMOUNT_AND_TIME: `${reducerName}/Set buOlas - next amount and time`,
 
   SET_STORE_STATE: `${reducerName}/Set Store State`,
 };
