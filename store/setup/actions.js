@@ -195,7 +195,9 @@ export const fetchMapLockedBalances = () => async (dispatch, getState) => {
       .call();
 
     const blockTimestamp = await getBlockTimestamp();
-    const nextValues = getNextReleasableAmount(response, blockTimestamp);
+
+    const tempResponse = { ...response };
+    const nextValues = getNextReleasableAmount(tempResponse, blockTimestamp);
 
     dispatch({
       type: syncTypes.SET_BUOLAS_MAPPED_BALANCES,
