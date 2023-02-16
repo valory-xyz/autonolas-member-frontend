@@ -1,18 +1,12 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Form, Typography } from 'antd/lib';
+import { Button, Typography } from 'antd/lib';
 import {
   fetchOlasBalance,
   fetchMappedBalances,
   fetchVotesAndTotalSupplyLocked,
 } from 'store/setup/actions';
-import { parseToEth, notifyError, notifySuccess } from 'common-util/functions';
-import {
-  parseAmount,
-  parseToSeconds,
-  FormItemDate,
-  FormItemInputNumber,
-} from '../../common';
+import { notifyError, notifySuccess } from 'common-util/functions';
 import { createBuolasLockRequest, approveOlasByOwner } from './utils';
 import { CreateLockContainer } from './styles';
 
@@ -22,12 +16,9 @@ export const BuolasCreateLock = () => {
   const dispatch = useDispatch();
   const account = useSelector((state) => state?.setup?.account);
   const chainId = useSelector((state) => state?.setup?.chainId);
-  const olasBalance = useSelector((state) => state?.setup?.olasBalance);
   const isSubmitBtnDisabled = useSelector(
     (state) => !state?.setup?.mappedBalances?.isMappedAmountZero,
   );
-
-  const [form] = Form.useForm();
 
   useEffect(() => {
     if (account && chainId) {
@@ -36,26 +27,22 @@ export const BuolasCreateLock = () => {
     }
   }, [account, chainId]);
 
-  const createLockHelper = async () => {
-    await approveOlasByOwner({ account, chainId });
-
-    const txHash = await createBuolasLockRequest({
-      amount: parseAmount(form.getFieldValue('amount')),
-      unlockTime: parseToSeconds(form.getFieldValue('unlockTime')),
-      account,
-      chainId,
-    });
-    notifySuccess('Lock created successfully!', `Transaction Hash: ${txHash}`);
-
-    // fetch the data again to disable button or show message
-    dispatch(fetchMappedBalances());
-    dispatch(fetchVotesAndTotalSupplyLocked());
-  };
-
   const onFinish = async () => {
     try {
-      await form.validateFields();
-      createLockHelper();
+      await approveOlasByOwner({ account, chainId });
+
+      const txHash = await createBuolasLockRequest({
+        account,
+        chainId,
+      });
+      notifySuccess(
+        'Lock created successfully!',
+        `Transaction Hash: ${txHash}`,
+      );
+
+      // fetch the data again to disable button or show message
+      dispatch(fetchMappedBalances());
+      dispatch(fetchVotesAndTotalSupplyLocked());
     } catch (error) {
       window.console.error(error);
       notifyError('Some error occured');
@@ -66,25 +53,14 @@ export const BuolasCreateLock = () => {
     <CreateLockContainer>
       <Title level={3}>Create Lock</Title>
 
-      <Form
-        form={form}
-        layout="vertical"
-        autoComplete="off"
-        name="create-lock-form"
-        onFinish={onFinish}
+      <Button
+        type="primary"
+        htmlType="submit"
+        disabled={!account || isSubmitBtnDisabled}
+        onClick={onFinish}
       >
-        <FormItemInputNumber maxAmount={parseToEth(olasBalance)} />
-        <FormItemDate />
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            disabled={!account || isSubmitBtnDisabled}
-          >
-            Create Lock
-          </Button>
-        </Form.Item>
-      </Form>
+        Create Lock
+      </Button>
     </CreateLockContainer>
   );
 };

@@ -1,7 +1,10 @@
-import { getContractAddress, getBuolasContract, getOlasContract } from 'common-util/Contracts';
+import {
+  getContractAddress,
+  getBuolasContract,
+  getOlasContract,
+} from 'common-util/Contracts';
 import { MAX_AMOUNT } from 'common-util/functions';
 import { parseEther } from 'components/Home/common';
-// import { parseAmount } from 'components/Home/common';
 
 export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
@@ -24,15 +27,13 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
  */
 export const createBuolasLockRequest = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
-  const signer = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8';
+
+  // creating lock for the signer with 100 ETH & locked for 4 years
   const values = {
-    signer,
-    amount: parseEther(100),
-    // amount: parseAmount(100),
+    signer: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+    amount: parseEther('100'),
     numSteps: 4,
   };
-
-  console.log(values);
 
   contract.methods
     .createLockFor(values.signer, values.amount, values.numSteps)
