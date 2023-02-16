@@ -52,20 +52,20 @@ export const BuolasManage = () => {
           <SectionHeader>Locked Balances</SectionHeader>
           <Sections>
             {getToken({
-              tokenName: 'Balance Of',
+              tokenName: 'Balance',
               token: buolasBalance || '--',
             })}
             {getToken({
-              tokenName: 'Amount',
-              token: buolasReleasableAmount || '--',
-            })}
-            {getToken({
-              tokenName: 'Lock Time',
+              tokenName: 'Vesting time',
               token: getTime(mappedBalances?.startTime),
             })}
             {getToken({
-              tokenName: 'Unlock Time',
+              tokenName: 'Time to vest',
               token: getTime(mappedBalances?.endTime),
+            })}
+            {getToken({
+              tokenName: 'Vested amount',
+              token: buolasReleasableAmount || '--',
             })}
           </Sections>
         </MiddleContent>
