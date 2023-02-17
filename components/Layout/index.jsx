@@ -19,8 +19,7 @@ const NavigationBar = ({ children }) => {
   useEffect(() => {
     if (pathname) {
       const name = pathname.split('/')[1];
-      console.log(name);
-      setSelectedMenu(name || null);
+      setSelectedMenu(name || 'veolas');
     }
   }, [pathname]);
 
@@ -40,10 +39,10 @@ const NavigationBar = ({ children }) => {
         </div>
 
         <Menu theme="light" mode="horizontal" selectedKeys={[selectedMenu]}>
-          <Menu.Item key="veOlas" onClick={handleMenuItemClick}>
+          <Menu.Item key="veolas" onClick={handleMenuItemClick}>
             veOlas
           </Menu.Item>
-          <Menu.Item key="buOlas" onClick={handleMenuItemClick}>
+          <Menu.Item key="buolas" onClick={handleMenuItemClick}>
             buOlas
           </Menu.Item>
         </Menu>

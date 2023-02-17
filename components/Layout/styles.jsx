@@ -2,9 +2,7 @@ import styled from 'styled-components';
 import { Layout } from 'antd/lib';
 import { COLOR, MEDIA_QUERY } from 'util/theme';
 
-export const CustomLayout = styled(Layout)`
-
-`;
+export const CustomLayout = styled(Layout)``;
 
 // HEADER
 export const HeaderContainer = styled.div`
