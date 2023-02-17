@@ -15,7 +15,7 @@ const GlobalStyle = createGlobalStyle`
     box-sizing: border-box;
   }
   body {
-    padding: 1rem 2rem;
+    padding: 1rem;
   }
 
   ${MEDIA_QUERY.tablet} {
@@ -49,12 +49,11 @@ const GlobalStyle = createGlobalStyle`
   }
   .ant-layout-header {
     display: flex;
-    /* position: fixed; */
+    align-items: center;
+    position: fixed;
+    top: 0;
     z-index: 10;
-    height: 64px;
-    width: 100%;
-    padding: 0;
-    background-color: ${COLOR.WHITE};
+    width: calc(100% - 32px);
     .ant-menu {
       flex: 1;
       &.ant-menu-horizontal {
@@ -96,7 +95,7 @@ const GlobalStyle = createGlobalStyle`
   /* layout */
   .site-layout {
     padding: 0 50px;
-    /* margin-top: 64px; */
+    margin-top: 42px;
   }
   .site-layout-background {
     padding: 24px 0;
