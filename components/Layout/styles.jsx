@@ -3,45 +3,7 @@ import { Layout } from 'antd/lib';
 import { COLOR, MEDIA_QUERY } from 'util/theme';
 
 export const CustomLayout = styled(Layout)`
-  background-size: 100%;
-  background-color: ${COLOR.WHITE};
-  .ant-layout-header {
-    z-index: 1;
-    height: 82px;
-    width: 100%;
-    padding: 0;
-    background-color: ${COLOR.WHITE};
-  }
-  .site-layout {
-    padding: 0 1rem;
-  }
-  .site-layout-background {
-    min-height: calc(100vh - 8.5rem);
-  }
-  .ant-layout-footer {
-    text-align: center;
-  }
-  .ant-result-title {
-    color: ${COLOR.BLACK};
-  }
 
-  ${MEDIA_QUERY.tablet} {
-    .ant-layout-header {
-      ${MEDIA_QUERY.tablet} {
-        position: relative;
-        height: auto;
-      }
-    }
-    .site-layout-background {
-      ${MEDIA_QUERY.tablet} {
-        padding: 1rem 0;
-        min-height: calc(100vh - 20rem);
-      }
-    }
-    .site-layout {
-      margin-top: 0;
-    }
-  }
 `;
 
 // HEADER

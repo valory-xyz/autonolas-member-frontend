@@ -1,8 +1,14 @@
 import styled, { createGlobalStyle } from 'styled-components';
 import { MEDIA_QUERY, COLOR } from 'util/theme';
 
+const ANTD_COLOR = {
+  whiteColor: '#fff',
+  borderColor: '#f0f0f0',
+};
+
 // const GlobalStyles = styled.div`
 const GlobalStyle = createGlobalStyle`
+
   *,
   :after,
   :before {
@@ -11,10 +17,10 @@ const GlobalStyle = createGlobalStyle`
   body {
     padding: 1rem 2rem;
   }
-  
+
   ${MEDIA_QUERY.tablet} {
     body {
-      padding: 1rem
+      padding: 1rem;
     }
   }
 
@@ -37,12 +43,106 @@ const GlobalStyle = createGlobalStyle`
     display: initial;
   }
 
+  /* layout */
+  .ant-layout {
+    background: ${COLOR.WHITE};
+  }
+  .ant-layout-header {
+    display: flex;
+    /* position: fixed; */
+    z-index: 10;
+    height: 64px;
+    width: 100%;
+    padding: 0;
+    background-color: ${COLOR.WHITE};
+    .ant-menu {
+      flex: 1;
+      &.ant-menu-horizontal {
+        border: none;
+      }
+      &.ant-menu-horizontal > .ant-menu-item::after,
+      .ant-menu-horizontal > .ant-menu-submenu::after {
+        border-bottom: none !important;
+      }
+      .ant-menu-item-selected {
+        font-weight: bold;
+      }
+    }
+  }
+
+  /* tabs */
+  .ant-tabs-card.ant-tabs-top {
+    > .ant-tabs-nav .ant-tabs-tab {
+      border-radius: 18px;
+      background-color: transparent;
+      border-color: transparent !important;
+    }
+    > .ant-tabs-nav .ant-tabs-tab-active {
+      border-bottom-color: ${ANTD_COLOR.borderColor};
+      background-color: ${COLOR.GREY_1};
+      .ant-tabs-tab-btn {
+        color: ${COLOR.BLACK};
+      }
+    }
+  }
+
+  .ant-tabs-top > .ant-tabs-nav::before,
+  .ant-tabs-bottom > .ant-tabs-nav::before,
+  .ant-tabs-top > div > .ant-tabs-nav::before,
+  .ant-tabs-bottom > div > .ant-tabs-nav::before {
+    border-bottom: none;
+  }
+
+  /* layout */
+  .site-layout {
+    padding: 0 50px;
+    /* margin-top: 64px; */
+  }
+  .site-layout-background {
+    padding: 24px 0;
+    min-height: calc(100vh - 140px);
+  }
+
   ${MEDIA_QUERY.mobileL} {
     .show-only-sm {
       display: initial;
     }
     .hide-only-sm {
       display: none;
+    }
+  }
+
+  background-size: 100%;
+  background-color: ${COLOR.WHITE};
+
+  .site-layout {
+    padding: 0 1rem;
+  }
+  .site-layout-background {
+    min-height: calc(100vh - 8.5rem);
+  }
+  .ant-layout-footer {
+    text-align: center;
+  }
+  .ant-result-title {
+    color: ${COLOR.BLACK};
+  }
+
+  ${MEDIA_QUERY.tablet} {
+    .ant-layout-header {
+      ${MEDIA_QUERY.tablet} {
+        position: relative;
+        height: auto;
+      }
+    }
+    .site-layout-background {
+      ${MEDIA_QUERY.tablet} {
+        padding: 1rem 0;
+        min-height: calc(100vh - 20rem);
+      }
+    }
+    .site-layout {
+      margin-top: 0;
     }
   }
 `;
