@@ -28,7 +28,7 @@ export const getBalance = (account, p) => new Promise((resolve, reject) => {
  */
 export const formatToEth = (value, dv = 0) => {
   if (isNil(value)) return dv || 0;
-  return (+ethers.utils.formatEther(value)).toFixed(8);
+  return (+ethers.utils.formatEther(value)).toFixed(2);
 };
 
 /**

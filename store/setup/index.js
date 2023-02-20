@@ -16,6 +16,7 @@ const initialState = {
   canWithdrawVeolas: null,
 
   // others
+  veolasBalance: null,
   mappedBalances: {
     amount: null,
     endTime: null,
@@ -67,6 +68,7 @@ export default (state = initialState, action) => {
       return { ...state, mappedBalances: { ...data, isMappedAmountZero } };
     }
     case syncTypes.SET_VOTES:
+    case syncTypes.SET_VEOLAS_BALANCEOF:
     case syncTypes.SET_TOTAL_SUPPLY_LOCKED: {
       return { ...state, ...data };
     }

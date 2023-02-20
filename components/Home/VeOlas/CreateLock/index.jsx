@@ -6,7 +6,7 @@ import {
 import {
   fetchOlasBalance,
   fetchMappedBalances,
-  fetchVotesAndTotalSupplyLocked,
+  fetchVeolasDetails,
 } from 'store/setup/actions';
 import { parseToEth, notifyError, notifySuccess } from 'common-util/functions';
 import {
@@ -62,7 +62,7 @@ export const VeolasCreateLock = () => {
 
     // fetch the data again to disable button or show message
     dispatch(fetchMappedBalances());
-    dispatch(fetchVotesAndTotalSupplyLocked());
+    dispatch(fetchVeolasDetails());
   };
 
   const onFinish = async () => {

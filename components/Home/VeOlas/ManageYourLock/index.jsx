@@ -8,7 +8,7 @@ import { isNil, isString } from 'lodash';
 import {
   fetchOlasBalance,
   fetchMappedBalances,
-  fetchVotesAndTotalSupplyLocked,
+  fetchVeolasDetails,
   fetchIfCanWithdrawVeolas,
 } from 'store/setup/actions';
 import {
@@ -37,6 +37,7 @@ export const VeolasManage = ({ setActiveTab }) => {
   const dispatch = useDispatch();
   const account = useSelector((state) => state?.setup?.account);
   const chainId = useSelector((state) => state?.setup?.chainId);
+  const veolasBalance = useSelector((state) => state?.setup?.veolasBalance);
   const mappedAmount = useSelector(
     (state) => state?.setup?.mappedBalances?.amount || null,
   );
@@ -58,7 +59,7 @@ export const VeolasManage = ({ setActiveTab }) => {
 
   const getData = () => {
     dispatch(fetchOlasBalance());
-    dispatch(fetchVotesAndTotalSupplyLocked());
+    dispatch(fetchVeolasDetails());
     dispatch(fetchMappedBalances());
     dispatch(fetchIfCanWithdrawVeolas());
   };
@@ -112,7 +113,8 @@ export const VeolasManage = ({ setActiveTab }) => {
         <Col lg={4} xs={12}>
           <InfoCard
             title="Your balance"
-            value={getString(formatToEth(mappedAmount))}
+            // value="2,000"
+            value={getString(veolasBalance)}
             subText="veOLAS"
           />
         </Col>

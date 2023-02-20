@@ -11,7 +11,7 @@ import {
 } from 'common-util/functions';
 import {
   fetchMappedBalances,
-  fetchVotesAndTotalSupplyLocked,
+  fetchVeolasDetails,
 } from 'store/setup/actions';
 import { parseAmount, FormItemInputNumber } from '../../common';
 import { updateIncreaseAmount } from '../utils';
@@ -51,7 +51,7 @@ export const IncreaseAmount = () => {
       // once the amount is increased,
       // fetch the newly updated mapped balances & votes.
       dispatch(fetchMappedBalances());
-      dispatch(fetchVotesAndTotalSupplyLocked());
+      dispatch(fetchVeolasDetails());
     } catch (error) {
       window.console.error(error);
       notifyError('Some error occured');
