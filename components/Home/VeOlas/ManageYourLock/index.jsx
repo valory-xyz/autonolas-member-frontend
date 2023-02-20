@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Radio, Statistic, Button } from 'antd/lib';
-import { isNil } from 'lodash';
+import {
+  Radio, Statistic, Button, Row, Col,
+} from 'antd/lib';
+import { isNil, isString } from 'lodash';
 import {
   fetchOlasBalance,
   fetchMappedBalances,
@@ -14,6 +16,7 @@ import {
   getTotalVotesPercentage,
   notifySuccess,
 } from 'common-util/functions';
+import { InfoCard } from 'common-util/InfoCard';
 import { TAB_KEYS } from 'common-util/constants';
 import { getToken } from '../../common';
 import { withdrawVeolasRequest } from '../utils';
@@ -97,86 +100,125 @@ export const VeolasManage = ({ setActiveTab }) => {
     }
   };
 
+  // get the value in string
+  const getString = (x) => {
+    if (isNil(x)) return '--';
+    return isString(x) ? x : `${x}`;
+  };
+
   return (
-    <VeOlasContainer>
-      <div className="left-content">
-        <MiddleContent className="balance-container">
-          <SectionHeader>Locked OLAS</SectionHeader>
-          <Sections>
-            {getToken({
-              tokenName: 'Amount',
-              token: mappedAmount,
-              isLoading,
-            })}
-            {getToken({
-              tokenName: 'Unlocking time',
-              isLoading,
-              token: mappedEndTime ? (
+    <>
+      <Row align="top">
+        <Col lg={4} xs={12}>
+          <InfoCard
+            title="Your balance"
+            value={getString(formatToEth(mappedAmount))}
+            subText="veOLAS"
+          />
+        </Col>
+
+        <Col lg={4} xs={12}>
+          <InfoCard
+            title="Lock"
+            value={getString(mappedAmount)}
+            subText="locked OLAS"
+          />
+        </Col>
+
+        <Col lg={4} xs={12}>
+          <InfoCard
+            value={
+              mappedEndTime ? (
                 <Countdown value={mappedEndTime} format="MM DD HH:mm:ss" />
               ) : (
                 '--'
-              ),
-            })}
-          </Sections>
-        </MiddleContent>
+              )
+            }
+            subText="unlock date"
+          />
+        </Col>
+      </Row>
 
-        <MiddleContent className="balance-container">
-          <SectionHeader>Voting power</SectionHeader>
-          <Sections>
-            {getToken({
-              tokenName: 'Votes',
-              token: formatToEth(votes),
-              isLoading,
-            })}
-            {getToken({
-              tokenName: 'Total Voting power %',
-              token:
-                Number(votes) === 0 || Number(totalSupplyLocked) === 0
-                  ? '--'
-                  : `${getTotalVotesPercentage(votes, totalSupplyLocked)}%`,
-              isLoading,
-            })}
-          </Sections>
-        </MiddleContent>
-      </div>
+      <VeOlasContainer>
+        <div className="left-content">
+          <MiddleContent className="balance-container">
+            <SectionHeader>Locked OLAS</SectionHeader>
+            <Sections>
+              {getToken({
+                tokenName: 'Amount',
+                token: mappedAmount,
+                isLoading,
+              })}
+              {getToken({
+                tokenName: 'Unlocking time',
+                isLoading,
+                token: mappedEndTime ? (
+                  <Countdown value={mappedEndTime} format="MM DD HH:mm:ss" />
+                ) : (
+                  '--'
+                ),
+              })}
+            </Sections>
+          </MiddleContent>
 
-      <WriteFunctionalityContainer>
-        {/* to avoid glitch, show the component only if `canWithdrawVeolas`
+          <MiddleContent className="balance-container">
+            <SectionHeader>Voting power</SectionHeader>
+            <Sections>
+              {getToken({
+                tokenName: 'Votes',
+                token: formatToEth(votes),
+                isLoading,
+              })}
+              {getToken({
+                tokenName: 'Total Voting power %',
+                token:
+                  Number(votes) === 0 || Number(totalSupplyLocked) === 0
+                    ? '--'
+                    : `${getTotalVotesPercentage(votes, totalSupplyLocked)}%`,
+                isLoading,
+              })}
+            </Sections>
+          </MiddleContent>
+        </div>
+
+        <WriteFunctionalityContainer>
+          {/* to avoid glitch, show the component only if `canWithdrawVeolas`
         is either true or false (default value is null) */}
-        {!isNil(canWithdrawVeolas) && (
-          <>
-            {canWithdrawVeolas ? (
-              <Button type="primary" htmlType="submit" onClick={onWithdraw}>
-                Withdraw
-              </Button>
-            ) : (
-              <>
-                <Radio.Group
-                  onChange={onRadioBtnChange}
-                  value={currentFormType}
-                >
-                  <Radio value={FORM_TYPE.increaseAmount}>
-                    Increase Amount
-                  </Radio>
-                  <Radio value={FORM_TYPE.increaseUnlockTime}>
-                    Increase Unlock Time
-                  </Radio>
-                </Radio.Group>
+          {!isNil(canWithdrawVeolas) && (
+            <>
+              {canWithdrawVeolas ? (
+                <Button type="primary" htmlType="submit" onClick={onWithdraw}>
+                  Withdraw
+                </Button>
+              ) : (
+                <>
+                  <Radio.Group
+                    onChange={onRadioBtnChange}
+                    value={currentFormType}
+                  >
+                    <Radio value={FORM_TYPE.increaseAmount}>
+                      Increase Amount
+                    </Radio>
+                    <Radio value={FORM_TYPE.increaseUnlockTime}>
+                      Increase Unlock Time
+                    </Radio>
+                  </Radio.Group>
 
-                <div className="forms-container">
-                  {currentFormType === FORM_TYPE.increaseAmount && (
-                    <IncreaseAmount />
-                  )}
-                  {currentFormType === FORM_TYPE.increaseUnlockTime && (
-                    <IncreaseUnlockTime />
-                  )}
-                </div>
-              </>
-            )}
-          </>
-        )}
-      </WriteFunctionalityContainer>
-    </VeOlasContainer>
+                  <div className="forms-container">
+                    {currentFormType === FORM_TYPE.increaseAmount && (
+                      <IncreaseAmount />
+                    )}
+                    {currentFormType === FORM_TYPE.increaseUnlockTime && (
+                      <IncreaseUnlockTime />
+                    )}
+                  </div>
+                </>
+              )}
+            </>
+          )}
+        </WriteFunctionalityContainer>
+      </VeOlasContainer>
+    </>
   );
 };
 
