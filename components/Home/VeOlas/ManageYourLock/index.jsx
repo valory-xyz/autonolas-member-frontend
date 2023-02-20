@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
-  Radio, Statistic, Button, Row, Col,
+  Radio, Button, Row, Col, Modal,
 } from 'antd/lib';
 import { isNil, isString } from 'lodash';
 import {
@@ -13,19 +13,15 @@ import {
 } from 'store/setup/actions';
 import {
   formatToEth,
+  getFormattedDate,
   getTotalVotesPercentage,
   notifySuccess,
 } from 'common-util/functions';
 import { InfoCard } from 'common-util/InfoCard';
 import { TAB_KEYS } from 'common-util/constants';
-import { getToken } from '../../common';
 import { withdrawVeolasRequest } from '../utils';
 import { IncreaseAmount } from './IncreaseAmount';
 import { IncreaseUnlockTime } from './IncreaseUnlockTime';
-import { MiddleContent, SectionHeader, Sections } from '../../styles';
-import { VeOlasContainer, WriteFunctionalityContainer } from './styles';
-
-const { Countdown } = Statistic;
 
 const FORM_TYPE = {
   increaseAmount: 'typeIncreaseAmount',
@@ -53,6 +49,7 @@ export const VeolasManage = ({ setActiveTab }) => {
   );
 
   const [isLoading, setIsLoading] = useState(!!account);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentFormType, setCurrentFormType] = useState(
     FORM_TYPE.increaseAmount,
   );
@@ -80,9 +77,7 @@ export const VeolasManage = ({ setActiveTab }) => {
     fn();
   }, [account, chainId]);
 
-  /**
-   * on radio button changes
-   */
+  // on radio button changes
   const onRadioBtnChange = (e) => {
     setCurrentFormType(e.target.value);
   };
@@ -110,12 +105,31 @@ export const VeolasManage = ({ setActiveTab }) => {
   return (
     <>
       <Row align="top">
-        <Col lg={4} xs={12}>
+        <Col lg={4} xs={24}>
           <InfoCard
+            isLoading={isLoading}
             title="Your balance"
-            // value="2,000"
             value={getString(veolasBalance)}
             subText="veOLAS"
+          />
+        </Col>
+
+        <Col lg={3} xs={12}>
+          <InfoCard
+            title="Voting power"
+            value={getString(formatToEth(votes))}
+            subText="votes"
+          />
+        </Col>
+
+        <Col lg={5} xs={12}>
+          <InfoCard
+            value={
+              Number(votes) === 0 || Number(totalSupplyLocked) === 0
+                ? '--'
+                : `${getTotalVotesPercentage(votes, totalSupplyLocked)}%`
+            }
+            subText="% of total voting power"
           />
         </Col>
 
@@ -125,67 +139,8 @@ export const VeolasManage = ({ setActiveTab }) => {
             value={getString(mappedAmount)}
             subText="locked OLAS"
           />
-        </Col>
-
-        <Col lg={4} xs={12}>
-          <InfoCard
-            value={
-              mappedEndTime ? (
-                <Countdown value={mappedEndTime} format="MM DD HH:mm:ss" />
-              ) : (
-                '--'
-              )
-            }
-            subText="unlock date"
-          />
-        </Col>
-      </Row>
-
-      <VeOlasContainer>
-        <div className="left-content">
-          <MiddleContent className="balance-container">
-            <SectionHeader>Locked OLAS</SectionHeader>
-            <Sections>
-              {getToken({
-                tokenName: 'Amount',
-                token: mappedAmount,
-                isLoading,
-              })}
-              {getToken({
-                tokenName: 'Unlocking time',
-                isLoading,
-                token: mappedEndTime ? (
-                  <Countdown value={mappedEndTime} format="MM DD HH:mm:ss" />
-                ) : (
-                  '--'
-                ),
-              })}
-            </Sections>
-          </MiddleContent>
-
-          <MiddleContent className="balance-container">
-            <SectionHeader>Voting power</SectionHeader>
-            <Sections>
-              {getToken({
-                tokenName: 'Votes',
-                token: formatToEth(votes),
-                isLoading,
-              })}
-              {getToken({
-                tokenName: 'Total Voting power %',
-                token:
-                  Number(votes) === 0 || Number(totalSupplyLocked) === 0
-                    ? '--'
-                    : `${getTotalVotesPercentage(votes, totalSupplyLocked)}%`,
-                isLoading,
-              })}
-            </Sections>
-          </MiddleContent>
-        </div>
-
-        <WriteFunctionalityContainer>
           {/* to avoid glitch, show the component only if `canWithdrawVeolas`
-        is either true or false (default value is null) */}
+          is either true or false (default value is null) */}
           {!isNil(canWithdrawVeolas) && (
             <>
               {canWithdrawVeolas ? (
@@ -193,33 +148,44 @@ export const VeolasManage = ({ setActiveTab }) => {
                   Withdraw
                 </Button>
               ) : (
-                <>
-                  <Radio.Group
-                    onChange={onRadioBtnChange}
-                    value={currentFormType}
-                  >
-                    <Radio value={FORM_TYPE.increaseAmount}>
-                      Increase Amount
-                    </Radio>
-                    <Radio value={FORM_TYPE.increaseUnlockTime}>
-                      Increase Unlock Time
-                    </Radio>
-                  </Radio.Group>
-
-                  <div className="forms-container">
-                    {currentFormType === FORM_TYPE.increaseAmount && (
-                      <IncreaseAmount />
-                    )}
-                    {currentFormType === FORM_TYPE.increaseUnlockTime && (
-                      <IncreaseUnlockTime />
-                    )}
-                  </div>
-                </>
+                <Button onClick={() => setIsModalVisible(true)}>
+                  Increase lock
+                </Button>
               )}
             </>
           )}
-        </WriteFunctionalityContainer>
-      </VeOlasContainer>
+        </Col>
+
+        <Col lg={5} xs={12}>
+          <InfoCard
+            value={getFormattedDate(getString(mappedEndTime))}
+            subText="unlock date"
+          />
+        </Col>
+      </Row>
+
+      {isModalVisible && (
+        <Modal
+          title="Increase Lock"
+          visible={isModalVisible}
+          footer={null}
+          onCancel={() => setIsModalVisible(false)}
+        >
+          <Radio.Group onChange={onRadioBtnChange} value={currentFormType}>
+            <Radio value={FORM_TYPE.increaseAmount}>Increase Amount</Radio>
+            <Radio value={FORM_TYPE.increaseUnlockTime}>
+              Increase Unlock Time
+            </Radio>
+          </Radio.Group>
+
+          <div className="forms-container">
+            {currentFormType === FORM_TYPE.increaseAmount && <IncreaseAmount />}
+            {currentFormType === FORM_TYPE.increaseUnlockTime && (
+              <IncreaseUnlockTime />
+            )}
+          </div>
+        </Modal>
+      )}
     </>
   );
 };

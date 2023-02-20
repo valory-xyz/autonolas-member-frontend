@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Typography } from 'antd/lib';
+import { Shimmer } from '../Shimmer';
 
 export const InfoCardContainer = styled.div`
   h5 {
@@ -19,21 +20,25 @@ export const ValueText = styled.div`
 
 const { Title, Paragraph } = Typography;
 
-export const InfoCard = ({ title, value, subText }) => (
+export const InfoCard = ({
+  isLoading, title, value, subText,
+}) => (
   <InfoCardContainer>
-    <Title level={5}>{title || ' '}</Title>
-    <ValueText>{value || ' '}</ValueText>
+    <Title level={5}>{title || ''}</Title>
+    <ValueText>{isLoading ? <Shimmer /> : <>{value || ''}</>}</ValueText>
     <Paragraph>{subText || ' '}</Paragraph>
   </InfoCardContainer>
 );
 
 InfoCard.propTypes = {
+  isLoading: PropTypes.bool,
   title: PropTypes.string,
   value: PropTypes.string,
   subText: PropTypes.string,
 };
 
 InfoCard.defaultProps = {
+  isLoading: false,
   title: null,
   value: null,
   subText: null,

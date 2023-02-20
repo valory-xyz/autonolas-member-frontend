@@ -18,7 +18,7 @@ export const VeOlas = () => (
       </a>
     </Paragraph>
 
-    <VeolasManage />
     <VeolasCreateLock />
+    <VeolasManage />
   </div>
 );

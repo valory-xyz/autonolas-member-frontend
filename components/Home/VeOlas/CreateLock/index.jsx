@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  Alert, Button, Form, Typography, Modal, Checkbox,
+  Alert, Button, Form, Modal, Checkbox,
 } from 'antd/lib';
 import {
   fetchOlasBalance,
@@ -22,8 +22,6 @@ import {
 } from '../utils';
 import { CreateLockContainer } from './styles';
 
-const { Title } = Typography;
-
 export const VeolasCreateLock = () => {
   const dispatch = useDispatch();
   const account = useSelector((state) => state?.setup?.account);
@@ -33,7 +31,8 @@ export const VeolasCreateLock = () => {
     (state) => !state?.setup?.mappedBalances?.isMappedAmountZero,
   );
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isApproveModalVisible, setIsApproveModalVisible] = useState(false);
   const [canLockMaxAmount, setCheckMaxAmount] = useState(false);
 
   const [form] = Form.useForm();
@@ -79,7 +78,7 @@ export const VeolasCreateLock = () => {
       if (hasSufficientTokes) {
         createLockHelper();
       } else {
-        setIsModalOpen(true);
+        setIsApproveModalVisible(true);
       }
     } catch (error) {
       window.console.error(error);
@@ -89,49 +88,67 @@ export const VeolasCreateLock = () => {
 
   return (
     <CreateLockContainer>
-      <Title level={3}>Create Lock</Title>
+      <div style={{ marginBottom: '1rem' }}>
+        {/* TODO */}
+        <Button type="primary" style={{ marginRight: '1rem' }} disabled>
+          Get more veOLAS
+        </Button>
 
-      <Form
-        form={form}
-        layout="vertical"
-        autoComplete="off"
-        name="create-lock-form"
-        onFinish={onFinish}
-      >
-        <FormItemInputNumber
-          isRequired={!canLockMaxAmount}
-          maxAmount={parseToEth(olasBalance)}
-        />
-        <Form.Item>
-          <Checkbox checked={canLockMaxAmount} onChange={onCheckboxChange}>
-            Lock maximum amount
-          </Checkbox>
-        </Form.Item>
-        <FormItemDate />
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            disabled={!account || isSubmitBtnDisabled}
+        <Button type="primary" onClick={() => setIsModalVisible(true)}>
+          Create Lock
+        </Button>
+      </div>
+
+      {isModalVisible && (
+        <Modal
+          title="Create Lock"
+          visible={isModalVisible}
+          footer={null}
+          onCancel={() => setIsModalVisible(false)}
+        >
+          <Form
+            form={form}
+            layout="vertical"
+            autoComplete="off"
+            name="create-lock-form"
+            onFinish={onFinish}
           >
-            Create Lock
-          </Button>
-        </Form.Item>
-      </Form>
+            <FormItemInputNumber
+              isRequired={!canLockMaxAmount}
+              maxAmount={parseToEth(olasBalance)}
+            />
+            <Form.Item>
+              <Checkbox checked={canLockMaxAmount} onChange={onCheckboxChange}>
+                Lock maximum amount
+              </Checkbox>
+            </Form.Item>
+            <FormItemDate />
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                disabled={!account || isSubmitBtnDisabled}
+              >
+                Create Lock
+              </Button>
+            </Form.Item>
+          </Form>
 
-      {isSubmitBtnDisabled && (
-        <Alert
-          message="Amount already locked, please wait until the lock expires."
-          type="warning"
-        />
+          {isSubmitBtnDisabled && (
+          <Alert
+            message="Amount already locked, please wait until the lock expires."
+            type="warning"
+          />
+          )}
+        </Modal>
       )}
 
-      {isModalOpen && (
+      {isApproveModalVisible && (
         <Modal
           title="Approve veOlas"
-          visible={isModalOpen}
+          visible={isApproveModalVisible}
           footer={null}
-          onCancel={() => setIsModalOpen(false)}
+          onCancel={() => setIsApproveModalVisible(false)}
         >
           <Alert
             message="Before creating lock an approval for veOLAS is required, please approve to proceed"
@@ -145,7 +162,7 @@ export const VeolasCreateLock = () => {
             style={{ right: 'calc(-100% + 100px)', position: 'relative' }}
             onClick={async () => {
               await approveOlasByOwner({ account, chainId });
-              setIsModalOpen(false);
+              setIsApproveModalVisible(false);
 
               // once approved, create lock
               await createLockHelper();

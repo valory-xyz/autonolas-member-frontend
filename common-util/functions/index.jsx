@@ -79,3 +79,13 @@ export const getTotalVotesPercentage = (votes, totalSupply) => {
 
   return null;
 };
+
+/**
+ * Get formatted date from milliseconds
+ * example, 1678320000000 => 'Mar 09, 2023'
+ */
+export const getFormattedDate = (ms) => new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: '2-digit',
+}).format(ms);
