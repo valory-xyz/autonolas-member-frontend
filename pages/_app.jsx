@@ -30,17 +30,7 @@ class MyApp extends App {
 
     return (
       <>
-        <style global jsx>
-          {`
-            body {
-              margin: 0;
-              overscroll-behavior: none;
-              text-rendering: optimizeLegibility;
-              -webkit-font-smoothing: antialiased;
-              -moz-osx-font-smoothing: grayscale;
-            }
-          `}
-        </style>
+        <GlobalStyle />
         <Head>
           <title>Autonolas Governance & Locking</title>
           <meta name="title" content="Autonolas Governance & Locking" />
@@ -52,7 +42,6 @@ class MyApp extends App {
             </Layout>
           </Web3ReactProvider>
         </Web3DataProvider>
-        <GlobalStyle />
       </>
     );
   }
