@@ -1,9 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Form, Typography } from 'antd/lib';
-import {
-  fetchMappedBalances,
-  fetchVeolasDetails,
-} from 'store/setup/actions';
+import { Button, Form } from 'antd/lib';
+import { fetchMappedBalances, fetchVeolasDetails } from 'store/setup/actions';
 import {
   notifyError,
   notifySuccess,
@@ -11,8 +8,7 @@ import {
 } from 'common-util/functions';
 import { parseToSeconds, FormItemDate } from '../../common';
 import { updateIncreaseUnlockTime } from '../utils';
-
-const { Title } = Typography;
+import { FormContainer } from './styles';
 
 export const IncreaseUnlockTime = () => {
   const dispatch = useDispatch();
@@ -51,26 +47,26 @@ export const IncreaseUnlockTime = () => {
 
   return (
     <>
-      <Title level={3}>Increase Unlock Time</Title>
-
-      <Form
-        form={form}
-        layout="vertical"
-        autoComplete="off"
-        name="increase-unlock-time-form"
-        onFinish={onFinish}
-      >
-        <FormItemDate startDate={mappedEndTime} />
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            disabled={!account || cannotIncreaseTime}
-          >
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
+      <FormContainer>
+        <Form
+          form={form}
+          layout="vertical"
+          autoComplete="off"
+          name="increase-unlock-time-form"
+          onFinish={onFinish}
+        >
+          <FormItemDate startDate={mappedEndTime} />
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              disabled={!account || cannotIncreaseTime}
+            >
+              Add to lock
+            </Button>
+          </Form.Item>
+        </Form>
+      </FormContainer>
 
       {cannotIncreaseTime && <CannotIncreaseAlert />}
     </>

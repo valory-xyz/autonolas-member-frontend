@@ -1,16 +1,9 @@
-import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Radio, Button, Row, Col, Modal,
 } from 'antd/lib';
 import { isNil, isString } from 'lodash';
-import {
-  fetchOlasBalance,
-  fetchMappedBalances,
-  fetchVeolasDetails,
-  fetchIfCanWithdrawVeolas,
-} from 'store/setup/actions';
 import {
   formatToEth,
   getFormattedDate,
@@ -18,10 +11,11 @@ import {
   notifySuccess,
 } from 'common-util/functions';
 import { InfoCard } from 'common-util/InfoCard';
-import { TAB_KEYS } from 'common-util/constants';
+import { TAB_KEYS, NA } from 'common-util/constants';
 import { withdrawVeolasRequest } from '../utils';
 import { IncreaseAmount } from './IncreaseAmount';
 import { IncreaseUnlockTime } from './IncreaseUnlockTime';
+import { useFetchBalances } from '../hooks';
 
 const FORM_TYPE = {
   increaseAmount: 'typeIncreaseAmount',
@@ -30,52 +24,23 @@ const FORM_TYPE = {
 };
 
 export const VeolasManage = ({ setActiveTab }) => {
-  const dispatch = useDispatch();
-  const account = useSelector((state) => state?.setup?.account);
-  const chainId = useSelector((state) => state?.setup?.chainId);
-  const veolasBalance = useSelector((state) => state?.setup?.veolasBalance);
-  const mappedAmount = useSelector(
-    (state) => state?.setup?.mappedBalances?.amount || null,
-  );
-  const mappedEndTime = useSelector(
-    (state) => state?.setup?.mappedBalances?.endTime || null,
-  );
-  const votes = useSelector((state) => state?.setup?.votes || null);
-  const totalSupplyLocked = useSelector(
-    (state) => state?.setup?.totalSupplyLocked || null,
-  );
-  const canWithdrawVeolas = useSelector(
-    (state) => state?.setup?.canWithdrawVeolas,
-  );
+  const {
+    isLoading,
+    account,
+    chainId,
+    veolasBalance,
+    mappedAmount,
+    mappedEndTime,
+    votes,
+    totalSupplyLocked,
+    canWithdrawVeolas,
+    getData,
+  } = useFetchBalances();
 
-  const [isLoading, setIsLoading] = useState(!!account);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(true);
   const [currentFormType, setCurrentFormType] = useState(
     FORM_TYPE.increaseAmount,
   );
-
-  const getData = () => {
-    dispatch(fetchOlasBalance());
-    dispatch(fetchVeolasDetails());
-    dispatch(fetchMappedBalances());
-    dispatch(fetchIfCanWithdrawVeolas());
-  };
-
-  useEffect(() => {
-    const fn = async () => {
-      if (account && chainId) {
-        setIsLoading(true);
-        try {
-          getData();
-        } catch (error) {
-          window.console.error(error);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-    };
-    fn();
-  }, [account, chainId]);
 
   // on radio button changes
   const onRadioBtnChange = (e) => {
@@ -98,14 +63,27 @@ export const VeolasManage = ({ setActiveTab }) => {
 
   // get the value in string
   const getString = (x) => {
-    if (isNil(x)) return '--';
+    if (isNil(x)) return NA;
     return isString(x) ? x : `${x}`;
   };
+
+  // locked & unlock time component
+  const lockedAmountComponent = (
+    <InfoCard
+      title="Lock"
+      value={getString(mappedAmount)}
+      subText="locked OLAS"
+    />
+  );
+
+  const unlockTimeComponent = (
+    <InfoCard value={getFormattedDate(mappedEndTime)} subText="unlock date" />
+  );
 
   return (
     <>
       <Row align="top">
-        <Col lg={4} xs={24}>
+        <Col lg={4} md={24} xs={24}>
           <InfoCard
             isLoading={isLoading}
             title="Your balance"
@@ -114,7 +92,7 @@ export const VeolasManage = ({ setActiveTab }) => {
           />
         </Col>
 
-        <Col lg={3} xs={12}>
+        <Col lg={3} md={12} xs={12}>
           <InfoCard
             title="Voting power"
             value={getString(formatToEth(votes))}
@@ -122,11 +100,11 @@ export const VeolasManage = ({ setActiveTab }) => {
           />
         </Col>
 
-        <Col lg={5} xs={12}>
+        <Col lg={5} md={12} xs={12}>
           <InfoCard
             value={
               Number(votes) === 0 || Number(totalSupplyLocked) === 0
-                ? '--'
+                ? '0%'
                 : `${getTotalVotesPercentage(votes, totalSupplyLocked)}%`
             }
             subText="% of total voting power"
@@ -134,11 +112,7 @@ export const VeolasManage = ({ setActiveTab }) => {
         </Col>
 
         <Col lg={4} xs={12}>
-          <InfoCard
-            title="Lock"
-            value={getString(mappedAmount)}
-            subText="locked OLAS"
-          />
+          {lockedAmountComponent}
           {/* to avoid glitch, show the component only if `canWithdrawVeolas`
           is either true or false (default value is null) */}
           {!isNil(canWithdrawVeolas) && (
@@ -156,11 +130,8 @@ export const VeolasManage = ({ setActiveTab }) => {
           )}
         </Col>
 
-        <Col lg={5} xs={12}>
-          <InfoCard
-            value={getFormattedDate(getString(mappedEndTime))}
-            subText="unlock date"
-          />
+        <Col lg={6} xs={12}>
+          {unlockTimeComponent}
         </Col>
       </Row>
 
@@ -171,7 +142,21 @@ export const VeolasManage = ({ setActiveTab }) => {
           footer={null}
           onCancel={() => setIsModalVisible(false)}
         >
-          <Radio.Group onChange={onRadioBtnChange} value={currentFormType}>
+          <Row align="top">
+            <Col lg={10} xs={12}>
+              {lockedAmountComponent}
+            </Col>
+
+            <Col lg={14} xs={12}>
+              {unlockTimeComponent}
+            </Col>
+          </Row>
+
+          <Radio.Group
+            onChange={onRadioBtnChange}
+            value={currentFormType}
+            style={{ display: 'none' }}
+          >
             <Radio value={FORM_TYPE.increaseAmount}>Increase Amount</Radio>
             <Radio value={FORM_TYPE.increaseUnlockTime}>
               Increase Unlock Time

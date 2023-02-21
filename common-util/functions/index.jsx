@@ -2,6 +2,7 @@ import { ethers } from 'ethers';
 import { notification, Alert } from 'antd/lib';
 import { isNil } from 'lodash';
 import { COLOR } from 'util/theme';
+import { NA } from 'common-util/constants';
 
 /**
  * https://docs.ethers.org/v5/api/utils/constants/#constants-MaxUint256
@@ -84,8 +85,11 @@ export const getTotalVotesPercentage = (votes, totalSupply) => {
  * Get formatted date from milliseconds
  * example, 1678320000000 => 'Mar 09, 2023'
  */
-export const getFormattedDate = (ms) => new Intl.DateTimeFormat('en-US', {
-  year: 'numeric',
-  month: 'short',
-  day: '2-digit',
-}).format(ms);
+export const getFormattedDate = (ms) => {
+  if (!ms) return NA;
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+  }).format(ms);
+};

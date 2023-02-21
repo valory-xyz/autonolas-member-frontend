@@ -5,3 +5,5 @@ export const TAB_KEYS = {
   createBuolasLock: 'createBuolasLock', // internal
   manageBuolas: 'manageBuolas',
 };
+
+export const NA = '--';

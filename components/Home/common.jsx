@@ -45,10 +45,14 @@ export const parseToSeconds = (unlockTime) => {
 /**
  * @returns Amount Input
  */
-export const FormItemInputNumber = ({ isRequired = true, maxAmount }) => (
+export const FormItemInputNumber = ({
+  isRequired = true,
+  maxAmount,
+  // extra,
+}) => (
   <Form.Item
     name="amount"
-    label="Amount"
+    label="Lock more OLAS"
     rules={[
       { required: isRequired, message: 'Amount is required' },
       () => ({
@@ -72,6 +76,7 @@ export const FormItemInputNumber = ({ isRequired = true, maxAmount }) => (
       placeholder="Add amount"
       disabled={!isRequired}
     />
+    {/* {extra && <>{extra}</>} */}
   </Form.Item>
 );
 

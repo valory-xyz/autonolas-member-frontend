@@ -38,15 +38,23 @@ const NavigationBar = ({ children }) => {
           </Logo>
         </div>
 
-        <Menu theme="light" mode="horizontal" selectedKeys={[selectedMenu]}>
-          <Menu.Item key="veolas" onClick={handleMenuItemClick}>
-            veOlas
-          </Menu.Item>
-          <Menu.Item key="buolas" onClick={handleMenuItemClick}>
-            buOlas
-          </Menu.Item>
-        </Menu>
-
+        <Menu
+          theme="light"
+          mode="horizontal"
+          selectedKeys={[selectedMenu]}
+          items={[
+            {
+              key: 'veolas',
+              label: 'veOlas',
+              onClick: handleMenuItemClick,
+            },
+            {
+              key: 'buolas',
+              label: 'buOlas',
+              onClick: handleMenuItemClick,
+            },
+          ]}
+        />
         <Login />
       </Header>
 

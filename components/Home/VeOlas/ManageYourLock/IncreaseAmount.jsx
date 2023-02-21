@@ -1,7 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import {
-  Button, Form, Typography, Divider,
-} from 'antd/lib';
+import { Button, Form, Typography } from 'antd/lib';
 import {
   parseToEth,
   notifyError,
@@ -9,14 +7,12 @@ import {
   CannotIncreaseAlert,
   AlreadyAllAmountLocked,
 } from 'common-util/functions';
-import {
-  fetchMappedBalances,
-  fetchVeolasDetails,
-} from 'store/setup/actions';
+import { fetchMappedBalances, fetchVeolasDetails } from 'store/setup/actions';
 import { parseAmount, FormItemInputNumber } from '../../common';
 import { updateIncreaseAmount } from '../utils';
+import { FormContainer } from './styles';
 
-const { Title } = Typography;
+const { Text } = Typography;
 
 export const IncreaseAmount = () => {
   const dispatch = useDispatch();
@@ -60,34 +56,51 @@ export const IncreaseAmount = () => {
 
   return (
     <>
-      <Title level={3}>Increase Amount</Title>
+      <FormContainer>
+        <Form
+          form={form}
+          layout="vertical"
+          autoComplete="off"
+          name="increase-amount-form"
+          className="custom-vertical-form"
+          onFinish={onFinish}
+        >
+          <div>
+            <FormItemInputNumber maxAmount={parseToEth(olasBalance)} />
 
-      <Form
-        form={form}
-        layout="vertical"
-        autoComplete="off"
-        name="increase-amount-form"
-        onFinish={onFinish}
-      >
-        <FormItemInputNumber maxAmount={parseToEth(olasBalance)} />
-        <Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            disabled={cannotIncreaseAmount}
-          >
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
+            <Form.Item className="mb-0">
+              <Text type="secondary">
+                OLAS balance: 200&nbsp;
+                <Button
+                  htmlType="button"
+                  type="link"
+                  // onClick={prefillOwnerAddress}
+                  className="pl-0"
+                >
+                  Max
+                </Button>
+              </Text>
+            </Form.Item>
+          </div>
 
-      <Divider>OR</Divider>
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              disabled={cannotIncreaseAmount}
+            >
+              Add to lock
+            </Button>
+          </Form.Item>
+        </Form>
+      </FormContainer>
 
       <Button
         type="primary"
         htmlType="submit"
         disabled={cannotIncreaseAmount}
         onClick={() => onFinish({ sendMaxAmount: true })}
+        style={{ display: 'none' }}
       >
         Lock maximum amount
       </Button>

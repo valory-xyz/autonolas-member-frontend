@@ -1,20 +1,24 @@
 import styled from 'styled-components';
 
-export const VeOlasContainer = styled.div`
-  display: flex;
-  align-items: flex-start;
-  max-width: 980px;
-  .balance-container {
-    width: 360px;
-    margin: 0.25rem 3rem 1rem 0;
-  }
-`;
-
 export const WriteFunctionalityContainer = styled.div`
   .forms-container {
     margin-top: 2rem;
     .ant-form {
       max-width: 300px;
+    }
+  }
+`;
+
+export const FormContainer = styled.div`
+  .custom-vertical-form {
+    display: flex;
+    align-items: flex-start;
+    > .ant-form-item:last-child {
+      margin-top: 36px;
+      margin-left: 12px;
+    }
+    .ant-form-item {
+      margin-bottom: 4px;
     }
   }
 `;
