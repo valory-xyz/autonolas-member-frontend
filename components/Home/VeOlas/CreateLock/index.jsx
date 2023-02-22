@@ -15,7 +15,7 @@ import {
   cannotApproveTokens,
   approveOlasByOwner,
   createLockRequest,
-} from '../utils';
+} from '../contractUtils';
 import { useFetchBalances } from '../hooks';
 import { CreateLockContainer, GetMoreOlasRow } from './styles';
 

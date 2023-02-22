@@ -1,7 +1,7 @@
 import { Button, Form } from 'antd/lib';
 import { notifyError, notifySuccess } from 'common-util/functions';
 import { parseToWei, FormItemInputNumber, MaxButton } from '../../common';
-import { updateIncreaseAmount } from '../utils';
+import { updateIncreaseAmount } from '../contractUtils';
 import { useFetchBalances } from '../hooks';
 import { FormContainer } from './styles';
 

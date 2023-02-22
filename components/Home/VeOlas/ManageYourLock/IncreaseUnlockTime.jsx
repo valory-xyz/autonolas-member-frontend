@@ -1,7 +1,7 @@
 import { Button, Form } from 'antd/lib';
 import { notifyError, notifySuccess } from 'common-util/functions';
 import { parseToSeconds, FormItemDate } from '../../common';
-import { updateIncreaseUnlockTime } from '../utils';
+import { updateIncreaseUnlockTime } from '../contractUtils';
 import { useFetchBalances } from '../hooks';
 import { FormContainer } from './styles';
 

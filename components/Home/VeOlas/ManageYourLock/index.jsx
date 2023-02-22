@@ -10,7 +10,7 @@ import {
   AlreadyAllAmountLocked,
 } from 'common-util/functions';
 import { TAB_KEYS } from 'common-util/constants';
-import { withdrawVeolasRequest } from '../utils';
+import { withdrawVeolasRequest } from '../contractUtils';
 import { useFetchBalances, useVeolasComponents } from '../hooks';
 import { IncreaseAmount } from './IncreaseAmount';
 import { IncreaseUnlockTime } from './IncreaseUnlockTime';
@@ -33,7 +33,7 @@ export const VeolasManage = ({ setActiveTab }) => {
     getUnlockTimeComponent,
   } = useVeolasComponents();
 
-  const [isModalVisible, setIsModalVisible] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const onWithdraw = async () => {
     try {
@@ -70,21 +70,22 @@ export const VeolasManage = ({ setActiveTab }) => {
           is either true or false (default value is null) */}
           {!isNil(canWithdrawVeolas) && (
             <>
-              {canWithdrawVeolas ? (
-                <Button type="primary" htmlType="submit" onClick={onWithdraw}>
-                  Withdraw
-                </Button>
-              ) : (
-                <Button onClick={() => setIsModalVisible(true)}>
-                  Increase lock
-                </Button>
-              )}
+              <Button onClick={() => setIsModalVisible(true)}>
+                Increase lock
+              </Button>
             </>
           )}
         </Col>
 
         <Col lg={6} xs={12}>
           {getUnlockTimeComponent()}
+          {/* to avoid glitch, show the component only if `canWithdrawVeolas`
+          is either true or false (default value is null) */}
+          {!isNil(canWithdrawVeolas) && canWithdrawVeolas && (
+            <Button htmlType="submit" onClick={onWithdraw}>
+              Claim all
+            </Button>
+          )}
         </Col>
       </Row>
 
@@ -119,16 +120,6 @@ export const VeolasManage = ({ setActiveTab }) => {
               </ModalAlertSection>
             )}
           </div>
-
-          <Row align="top">
-            <Col lg={10} xs={12}>
-              {getVotingPowerComponent()}
-            </Col>
-
-            <Col lg={14} xs={12}>
-              {getVotingPercentComponent()}
-            </Col>
-          </Row>
         </Modal>
       )}
     </>
