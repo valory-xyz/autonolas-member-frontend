@@ -48,6 +48,7 @@ const GlobalStyle = createGlobalStyle`
     z-index: 1;
     width: calc(100% - 32px);
     padding: 0 24px;
+    height: 80px;
     .ant-menu {
       flex: 1;
       &.ant-menu-horizontal {
@@ -89,7 +90,7 @@ const GlobalStyle = createGlobalStyle`
   /* layout */
   .site-layout {
     padding: 0 24px;
-    margin-top: 42px;
+    margin-top: 56px;
   }
   .site-layout-background {
     padding: 24px 0;

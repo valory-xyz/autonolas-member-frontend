@@ -1,16 +1,10 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { Button, Form, Typography } from 'antd/lib';
-import {
-  parseToEth,
-  notifyError,
-  notifySuccess,
-  CannotIncreaseAlert,
-  AlreadyAllAmountLocked,
-} from 'common-util/functions';
+import { parseToEth, notifyError, notifySuccess } from 'common-util/functions';
 import { fetchMappedBalances, fetchVeolasDetails } from 'store/setup/actions';
 import { parseAmount, FormItemInputNumber } from '../../common';
 import { updateIncreaseAmount } from '../utils';
-import { FormContainer, ModalAlertSection } from './styles';
+import { FormContainer } from './styles';
 
 const { Text } = Typography;
 
@@ -102,15 +96,6 @@ export const IncreaseAmount = () => {
       >
         Lock maximum amount
       </Button>
-
-      {account && (
-        <ModalAlertSection>
-          {isMappedAmountZero && <CannotIncreaseAlert />}
-          {hasNoOlasBalance && !isMappedAmountZero && (
-            <AlreadyAllAmountLocked />
-          )}
-        </ModalAlertSection>
-      )}
     </>
   );
 };

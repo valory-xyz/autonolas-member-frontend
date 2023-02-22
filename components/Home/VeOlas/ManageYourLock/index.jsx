@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Radio, Button, Row, Col, Modal,
+  Button, Row, Col, Modal,
 } from 'antd/lib';
 import { isNil, isString } from 'lodash';
 import {
@@ -16,12 +16,6 @@ import { withdrawVeolasRequest } from '../utils';
 import { IncreaseAmount } from './IncreaseAmount';
 import { IncreaseUnlockTime } from './IncreaseUnlockTime';
 import { useFetchBalances } from '../hooks';
-
-const FORM_TYPE = {
-  increaseAmount: 'typeIncreaseAmount',
-  increaseUnlockTime: 'typeIncreaseUnlockTime',
-  claim: 'typeClaim',
-};
 
 export const VeolasManage = ({ setActiveTab }) => {
   const {
@@ -38,14 +32,6 @@ export const VeolasManage = ({ setActiveTab }) => {
   } = useFetchBalances();
 
   const [isModalVisible, setIsModalVisible] = useState(true);
-  const [currentFormType, setCurrentFormType] = useState(
-    FORM_TYPE.increaseAmount,
-  );
-
-  // on radio button changes
-  const onRadioBtnChange = (e) => {
-    setCurrentFormType(e.target.value);
-  };
 
   const onWithdraw = async () => {
     try {
@@ -152,22 +138,9 @@ export const VeolasManage = ({ setActiveTab }) => {
             </Col>
           </Row>
 
-          <Radio.Group
-            onChange={onRadioBtnChange}
-            value={currentFormType}
-            style={{ display: 'none' }}
-          >
-            <Radio value={FORM_TYPE.increaseAmount}>Increase Amount</Radio>
-            <Radio value={FORM_TYPE.increaseUnlockTime}>
-              Increase Unlock Time
-            </Radio>
-          </Radio.Group>
-
           <div className="forms-container">
-            {currentFormType === FORM_TYPE.increaseAmount && <IncreaseAmount />}
-            {currentFormType === FORM_TYPE.increaseUnlockTime && (
-              <IncreaseUnlockTime />
-            )}
+            <IncreaseAmount />
+            <IncreaseUnlockTime />
           </div>
         </Modal>
       )}

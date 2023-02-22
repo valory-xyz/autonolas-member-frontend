@@ -5,15 +5,21 @@ import {
   notifyError,
   notifySuccess,
   CannotIncreaseAlert,
+  AlreadyAllAmountLocked,
 } from 'common-util/functions';
 import { parseToSeconds, FormItemDate } from '../../common';
 import { updateIncreaseUnlockTime } from '../utils';
-import { FormContainer } from './styles';
+import { FormContainer, ModalAlertSection } from './styles';
 
 export const IncreaseUnlockTime = () => {
   const dispatch = useDispatch();
   const account = useSelector((state) => state?.setup?.account);
   const chainId = useSelector((state) => state?.setup?.chainId);
+  const isMappedAmountZero = useSelector(
+    (state) => state?.setup?.mappedBalances?.isMappedAmountZero || false,
+  );
+  const olasBalance = useSelector((state) => state?.setup?.olasBalance);
+  const hasNoOlasBalance = Number(olasBalance || '0') === 0;
   const cannotIncreaseTime = useSelector(
     (state) => state?.setup?.mappedBalances?.isMappedAmountZero,
   );
@@ -53,9 +59,13 @@ export const IncreaseUnlockTime = () => {
           layout="vertical"
           autoComplete="off"
           name="increase-unlock-time-form"
+          className="custom-vertical-form"
           onFinish={onFinish}
         >
-          <FormItemDate startDate={mappedEndTime} />
+          <div className="full-width">
+            <FormItemDate startDate={mappedEndTime} />
+          </div>
+
           <Form.Item>
             <Button
               type="primary"
@@ -68,7 +78,14 @@ export const IncreaseUnlockTime = () => {
         </Form>
       </FormContainer>
 
-      {cannotIncreaseTime && <CannotIncreaseAlert />}
+      {account && (
+        <ModalAlertSection>
+          {isMappedAmountZero && <CannotIncreaseAlert />}
+          {hasNoOlasBalance && !isMappedAmountZero && (
+            <AlreadyAllAmountLocked />
+          )}
+        </ModalAlertSection>
+      )}
     </>
   );
 };

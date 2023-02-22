@@ -15,7 +15,7 @@ export const ValueText = styled.div`
   font-size: 48px;
   line-height: 58px;
   letter-spacing: -0.02em;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 `;
 
 const { Title, Paragraph } = Typography;

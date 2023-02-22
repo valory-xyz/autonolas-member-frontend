@@ -20,7 +20,7 @@ import {
   approveOlasByOwner,
   createLockRequest,
 } from '../utils';
-import { CreateLockContainer } from './styles';
+import { CreateLockContainer, GetMoreOlasRow } from './styles';
 
 export const VeolasCreateLock = () => {
   const dispatch = useDispatch();
@@ -88,16 +88,12 @@ export const VeolasCreateLock = () => {
 
   return (
     <CreateLockContainer>
-      <div style={{ marginBottom: '1rem' }}>
-        {/* TODO */}
-        <Button type="primary" style={{ marginRight: '1rem' }} disabled>
-          Get more veOLAS
-        </Button>
-
+      <GetMoreOlasRow>
+        <Button type="danger">Get more veOLAS</Button>
         <Button type="primary" onClick={() => setIsModalVisible(true)}>
           Create Lock
         </Button>
-      </div>
+      </GetMoreOlasRow>
 
       {isModalVisible && (
         <Modal
@@ -135,10 +131,10 @@ export const VeolasCreateLock = () => {
           </Form>
 
           {isSubmitBtnDisabled && (
-          <Alert
-            message="Amount already locked, please wait until the lock expires."
-            type="warning"
-          />
+            <Alert
+              message="Amount already locked, please wait until the lock expires."
+              type="warning"
+            />
           )}
         </Modal>
       )}
