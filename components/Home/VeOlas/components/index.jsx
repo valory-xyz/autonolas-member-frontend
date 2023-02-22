@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import PropTypes from 'prop-types';
 import {
   Button, Row, Col, Modal,
 } from 'antd/lib';
@@ -9,7 +8,6 @@ import {
   CannotIncreaseAlert,
   AlreadyAllAmountLocked,
 } from 'common-util/functions';
-import { TAB_KEYS } from 'common-util/constants';
 import { withdrawVeolasRequest } from '../contractUtils';
 import { useFetchBalances, useVeolasComponents } from '../hooks';
 
@@ -18,7 +16,7 @@ import { IncreaseAmount } from './IncreaseAmount';
 import { IncreaseUnlockTime } from './IncreaseUnlockTime';
 import { ModalAlertSection } from '../styles';
 
-export const VeolasManage = ({ setActiveTab }) => {
+export const VeolasManage = () => {
   const {
     account,
     chainId,
@@ -46,7 +44,6 @@ export const VeolasManage = ({ setActiveTab }) => {
       // fetch all the data again to update
       // amount, time, votes, etc
       getData();
-      setActiveTab(TAB_KEYS.createLock);
     } catch (error) {
       window.console.error(error);
     }
@@ -134,12 +131,4 @@ export const VeolasManage = ({ setActiveTab }) => {
       )}
     </>
   );
-};
-
-VeolasManage.propTypes = {
-  setActiveTab: PropTypes.func,
-};
-
-VeolasManage.defaultProps = {
-  setActiveTab: () => {},
 };

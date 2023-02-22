@@ -2,7 +2,7 @@ import { Button, Typography } from 'antd/lib';
 import { notifyError, notifySuccess } from 'common-util/functions';
 import { useFetchBuolasBalances } from '../hooks';
 import { createBuolasLockRequest, approveOlasByOwner } from '../contractUtils';
-import { CreateLockContainer } from './styles';
+import { CreateLockContainer } from '../styles';
 
 const { Title } = Typography;
 

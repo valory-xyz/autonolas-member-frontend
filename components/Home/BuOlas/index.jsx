@@ -1,6 +1,6 @@
 import { Typography } from 'antd/lib';
 // import { BuolasCreateLock } from './CreateLock';
-import { BuolasManage } from './Manage';
+import { BuolasManage } from './components/BuolasManage';
 
 const { Title, Paragraph, Text } = Typography;
 

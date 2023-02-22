@@ -10,15 +10,6 @@ export const GetMoreOlasRow = styled.div`
   }
 `;
 
-export const WriteFunctionalityContainer = styled.div`
-  .forms-container {
-    margin-top: 2rem;
-    .ant-form {
-      max-width: 300px;
-    }
-  }
-`;
-
 export const FormContainer = styled.div`
   .custom-vertical-form {
     display: flex;
@@ -35,5 +26,4 @@ export const FormContainer = styled.div`
 
 export const ModalAlertSection = styled.div`
   margin: 1rem 0 1rem 0;
-  /* margin-top: 2rem; */
 `;
