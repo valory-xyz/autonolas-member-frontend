@@ -1,9 +1,8 @@
-import { isNil, isString } from 'lodash';
-import { NA } from 'common-util/constants';
 import {
   getFormattedDate,
   formatToEth,
   getTotalVotesPercentage,
+  getString,
 } from 'common-util/functions';
 import { InfoCard } from 'common-util/InfoCard';
 import { useFetchBalances } from './useFetchBalances';
@@ -20,11 +19,6 @@ export const useVeolasComponents = () => {
     mappedAmount,
     mappedEndTime,
   } = useFetchBalances();
-
-  const getString = (x) => {
-    if (isNil(x)) return NA;
-    return isString(x) ? x : `${x}`;
-  };
 
   const getBalanceComponent = (title) => (
     <InfoCard

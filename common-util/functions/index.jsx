@@ -1,6 +1,6 @@
 import { ethers } from 'ethers';
 import { notification, Alert } from 'antd/lib';
-import { isNil } from 'lodash';
+import { isNil, isString } from 'lodash';
 import { COLOR } from 'util/theme';
 import { NA } from 'common-util/constants';
 
@@ -92,4 +92,9 @@ export const getFormattedDate = (ms) => {
     month: 'short',
     day: '2-digit',
   }).format(ms);
+};
+
+export const getString = (x) => {
+  if (isNil(x)) return NA;
+  return isString(x) ? x : `${x}`;
 };
