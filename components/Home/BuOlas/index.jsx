@@ -1,5 +1,5 @@
 import { Typography } from 'antd/lib';
-import { BuolasCreateLock } from './CreateLock';
+// import { BuolasCreateLock } from './CreateLock';
 import { BuolasManage } from './Manage';
 
 const { Title, Paragraph, Text } = Typography;
@@ -17,7 +17,8 @@ export const BuOlas = () => (
       </a>
     </Paragraph>
 
-    <BuolasCreateLock />
+    {/* BuOlas create won't be visible to the user & used interally */}
+    {/* <BuolasCreateLock /> */}
     <BuolasManage />
   </div>
 );

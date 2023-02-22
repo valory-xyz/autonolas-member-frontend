@@ -1,16 +1,9 @@
 import { useState } from 'react';
-import {
-  Button, Alert, Row, Col,
-} from 'antd/lib';
-import { getString } from 'common-util/functions';
+import { Button, Row, Col } from 'antd/lib';
+import { getString, getFormattedDate } from 'common-util/functions';
 import { InfoCard } from 'common-util/InfoCard';
-import { getToken } from '../../common';
-import { withdrawRequest } from './utils';
 import { useFetchBuolasBalances } from '../hooks';
-import { MiddleContent, Sections } from '../../styles';
-import { BuOlasContainer, WriteFunctionalityContainer } from '../styles';
-
-const getTime = (seconds) => (seconds ? new Date(seconds).toLocaleDateString() : '--');
+import { withdrawRequest } from '../contractUtils';
 
 export const BuolasManage = () => {
   const {
@@ -22,7 +15,7 @@ export const BuolasManage = () => {
     buolasNextReleasableAmount,
     buolasNextReleasableTime,
     getData,
-  } = useFetchBuolasBalances;
+  } = useFetchBuolasBalances();
 
   const [isWithdrawLoading, setIsWithdrawLoading] = useState(false);
 
@@ -51,31 +44,37 @@ export const BuolasManage = () => {
           />
         </Col>
 
+        <Col lg={4} md={24} xs={24}>
+          <InfoCard
+            value={getString(buolasReleasableAmount)}
+            subText="Vested amount"
+          />
+          <Button
+            disabled={isWithdrawLoading || buolasReleasableAmount <= 0}
+            onClick={onWithdraw}
+            loading={isWithdrawLoading}
+          >
+            Claim all
+          </Button>
+        </Col>
+
         <Col lg={6} md={24} xs={24}>
           <InfoCard
-            value={getTime(mappedBalances?.startTime)}
+            value={getFormattedDate(mappedBalances?.startTime)}
             subText="Vesting time"
           />
         </Col>
 
         <Col lg={6} md={24} xs={24}>
           <InfoCard
-            value={getTime(mappedBalances?.endTime)}
+            value={getFormattedDate(mappedBalances?.endTime)}
             subText="Time to vest"
-          />
-        </Col>
-
-        <Col lg={4} md={24} xs={24}>
-          <InfoCard
-            value={getString(buolasReleasableAmount)}
-            subText="Vested amount"
           />
         </Col>
       </Row>
 
-      <br />
-      <Row align="top">
-        {/* Next releasable amount and time */}
+      {/* Next releasable amount and time */}
+      <Row align="top" style={{ marginTop: '1rem' }}>
         <Col lg={4} md={24} xs={24}>
           <InfoCard
             title="Next vesting"
@@ -84,66 +83,13 @@ export const BuolasManage = () => {
           />
         </Col>
 
-        <Col lg={4} md={24} xs={24}>
-          <InfoCard value={getTime(buolasNextReleasableTime)} subText="time" />
+        <Col lg={6} md={24} xs={24}>
+          <InfoCard
+            value={getFormattedDate(buolasNextReleasableTime)}
+            subText="time"
+          />
         </Col>
       </Row>
-
-      <BuOlasContainer>
-        <div className="left-content">
-          <MiddleContent className="balance-container">
-            <Sections>
-              {getToken({
-                tokenName: 'Balance',
-                token: buolasBalance || '--',
-              })}
-              {getToken({
-                tokenName: 'Vesting time',
-                token: getTime(mappedBalances?.startTime),
-              })}
-              {getToken({
-                tokenName: 'Time to vest',
-                token: getTime(mappedBalances?.endTime),
-              })}
-              {getToken({
-                tokenName: 'Vested amount',
-                token: buolasReleasableAmount || '--',
-              })}
-            </Sections>
-          </MiddleContent>
-
-          <MiddleContent className="balance-container">
-            <Sections>
-              {getToken({
-                tokenName: 'Next Vesting amount',
-                token: buolasNextReleasableAmount || '--',
-              })}
-              {getToken({
-                tokenName: 'Next Vesting time',
-                token: getTime(buolasNextReleasableTime),
-              })}
-            </Sections>
-          </MiddleContent>
-        </div>
-
-        {/* show Withdraw button only if releasable amount > 0 */}
-        <WriteFunctionalityContainer>
-          <Button
-            type="primary"
-            disabled={isWithdrawLoading || buolasReleasableAmount <= 0}
-            onClick={onWithdraw}
-            loading={isWithdrawLoading}
-          >
-            Withdraw
-          </Button>
-          {buolasReleasableAmount <= 0 && (
-            <Alert
-              message="You have no releasable amount to withdraw"
-              type="warning"
-            />
-          )}
-        </WriteFunctionalityContainer>
-      </BuOlasContainer>
     </>
   );
 };

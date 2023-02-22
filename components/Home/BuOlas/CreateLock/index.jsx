@@ -1,23 +1,13 @@
-import { useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import { Button, Typography } from 'antd/lib';
-import { fetchBuolasDetails } from 'store/setup/actions';
 import { notifyError, notifySuccess } from 'common-util/functions';
-import { createBuolasLockRequest, approveOlasByOwner } from './utils';
+import { useFetchBuolasBalances } from '../hooks';
+import { createBuolasLockRequest, approveOlasByOwner } from '../contractUtils';
 import { CreateLockContainer } from './styles';
 
 const { Title } = Typography;
 
 export const BuolasCreateLock = () => {
-  const dispatch = useDispatch();
-  const account = useSelector((state) => state?.setup?.account);
-  const chainId = useSelector((state) => state?.setup?.chainId);
-
-  useEffect(() => {
-    if (account && chainId) {
-      dispatch(fetchBuolasDetails());
-    }
-  }, [account, chainId]);
+  const { account, chainId, getData } = useFetchBuolasBalances();
 
   const onFinish = async () => {
     try {
@@ -33,7 +23,7 @@ export const BuolasCreateLock = () => {
       );
 
       // fetch the data again
-      dispatch(fetchBuolasDetails());
+      getData();
     } catch (error) {
       window.console.error(error);
       notifyError('Some error occured');
