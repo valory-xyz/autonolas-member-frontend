@@ -1,7 +1,8 @@
 import { ethers } from 'ethers';
 import { notification, Alert } from 'antd/lib';
-import { isNil } from 'lodash';
+import { isNil, isString } from 'lodash';
 import { COLOR } from 'util/theme';
+import { NA } from 'common-util/constants';
 
 /**
  * https://docs.ethers.org/v5/api/utils/constants/#constants-MaxUint256
@@ -28,7 +29,7 @@ export const getBalance = (account, p) => new Promise((resolve, reject) => {
  */
 export const formatToEth = (value, dv = 0) => {
   if (isNil(value)) return dv || 0;
-  return (+ethers.utils.formatEther(value)).toFixed(8);
+  return (+ethers.utils.formatEther(value)).toFixed(2);
 };
 
 /**
@@ -78,4 +79,27 @@ export const getTotalVotesPercentage = (votes, totalSupply) => {
   }
 
   return null;
+};
+
+/**
+ * Get formatted date from milliseconds
+ * example, 1678320000000 => Mar 09 '23
+ */
+export const getFormattedDate = (ms) => {
+  if (!ms) return NA;
+
+  // eg: Feb 23, 2023;
+  const dateInString = new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+  }).format(ms);
+
+  const yearInShortForm = dateInString.split(', ')[1].trim().substring(2, 4);
+  return `${dateInString.split(', ')[0]} '${yearInShortForm}`;
+};
+
+export const getString = (x) => {
+  if (isNil(x)) return NA;
+  return isString(x) ? x : `${x}`;
 };

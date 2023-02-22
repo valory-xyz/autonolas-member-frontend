@@ -18,8 +18,15 @@ export const getNextReleasableAmount = (lockedBalance, timestamp) => {
     if (numNextStep >= totalNumSteps) {
       buolasNextReleasableAmount = lockedBalance.totalAmount - lockedBalance.transferredAmount;
     } else {
-      buolasNextReleasableAmount = (lockedBalance.totalAmount * numNextStep) / totalNumSteps;
-      buolasNextReleasableAmount -= lockedBalance.transferredAmount;
+      /**
+       * divide the total amount by the number of steps
+       *
+       * example:
+       * amount = 1000
+       * steps = 4
+       * nextReleasableAmount = 1000 / 4 = 250
+       */
+      buolasNextReleasableAmount = (lockedBalance.totalAmount) / totalNumSteps;
     }
 
     // convert to display format

@@ -1,9 +1,14 @@
 /* eslint-disable react/prop-types */
 import { ethers } from 'ethers';
 import moment from 'moment';
-import { Form, InputNumber, DatePicker } from 'antd/lib';
+import {
+  Form, InputNumber, DatePicker, Button, Typography,
+} from 'antd/lib';
 import isNil from 'lodash/isNil';
 import { Shimmer } from 'common-util/Shimmer';
+import { useFetchBalances } from './VeOlas/hooks';
+
+const { Text } = Typography;
 
 const fullWidth = { width: '100%' };
 
@@ -21,7 +26,7 @@ export const getToken = ({ tokenName, token, isLoading = false }) => (
 /**
  * multiplies the amount by 10^18
  */
-export const parseAmount = (amount) => ethers.utils.parseUnits(`${amount}`, 18).toString();
+export const parseToWei = (amount) => ethers.utils.parseUnits(`${amount}`, 18).toString();
 
 /**
  * parse eth
@@ -45,35 +50,55 @@ export const parseToSeconds = (unlockTime) => {
 /**
  * @returns Amount Input
  */
-export const FormItemInputNumber = ({ isRequired = true, maxAmount }) => (
-  <Form.Item
-    name="amount"
-    label="Amount"
-    rules={[
-      { required: isRequired, message: 'Amount is required' },
-      () => ({
-        validator(_, value) {
-          if (value === '' || isNil(value)) return Promise.resolve();
-          if (value <= 1) {
-            return Promise.reject(new Error('Please input a valid amount'));
-          }
-          if (maxAmount && value > maxAmount) {
-            return Promise.reject(
-              new Error('Amount cannot be greater than the balance'),
-            );
-          }
-          return Promise.resolve();
-        },
-      }),
-    ]}
-  >
-    <InputNumber
-      style={fullWidth}
-      placeholder="Add amount"
-      disabled={!isRequired}
-    />
-  </Form.Item>
-);
+export const FormItemInputNumber = () => {
+  const { olasBalanceInEth } = useFetchBalances();
+
+  return (
+    <Form.Item
+      className="custom-form-item-lock"
+      name="amount"
+      label="Lock more OLAS"
+      rules={[
+        { required: true, message: 'Amount is required' },
+        () => ({
+          validator(_, value) {
+            if (value === '' || isNil(value)) return Promise.resolve();
+            if (value <= 1) {
+              return Promise.reject(new Error('Please input a valid amount'));
+            }
+            if (olasBalanceInEth && value > olasBalanceInEth) {
+              return Promise.reject(
+                new Error('Amount cannot be greater than the balance'),
+              );
+            }
+            return Promise.resolve();
+          },
+        }),
+      ]}
+    >
+      <InputNumber style={fullWidth} placeholder="Add amount" />
+    </Form.Item>
+  );
+};
+
+export const MaxButton = ({ onMaxClick }) => {
+  const { olasBalanceInEth } = useFetchBalances();
+
+  return (
+    <Text type="secondary">
+      OLAS balance:&nbsp;
+      {olasBalanceInEth}
+      <Button
+        htmlType="button"
+        type="link"
+        onClick={onMaxClick}
+        className="pl-0"
+      >
+        Max
+      </Button>
+    </Text>
+  );
+};
 
 /**
  * @returns Date Input

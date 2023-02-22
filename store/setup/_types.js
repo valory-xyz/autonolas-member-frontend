@@ -14,6 +14,7 @@ export const syncTypes = {
   SET_OLAS_BALANCE: `${reducerName}/OLAS - balance`,
 
   // veOlas
+  SET_VEOLAS_BALANCEOF: `${reducerName}/Set veOlas - balanceOf`,
   SET_MAPPED_BALANCES: `${reducerName}/Set veOlas - mapped balances`,
   SET_VOTES: `${reducerName}/Set veOlas - votes`,
   SET_TOTAL_SUPPLY_LOCKED: `${reducerName}/Set veOlas - total supply locked`,

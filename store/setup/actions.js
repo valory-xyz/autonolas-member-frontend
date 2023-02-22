@@ -46,6 +46,25 @@ export const fetchOlasBalance = () => async (dispatch, getState) => {
 };
 
 // veOlas
+export const fetchVeolasBalance = () => async (dispatch, getState) => {
+  const account = getState()?.setup?.account;
+  const chainId = getState()?.setup?.chainId;
+
+  try {
+    const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+    const response = await contract.methods
+      .balanceOf(account)
+      .call();
+
+    dispatch({
+      type: syncTypes.SET_VEOLAS_BALANCEOF,
+      data: { veolasBalance: formatToEth(response) },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const setMappedBalances = (data) => ({
   type: syncTypes.SET_MAPPED_BALANCES,
   data,
@@ -110,8 +129,9 @@ export const fetchTotalSupplyLocked = () => async (dispatch, getState) => {
   }
 };
 
-export const fetchVotesAndTotalSupplyLocked = () => async (dispatch) => {
+export const fetchVeolasDetails = () => async (dispatch) => {
   dispatch(fetchOlasBalance());
+  dispatch(fetchVeolasBalance());
   dispatch(fetchVotes());
   dispatch(fetchTotalSupplyLocked());
 };
