@@ -45,44 +45,32 @@ export const IncreaseAmount = () => {
   };
 
   return (
-    <>
-      <FormContainer>
-        <Form
-          form={form}
-          layout="vertical"
-          autoComplete="off"
-          name="increase-amount-form"
-          className="custom-vertical-form"
-          onFinish={onFinish}
-        >
-          <div className="full-width">
-            <FormItemInputNumber />
-            <MaxButton
-              onMaxClick={() => form.setFieldsValue({ amount: olasBalanceInEth })}
-            />
-          </div>
-
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              disabled={cannotIncreaseAmount}
-            >
-              Add to lock
-            </Button>
-          </Form.Item>
-        </Form>
-      </FormContainer>
-
-      <Button
-        type="primary"
-        htmlType="submit"
-        disabled={cannotIncreaseAmount}
-        onClick={() => onFinish({ sendMaxAmount: true })}
-        style={{ display: 'none' }}
+    <FormContainer>
+      <Form
+        form={form}
+        layout="vertical"
+        autoComplete="off"
+        name="increase-amount-form"
+        className="custom-vertical-form"
+        onFinish={onFinish}
       >
-        Lock maximum amount
-      </Button>
-    </>
+        <div className="full-width">
+          <FormItemInputNumber />
+          <MaxButton
+            onMaxClick={() => form.setFieldsValue({ amount: olasBalanceInEth })}
+          />
+        </div>
+
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={cannotIncreaseAmount}
+          >
+            Add to lock
+          </Button>
+        </Form.Item>
+      </Form>
+    </FormContainer>
   );
 };

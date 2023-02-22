@@ -1,23 +1,13 @@
 import { Button, Form } from 'antd/lib';
-import {
-  notifyError,
-  notifySuccess,
-  CannotIncreaseAlert,
-  AlreadyAllAmountLocked,
-} from 'common-util/functions';
+import { notifyError, notifySuccess } from 'common-util/functions';
 import { parseToSeconds, FormItemDate } from '../../common';
 import { updateIncreaseUnlockTime } from '../utils';
 import { useFetchBalances } from '../hooks';
-import { FormContainer, ModalAlertSection } from './styles';
+import { FormContainer } from './styles';
 
 export const IncreaseUnlockTime = () => {
   const {
-    account,
-    chainId,
-    mappedEndTime,
-    isMappedAmountZero,
-    hasNoOlasBalance,
-    getData,
+    account, chainId, mappedEndTime, isMappedAmountZero, getData,
   } = useFetchBalances();
   const [form] = Form.useForm();
 
@@ -43,40 +33,29 @@ export const IncreaseUnlockTime = () => {
   };
 
   return (
-    <>
-      <FormContainer style={{ marginTop: '1rem' }}>
-        <Form
-          form={form}
-          layout="vertical"
-          autoComplete="off"
-          name="increase-unlock-time-form"
-          className="custom-vertical-form"
-          onFinish={onFinish}
-        >
-          <div className="full-width">
-            <FormItemDate startDate={mappedEndTime} />
-          </div>
+    <FormContainer style={{ marginTop: '1rem' }}>
+      <Form
+        form={form}
+        layout="vertical"
+        autoComplete="off"
+        name="increase-unlock-time-form"
+        className="custom-vertical-form"
+        onFinish={onFinish}
+      >
+        <div className="full-width">
+          <FormItemDate startDate={mappedEndTime} />
+        </div>
 
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              disabled={!account || isMappedAmountZero}
-            >
-              Add to lock
-            </Button>
-          </Form.Item>
-        </Form>
-      </FormContainer>
-
-      {account && (
-        <ModalAlertSection>
-          {isMappedAmountZero && <CannotIncreaseAlert />}
-          {hasNoOlasBalance && !isMappedAmountZero && (
-            <AlreadyAllAmountLocked />
-          )}
-        </ModalAlertSection>
-      )}
-    </>
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={!account || isMappedAmountZero}
+          >
+            Add to lock
+          </Button>
+        </Form.Item>
+      </Form>
+    </FormContainer>
   );
 };

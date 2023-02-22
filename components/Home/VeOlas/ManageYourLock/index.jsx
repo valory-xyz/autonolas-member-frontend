@@ -4,16 +4,26 @@ import {
   Button, Row, Col, Modal,
 } from 'antd/lib';
 import { isNil } from 'lodash';
-import { notifySuccess } from 'common-util/functions';
+import {
+  notifySuccess,
+  CannotIncreaseAlert,
+  AlreadyAllAmountLocked,
+} from 'common-util/functions';
 import { TAB_KEYS } from 'common-util/constants';
 import { withdrawVeolasRequest } from '../utils';
 import { useFetchBalances, useVeolasComponents } from '../hooks';
 import { IncreaseAmount } from './IncreaseAmount';
 import { IncreaseUnlockTime } from './IncreaseUnlockTime';
+import { ModalAlertSection } from './styles';
 
 export const VeolasManage = ({ setActiveTab }) => {
   const {
-    account, chainId, canWithdrawVeolas, getData,
+    account,
+    chainId,
+    canWithdrawVeolas,
+    getData,
+    hasNoOlasBalance,
+    isMappedAmountZero,
   } = useFetchBalances();
   const {
     getBalanceComponent,
@@ -99,6 +109,15 @@ export const VeolasManage = ({ setActiveTab }) => {
           <div className="forms-container">
             <IncreaseAmount />
             <IncreaseUnlockTime />
+
+            {account && (
+              <ModalAlertSection>
+                {isMappedAmountZero && <CannotIncreaseAlert />}
+                {hasNoOlasBalance && !isMappedAmountZero && (
+                  <AlreadyAllAmountLocked />
+                )}
+              </ModalAlertSection>
+            )}
           </div>
 
           <Row align="top">
