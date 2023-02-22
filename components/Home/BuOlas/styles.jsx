@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-// import { COLOR, MEDIA_QUERY } from 'util/theme';
 
 export const BuOlasContainer = styled.div`
   display: flex;
@@ -11,4 +10,8 @@ export const BuOlasContainer = styled.div`
   }
 `;
 
-export const WriteFunctionalityContainer = styled.div``;
+export const WriteFunctionalityContainer = styled.div`
+  .ant-btn {
+    margin-bottom: 1rem;
+  }
+`;

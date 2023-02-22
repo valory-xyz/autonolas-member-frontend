@@ -24,10 +24,9 @@ export const getToken = ({ tokenName, token, isLoading = false }) => (
 export const parseAmount = (amount) => ethers.utils.parseUnits(`${amount}`, 18).toString();
 
 /**
- * Parse to Eth
- * eg. 1000000000000000000 => 1
+ * parse eth
  */
-export const parseToEth = (amount) => (amount ? ethers.utils.formatEther(`${amount}`) : 0);
+export const parseEther = (n) => ethers.utils.parseEther(`${n}`);
 
 /**
  * Parses to seconds by doing the following operation in order

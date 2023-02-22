@@ -1,7 +1,8 @@
-import { formatToEth } from 'common-util/functions';
+import { formatToEth, getBlockTimestamp } from 'common-util/functions';
 import {
-  getVeolasContract, getOlasContract,
+  getVeolasContract, getOlasContract, getBuolasContract,
 } from 'common-util/Contracts';
+import { getNextReleasableAmount } from './utils';
 import { syncTypes } from './_types';
 
 export const setUserAccount = (account) => ({
@@ -141,4 +142,107 @@ export const fetchIfCanWithdrawVeolas = () => async (dispatch, getState) => {
   } catch (error) {
     console.error(error);
   }
+};
+
+// buOlas
+export const fetchBuolasBalance = () => async (dispatch, getState) => {
+  const account = getState()?.setup?.account;
+  const chainId = getState()?.setup?.chainId;
+
+  try {
+    const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
+    const response = await contract.methods
+      .balanceOf(account)
+      .call();
+
+    dispatch({
+      type: syncTypes.SET_BUOLAS_BALANCEOF,
+      data: { buolasBalance: formatToEth(response) },
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const fetchReleasableAmount = () => async (dispatch, getState) => {
+  const account = getState()?.setup?.account;
+  const chainId = getState()?.setup?.chainId;
+
+  try {
+    const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
+    const response = await contract.methods
+      .releasableAmount(account)
+      .call();
+
+    dispatch({
+      type: syncTypes.SET_BUOLAS_RELEASABLE_AMOUNT,
+      data: { buolasReleasableAmount: formatToEth(response) },
+    });
+  } catch (error) {
+    window.console.log('Error occured on fetching buOlas ReleasableAmount');
+    console.error(error);
+  }
+};
+
+export const fetchMapLockedBalances = () => async (dispatch, getState) => {
+  const account = getState()?.setup?.account;
+  const chainId = getState()?.setup?.chainId;
+
+  try {
+    const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
+    const response = await contract.methods
+      .mapLockedBalances(account)
+      .call();
+
+    const blockTimestamp = await getBlockTimestamp();
+
+    const tempResponse = { ...response };
+    const nextValues = getNextReleasableAmount(tempResponse, blockTimestamp);
+
+    dispatch({
+      type: syncTypes.SET_BUOLAS_MAPPED_BALANCES,
+      data: {
+        // multiplied by 1000 to convert to milliseconds
+        buolasMappedBalances: {
+          amount: formatToEth(response.totalAmount),
+          startTime: response.startTime * 1000,
+          endTime: response.endTime * 1000,
+          transferredAmount: formatToEth(response.transferredAmount),
+        },
+        ...nextValues,
+      },
+    });
+  } catch (error) {
+    window.console.log('Error occured on fetching buOlas MapLockedBalances');
+    console.error(error);
+  }
+};
+
+export const fetchLockedEnd = () => async (dispatch, getState) => {
+  const account = getState()?.setup?.account;
+  const chainId = getState()?.setup?.chainId;
+
+  try {
+    const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
+    const response = await contract.methods
+      .lockedEnd(account)
+      .call();
+
+    dispatch({
+      type: syncTypes.SET_BUOLAS_LOCKED_END,
+      // multiplied by 1000 to convert to milliseconds
+      data: { buolasLockedEnd: response * 1000 },
+    });
+  } catch (error) {
+    window.console.log('Error occured on fetching buOlas lockedEnd');
+    console.error(error);
+  }
+};
+
+export const fetchBuolasDetails = () => async (dispatch) => {
+  dispatch(fetchOlasBalance());
+  dispatch(fetchBuolasBalance());
+  dispatch(fetchReleasableAmount());
+  dispatch(fetchMapLockedBalances());
+  dispatch(fetchLockedEnd());
 };

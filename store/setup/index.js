@@ -24,6 +24,19 @@ const initialState = {
   votes: null,
   totalSupplyLocked: null,
   votingPowerInPercentage: null,
+
+  // buOlas
+  buolasBalance: null,
+  buolasLockedEnd: null,
+  buolasReleasableAmount: null,
+  buolasMappedBalances: {
+    amount: null,
+    startTime: null,
+    endTime: null,
+    transferredAmount: null,
+  },
+  buolasNextReleasableAmount: null,
+  buolasNextReleasableTime: null,
 };
 
 export default (state = initialState, action) => {
@@ -58,6 +71,13 @@ export default (state = initialState, action) => {
       return { ...state, ...data };
     }
 
+    // buOlas
+    case syncTypes.SET_BUOLAS_BALANCEOF:
+    case syncTypes.SET_BUOLAS_RELEASABLE_AMOUNT:
+    case syncTypes.SET_BUOLAS_LOCKED_END:
+    case syncTypes.SET_BUOLAS_MAPPED_BALANCES: {
+      return { ...state, ...data };
+    }
     default:
       return state;
   }
