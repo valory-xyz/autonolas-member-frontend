@@ -3,7 +3,7 @@ import { notifyError, notifySuccess } from 'common-util/functions';
 import { parseToSeconds, FormItemDate } from '../../common';
 import { updateIncreaseUnlockTime } from '../contractUtils';
 import { useFetchBalances } from '../hooks';
-import { FormContainer } from './styles';
+import { FormContainer } from '../styles';
 
 export const IncreaseUnlockTime = () => {
   const {

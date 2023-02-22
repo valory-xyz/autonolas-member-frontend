@@ -12,9 +12,11 @@ import {
 import { TAB_KEYS } from 'common-util/constants';
 import { withdrawVeolasRequest } from '../contractUtils';
 import { useFetchBalances, useVeolasComponents } from '../hooks';
+
+import { VeolasAddToLock as AddToLock } from './AddToLock';
 import { IncreaseAmount } from './IncreaseAmount';
 import { IncreaseUnlockTime } from './IncreaseUnlockTime';
-import { ModalAlertSection } from './styles';
+import { ModalAlertSection } from '../styles';
 
 export const VeolasManage = ({ setActiveTab }) => {
   const {
@@ -31,6 +33,7 @@ export const VeolasManage = ({ setActiveTab }) => {
     getVotingPercentComponent,
     getLockedAmountComponent,
     getUnlockTimeComponent,
+    getUnlockedAmountComponent,
   } = useVeolasComponents();
 
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -66,26 +69,33 @@ export const VeolasManage = ({ setActiveTab }) => {
 
         <Col lg={4} xs={12}>
           {getLockedAmountComponent()}
+          <AddToLock />
+        </Col>
+
+        <Col lg={5} xs={12}>
+          {getUnlockTimeComponent()}
+
           {/* to avoid glitch, show the component only if `canWithdrawVeolas`
           is either true or false (default value is null) */}
           {!isNil(canWithdrawVeolas) && (
             <>
-              <Button onClick={() => setIsModalVisible(true)}>
+              <Button onClick={() => setIsModalVisible(true)} className="mr-12">
                 Increase lock
               </Button>
             </>
           )}
+
+          <Button
+            htmlType="submit"
+            onClick={onWithdraw}
+            disabled={isNil(canWithdrawVeolas) || !canWithdrawVeolas}
+          >
+            Claim all
+          </Button>
         </Col>
 
-        <Col lg={6} xs={12}>
-          {getUnlockTimeComponent()}
-          {/* to avoid glitch, show the component only if `canWithdrawVeolas`
-          is either true or false (default value is null) */}
-          {!isNil(canWithdrawVeolas) && canWithdrawVeolas && (
-            <Button htmlType="submit" onClick={onWithdraw}>
-              Claim all
-            </Button>
-          )}
+        <Col lg={3} xs={12}>
+          {getUnlockedAmountComponent()}
         </Col>
       </Row>
 

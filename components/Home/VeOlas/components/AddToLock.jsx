@@ -17,9 +17,9 @@ import {
   createLockRequest,
 } from '../contractUtils';
 import { useFetchBalances } from '../hooks';
-import { CreateLockContainer, GetMoreOlasRow } from './styles';
+import { CreateLockContainer } from '../styles';
 
-export const VeolasCreateLock = () => {
+export const VeolasAddToLock = () => {
   const {
     account, chainId, olasBalanceInEth, getData,
   } = useFetchBalances();
@@ -79,12 +79,9 @@ export const VeolasCreateLock = () => {
 
   return (
     <CreateLockContainer>
-      <GetMoreOlasRow>
-        <Button type="danger">Get more veOLAS</Button>
-        <Button type="primary" onClick={() => setIsModalVisible(true)}>
-          Create Lock
-        </Button>
-      </GetMoreOlasRow>
+      <Button onClick={() => setIsModalVisible(true)}>
+        Add to lock
+      </Button>
 
       {isModalVisible && (
         <Modal

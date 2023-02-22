@@ -87,11 +87,16 @@ export const getTotalVotesPercentage = (votes, totalSupply) => {
  */
 export const getFormattedDate = (ms) => {
   if (!ms) return NA;
-  return new Intl.DateTimeFormat('en-US', {
+
+  // eg: Feb 23, 2023;
+  const dateInString = new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
     month: 'short',
     day: '2-digit',
   }).format(ms);
+
+  const yearInShortForm = dateInString.split(', ')[1].trim().substring(2, 4);
+  return `${dateInString.split(', ')[0]} '${yearInShortForm}`;
 };
 
 export const getString = (x) => {

@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { Tabs } from 'antd/lib';
 import { TAB_KEYS } from 'common-util/constants';
-import { VeolasCreateLock } from './VeOlas/CreateLock';
-import { VeolasManage } from './VeOlas/ManageYourLock';
+import { VeolasAddToLock } from './VeOlas/components/AddToLock';
+import { VeolasManage } from './VeOlas/components';
 import { BuolasCreateLock } from './BuOlas/CreateLock';
 import { BuolasManage } from './BuOlas/Manage';
 
@@ -15,7 +15,7 @@ const Home = () => {
     <>
       <Tabs activeKey={activeKey} onChange={(e) => setActiveKey(e)}>
         <TabPane tab="Create lock" key={TAB_KEYS.createLock}>
-          <VeolasCreateLock />
+          <VeolasAddToLock />
         </TabPane>
 
         <TabPane tab="Manage your lock" key={TAB_KEYS.manageLock}>

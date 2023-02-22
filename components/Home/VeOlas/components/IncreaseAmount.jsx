@@ -3,7 +3,7 @@ import { notifyError, notifySuccess } from 'common-util/functions';
 import { parseToWei, FormItemInputNumber, MaxButton } from '../../common';
 import { updateIncreaseAmount } from '../contractUtils';
 import { useFetchBalances } from '../hooks';
-import { FormContainer } from './styles';
+import { FormContainer } from '../styles';
 
 export const IncreaseAmount = () => {
   const {

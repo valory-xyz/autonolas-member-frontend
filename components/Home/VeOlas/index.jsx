@@ -1,7 +1,7 @@
 import React from 'react';
-import { Typography } from 'antd/lib';
-import { VeolasCreateLock } from './CreateLock';
-import { VeolasManage } from './ManageYourLock';
+import { Typography, Button } from 'antd/lib';
+import { VeolasManage } from './components';
+import { GetMoreOlasRow } from './styles';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -18,7 +18,10 @@ export const VeOlas = () => (
       </a>
     </Paragraph>
 
-    <VeolasCreateLock />
+    <GetMoreOlasRow>
+      <Button type="danger">Get more veOLAS</Button>
+    </GetMoreOlasRow>
+
     <VeolasManage />
   </div>
 );

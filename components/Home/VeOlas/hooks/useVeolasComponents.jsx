@@ -65,11 +65,21 @@ export const useVeolasComponents = () => {
     />
   );
 
+  // TODO: how to fetch this data?
+  const getUnlockedAmountComponent = () => (
+    <InfoCard
+      isLoading={isLoading}
+      value="--"
+      subText="unlocked OLAS"
+    />
+  );
+
   return {
     getBalanceComponent,
     getVotingPowerComponent,
     getVotingPercentComponent,
     getLockedAmountComponent,
     getUnlockTimeComponent,
+    getUnlockedAmountComponent,
   };
 };
