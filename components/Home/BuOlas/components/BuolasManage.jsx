@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { Button, Row, Col } from 'antd/lib';
 import { getString, getFormattedDate } from 'common-util/functions';
 import { InfoCard } from 'common-util/InfoCard';
-import { useFetchBuolasBalances } from '../hooks';
 import { withdrawRequest } from '../contractUtils';
+import { useFetchBuolasBalances } from '../hooks';
 
 export const BuolasManage = () => {
   const {

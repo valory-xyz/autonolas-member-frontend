@@ -83,7 +83,7 @@ export const getTotalVotesPercentage = (votes, totalSupply) => {
 
 /**
  * Get formatted date from milliseconds
- * example, 1678320000000 => 'Mar 09, 2023'
+ * example, 1678320000000 => Mar 09 '23
  */
 export const getFormattedDate = (ms) => {
   if (!ms) return NA;

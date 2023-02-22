@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchBuolasDetails } from 'store/setup/actions';
-// import { parseToEth } from 'common-util/functions';
 
 export const useFetchBuolasBalances = () => {
   const dispatch = useDispatch();

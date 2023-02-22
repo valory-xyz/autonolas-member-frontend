@@ -20,18 +20,16 @@ import { useFetchBalances } from '../hooks';
 import { CreateLockContainer } from '../styles';
 
 export const VeolasAddToLock = () => {
+  const [form] = Form.useForm();
   const {
     account, chainId, olasBalanceInEth, getData,
   } = useFetchBalances();
-
   const isSubmitBtnDisabled = useSelector(
     (state) => !state?.setup?.mappedBalances?.isMappedAmountZero,
   );
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isApproveModalVisible, setIsApproveModalVisible] = useState(false);
-
-  const [form] = Form.useForm();
 
   useEffect(() => {
     if (account && chainId) {

@@ -6,6 +6,7 @@ import { useFetchBalances } from '../hooks';
 import { FormContainer } from '../styles';
 
 export const IncreaseAmount = () => {
+  const [form] = Form.useForm();
   const {
     account,
     chainId,
@@ -20,8 +21,6 @@ export const IncreaseAmount = () => {
    * or if the user has some olas tokens.
    */
   const cannotIncreaseAmount = isMappedAmountZero || hasNoOlasBalance || !account;
-
-  const [form] = Form.useForm();
 
   const onFinish = async ({ amount }) => {
     try {

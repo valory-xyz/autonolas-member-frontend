@@ -6,10 +6,10 @@ import { useFetchBalances } from '../hooks';
 import { FormContainer } from '../styles';
 
 export const IncreaseUnlockTime = () => {
+  const [form] = Form.useForm();
   const {
     account, chainId, mappedEndTime, isMappedAmountZero, getData,
   } = useFetchBalances();
-  const [form] = Form.useForm();
 
   const onFinish = async (e) => {
     try {
