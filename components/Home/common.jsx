@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { ethers } from 'ethers';
 import moment from 'moment';
-import { Form, InputNumber, DatePicker } from 'antd/lib';
+import { Form, Input, DatePicker } from 'antd/lib';
 import isNil from 'lodash/isNil';
 import { Shimmer } from 'common-util/Shimmer';
 
@@ -71,7 +71,7 @@ export const FormItemInputNumber = ({
       }),
     ]}
   >
-    <InputNumber
+    <Input
       style={fullWidth}
       placeholder="Add amount"
       disabled={!isRequired}

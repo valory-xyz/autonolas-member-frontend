@@ -10,7 +10,7 @@ import {
 import { fetchMappedBalances, fetchVeolasDetails } from 'store/setup/actions';
 import { parseAmount, FormItemInputNumber } from '../../common';
 import { updateIncreaseAmount } from '../utils';
-import { FormContainer } from './styles';
+import { FormContainer, ModalAlertSection } from './styles';
 
 const { Text } = Typography;
 
@@ -65,22 +65,20 @@ export const IncreaseAmount = () => {
           className="custom-vertical-form"
           onFinish={onFinish}
         >
-          <div>
+          <div className="full-width">
             <FormItemInputNumber maxAmount={parseToEth(olasBalance)} />
 
-            <Form.Item className="mb-0">
-              <Text type="secondary">
-                OLAS balance: 200&nbsp;
-                <Button
-                  htmlType="button"
-                  type="link"
-                  // onClick={prefillOwnerAddress}
-                  className="pl-0"
-                >
-                  Max
-                </Button>
-              </Text>
-            </Form.Item>
+            <Text type="secondary">
+              OLAS balance: 200
+              <Button
+                htmlType="button"
+                type="link"
+                onClick={() => form.setFieldsValue({ amount: olasBalance })}
+                className="pl-0"
+              >
+                Max
+              </Button>
+            </Text>
           </div>
 
           <Form.Item>
@@ -105,15 +103,13 @@ export const IncreaseAmount = () => {
         Lock maximum amount
       </Button>
 
-      <br />
-      <br />
       {account && (
-        <>
+        <ModalAlertSection>
           {isMappedAmountZero && <CannotIncreaseAlert />}
           {hasNoOlasBalance && !isMappedAmountZero && (
             <AlreadyAllAmountLocked />
           )}
-        </>
+        </ModalAlertSection>
       )}
     </>
   );

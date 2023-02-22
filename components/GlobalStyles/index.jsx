@@ -45,7 +45,7 @@ const GlobalStyle = createGlobalStyle`
     align-items: center;
     position: fixed;
     top: 0;
-    z-index: 10;
+    z-index: 1;
     width: calc(100% - 32px);
     padding: 0 24px;
     .ant-menu {

@@ -21,4 +21,12 @@ export const FormContainer = styled.div`
       margin-bottom: 4px;
     }
   }
+  .full-width {
+    width: 100%;
+  }
+`;
+
+export const ModalAlertSection = styled.div`
+  margin: 1rem 0;
+  /* margin-top: 0.5rem; */
 `;
