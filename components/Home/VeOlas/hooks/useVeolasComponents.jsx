@@ -26,6 +26,15 @@ export const useVeolasComponents = () => {
     return isString(x) ? x : `${x}`;
   };
 
+  const getBalanceComponent = (title) => (
+    <InfoCard
+      isLoading={isLoading}
+      title={title || 'Your balance'}
+      value={getString(veolasBalance)}
+      subText="veOLAS"
+    />
+  );
+
   const getVotingPowerComponent = (title) => (
     <InfoCard
       title={title || 'Voting power'}
@@ -42,15 +51,6 @@ export const useVeolasComponents = () => {
           : `${getTotalVotesPercentage(votes, totalSupplyLocked)}%`
       }
       subText="% of total voting power"
-    />
-  );
-
-  const getBalanceComponent = (title) => (
-    <InfoCard
-      isLoading={isLoading}
-      title={title || 'Your balance'}
-      value={getString(veolasBalance)}
-      subText="veOLAS"
     />
   );
 

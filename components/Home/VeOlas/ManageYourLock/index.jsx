@@ -3,33 +3,25 @@ import PropTypes from 'prop-types';
 import {
   Button, Row, Col, Modal,
 } from 'antd/lib';
-import { isNil, isString } from 'lodash';
-import {
-  formatToEth,
-  getFormattedDate,
-  getTotalVotesPercentage,
-  notifySuccess,
-} from 'common-util/functions';
-import { InfoCard } from 'common-util/InfoCard';
-import { TAB_KEYS, NA } from 'common-util/constants';
+import { isNil } from 'lodash';
+import { notifySuccess } from 'common-util/functions';
+import { TAB_KEYS } from 'common-util/constants';
 import { withdrawVeolasRequest } from '../utils';
+import { useFetchBalances, useVeolasComponents } from '../hooks';
 import { IncreaseAmount } from './IncreaseAmount';
 import { IncreaseUnlockTime } from './IncreaseUnlockTime';
-import { useFetchBalances } from '../hooks';
 
 export const VeolasManage = ({ setActiveTab }) => {
   const {
-    isLoading,
-    account,
-    chainId,
-    veolasBalance,
-    mappedAmount,
-    mappedEndTime,
-    votes,
-    totalSupplyLocked,
-    canWithdrawVeolas,
-    getData,
+    account, chainId, canWithdrawVeolas, getData,
   } = useFetchBalances();
+  const {
+    getBalanceComponent,
+    getVotingPowerComponent,
+    getVotingPercentComponent,
+    getLockedAmountComponent,
+    getUnlockTimeComponent,
+  } = useVeolasComponents();
 
   const [isModalVisible, setIsModalVisible] = useState(true);
 
@@ -47,58 +39,23 @@ export const VeolasManage = ({ setActiveTab }) => {
     }
   };
 
-  // get the value in string
-  const getString = (x) => {
-    if (isNil(x)) return NA;
-    return isString(x) ? x : `${x}`;
-  };
-
-  // locked & unlock time component
-  const lockedAmountComponent = (
-    <InfoCard
-      title="Lock"
-      value={getString(mappedAmount)}
-      subText="locked OLAS"
-    />
-  );
-
-  const unlockTimeComponent = (
-    <InfoCard value={getFormattedDate(mappedEndTime)} subText="unlock date" />
-  );
-
   return (
     <>
       <Row align="top">
         <Col lg={4} md={24} xs={24}>
-          <InfoCard
-            isLoading={isLoading}
-            title="Your balance"
-            value={getString(veolasBalance)}
-            subText="veOLAS"
-          />
+          {getBalanceComponent()}
         </Col>
 
         <Col lg={3} md={12} xs={12}>
-          <InfoCard
-            title="Voting power"
-            value={getString(formatToEth(votes))}
-            subText="votes"
-          />
+          {getVotingPowerComponent()}
         </Col>
 
         <Col lg={5} md={12} xs={12}>
-          <InfoCard
-            value={
-              Number(votes) === 0 || Number(totalSupplyLocked) === 0
-                ? '0%'
-                : `${getTotalVotesPercentage(votes, totalSupplyLocked)}%`
-            }
-            subText="% of total voting power"
-          />
+          {getVotingPercentComponent()}
         </Col>
 
         <Col lg={4} xs={12}>
-          {lockedAmountComponent}
+          {getLockedAmountComponent()}
           {/* to avoid glitch, show the component only if `canWithdrawVeolas`
           is either true or false (default value is null) */}
           {!isNil(canWithdrawVeolas) && (
@@ -117,7 +74,7 @@ export const VeolasManage = ({ setActiveTab }) => {
         </Col>
 
         <Col lg={6} xs={12}>
-          {unlockTimeComponent}
+          {getUnlockTimeComponent()}
         </Col>
       </Row>
 
@@ -127,14 +84,15 @@ export const VeolasManage = ({ setActiveTab }) => {
           visible={isModalVisible}
           footer={null}
           onCancel={() => setIsModalVisible(false)}
+          style={{ top: 60 }}
         >
           <Row align="top">
             <Col lg={10} xs={12}>
-              {lockedAmountComponent}
+              {getLockedAmountComponent()}
             </Col>
 
             <Col lg={14} xs={12}>
-              {unlockTimeComponent}
+              {getUnlockTimeComponent()}
             </Col>
           </Row>
 
@@ -142,6 +100,16 @@ export const VeolasManage = ({ setActiveTab }) => {
             <IncreaseAmount />
             <IncreaseUnlockTime />
           </div>
+
+          <Row align="top">
+            <Col lg={10} xs={12}>
+              {getVotingPowerComponent()}
+            </Col>
+
+            <Col lg={14} xs={12}>
+              {getVotingPercentComponent()}
+            </Col>
+          </Row>
         </Modal>
       )}
     </>
