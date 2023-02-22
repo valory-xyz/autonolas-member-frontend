@@ -122,6 +122,19 @@ const GlobalStyle = createGlobalStyle`
     color: ${COLOR.BLACK};
   }
 
+  /* form */
+  .ant-form-item-label > label {
+    font-weight: bold;
+  }
+  .custom-form-item-lock {
+    margin-bottom: 4px;
+  }
+
+  /* button */
+  .ant-btn-danger {
+    text-shadow: none;
+  }
+
   ${MEDIA_QUERY.tablet} {
     body {
       padding: 0rem;

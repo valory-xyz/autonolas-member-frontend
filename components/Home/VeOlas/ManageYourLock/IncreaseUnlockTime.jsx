@@ -53,7 +53,7 @@ export const IncreaseUnlockTime = () => {
 
   return (
     <>
-      <FormContainer>
+      <FormContainer style={{ marginTop: '1rem' }}>
         <Form
           form={form}
           layout="vertical"

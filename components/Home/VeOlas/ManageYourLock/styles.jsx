@@ -17,12 +17,6 @@ export const FormContainer = styled.div`
       margin-top: 36px;
       margin-left: 12px;
     }
-    .ant-form-item {
-      margin-bottom: 4px;
-    }
-    .ant-form-item-label > label {
-      font-weight: bold;
-    }
   }
   .full-width {
     width: 100%;
@@ -30,6 +24,6 @@ export const FormContainer = styled.div`
 `;
 
 export const ModalAlertSection = styled.div`
-  margin: 2rem 0 1rem 0;
+  margin: 1rem 0 1rem 0;
   /* margin-top: 2rem; */
 `;

@@ -6,11 +6,14 @@ import {
   fetchMappedBalances,
   fetchVeolasDetails,
 } from 'store/setup/actions';
+import { parseToEth } from 'common-util/functions';
 
 export const useFetchBalances = () => {
   const dispatch = useDispatch();
   const account = useSelector((state) => state?.setup?.account);
   const chainId = useSelector((state) => state?.setup?.chainId);
+  const olasBalance = useSelector((state) => state?.setup?.olasBalance);
+  const olasBalanceInEth = olasBalance ? parseToEth(olasBalance) : '0';
   const veolasBalance = useSelector((state) => state?.setup?.veolasBalance);
   const mappedAmount = useSelector(
     (state) => state?.setup?.mappedBalances?.amount || null,
@@ -54,6 +57,8 @@ export const useFetchBalances = () => {
     isLoading,
     account,
     chainId,
+    olasBalance,
+    olasBalanceInEth,
     veolasBalance,
     mappedAmount,
     mappedEndTime,

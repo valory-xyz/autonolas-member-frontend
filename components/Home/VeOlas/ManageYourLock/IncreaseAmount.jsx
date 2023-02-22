@@ -1,12 +1,10 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { Button, Form, Typography } from 'antd/lib';
-import { parseToEth, notifyError, notifySuccess } from 'common-util/functions';
+import { Button, Form } from 'antd/lib';
+import { notifyError, notifySuccess } from 'common-util/functions';
 import { fetchMappedBalances, fetchVeolasDetails } from 'store/setup/actions';
-import { parseAmount, FormItemInputNumber } from '../../common';
+import { parseToWei, FormItemInputNumber, MaxButton } from '../../common';
 import { updateIncreaseAmount } from '../utils';
 import { FormContainer } from './styles';
-
-const { Text } = Typography;
 
 export const IncreaseAmount = () => {
   const dispatch = useDispatch();
@@ -29,7 +27,7 @@ export const IncreaseAmount = () => {
   const onFinish = async ({ amount, sendMaxAmount }) => {
     try {
       const txHash = await updateIncreaseAmount({
-        amount: sendMaxAmount ? olasBalance : parseAmount(amount),
+        amount: sendMaxAmount ? olasBalance : parseToWei(amount),
         account,
         chainId,
       });
@@ -60,19 +58,10 @@ export const IncreaseAmount = () => {
           onFinish={onFinish}
         >
           <div className="full-width">
-            <FormItemInputNumber maxAmount={parseToEth(olasBalance)} />
-
-            <Text type="secondary">
-              OLAS balance: 200
-              <Button
-                htmlType="button"
-                type="link"
-                onClick={() => form.setFieldsValue({ amount: olasBalance })}
-                className="pl-0"
-              >
-                Max
-              </Button>
-            </Text>
+            <FormItemInputNumber />
+            <MaxButton
+              onMaxClick={() => form.setFieldsValue({ amount: olasBalance })}
+            />
           </div>
 
           <Form.Item>

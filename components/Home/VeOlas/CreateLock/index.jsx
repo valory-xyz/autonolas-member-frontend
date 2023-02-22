@@ -1,58 +1,47 @@
 import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
-  Alert, Button, Form, Modal, Checkbox,
+  Alert, Button, Form, Modal,
 } from 'antd/lib';
+import { notifyError, notifySuccess } from 'common-util/functions';
 import {
-  fetchOlasBalance,
-  fetchMappedBalances,
-  fetchVeolasDetails,
-} from 'store/setup/actions';
-import { parseToEth, notifyError, notifySuccess } from 'common-util/functions';
-import {
-  parseAmount,
+  parseToWei,
   parseToSeconds,
   FormItemDate,
   FormItemInputNumber,
+  MaxButton,
 } from '../../common';
 import {
   cannotApproveTokens,
   approveOlasByOwner,
   createLockRequest,
 } from '../utils';
+import { useFetchBalances } from '../hooks';
 import { CreateLockContainer, GetMoreOlasRow } from './styles';
 
 export const VeolasCreateLock = () => {
-  const dispatch = useDispatch();
-  const account = useSelector((state) => state?.setup?.account);
-  const chainId = useSelector((state) => state?.setup?.chainId);
-  const olasBalance = useSelector((state) => state?.setup?.olasBalance);
+  const {
+    account, chainId, olasBalanceInEth, getData,
+  } = useFetchBalances();
+
   const isSubmitBtnDisabled = useSelector(
     (state) => !state?.setup?.mappedBalances?.isMappedAmountZero,
   );
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isApproveModalVisible, setIsApproveModalVisible] = useState(false);
-  const [canLockMaxAmount, setCheckMaxAmount] = useState(false);
 
   const [form] = Form.useForm();
 
   useEffect(() => {
     if (account && chainId) {
-      dispatch(fetchOlasBalance());
-      dispatch(fetchMappedBalances());
+      getData();
     }
   }, [account, chainId]);
 
-  const onCheckboxChange = (e) => {
-    setCheckMaxAmount(e.target.checked);
-  };
-
   const createLockHelper = async () => {
     const txHash = await createLockRequest({
-      amount: canLockMaxAmount
-        ? olasBalance
-        : parseAmount(form.getFieldValue('amount')),
+      amount: parseToWei(form.getFieldValue('amount')),
       unlockTime: parseToSeconds(form.getFieldValue('unlockTime')),
       account,
       chainId,
@@ -60,8 +49,10 @@ export const VeolasCreateLock = () => {
     notifySuccess('Lock created successfully!', `Transaction Hash: ${txHash}`);
 
     // fetch the data again to disable button or show message
-    dispatch(fetchMappedBalances());
-    dispatch(fetchVeolasDetails());
+    getData();
+
+    // close the modal after successful locking
+    setIsModalVisible(false);
   };
 
   const onFinish = async () => {
@@ -109,15 +100,11 @@ export const VeolasCreateLock = () => {
             name="create-lock-form"
             onFinish={onFinish}
           >
-            <FormItemInputNumber
-              isRequired={!canLockMaxAmount}
-              maxAmount={parseToEth(olasBalance)}
+            <FormItemInputNumber />
+            <MaxButton
+              onMaxClick={() => form.setFieldsValue({ amount: olasBalanceInEth })}
             />
-            <Form.Item>
-              <Checkbox checked={canLockMaxAmount} onChange={onCheckboxChange}>
-                Lock maximum amount
-              </Checkbox>
-            </Form.Item>
+
             <FormItemDate />
             <Form.Item>
               <Button
