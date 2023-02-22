@@ -1,6 +1,4 @@
-import { useSelector, useDispatch } from 'react-redux';
 import { Button, Form } from 'antd/lib';
-import { fetchMappedBalances, fetchVeolasDetails } from 'store/setup/actions';
 import {
   notifyError,
   notifySuccess,
@@ -9,24 +7,18 @@ import {
 } from 'common-util/functions';
 import { parseToSeconds, FormItemDate } from '../../common';
 import { updateIncreaseUnlockTime } from '../utils';
+import { useFetchBalances } from '../hooks';
 import { FormContainer, ModalAlertSection } from './styles';
 
 export const IncreaseUnlockTime = () => {
-  const dispatch = useDispatch();
-  const account = useSelector((state) => state?.setup?.account);
-  const chainId = useSelector((state) => state?.setup?.chainId);
-  const isMappedAmountZero = useSelector(
-    (state) => state?.setup?.mappedBalances?.isMappedAmountZero || false,
-  );
-  const olasBalance = useSelector((state) => state?.setup?.olasBalance);
-  const hasNoOlasBalance = Number(olasBalance || '0') === 0;
-  const cannotIncreaseTime = useSelector(
-    (state) => state?.setup?.mappedBalances?.isMappedAmountZero,
-  );
-  const mappedEndTime = useSelector(
-    (state) => state?.setup?.mappedBalances?.endTime || null,
-  );
-
+  const {
+    account,
+    chainId,
+    mappedEndTime,
+    isMappedAmountZero,
+    hasNoOlasBalance,
+    getData,
+  } = useFetchBalances();
   const [form] = Form.useForm();
 
   const onFinish = async (e) => {
@@ -43,8 +35,7 @@ export const IncreaseUnlockTime = () => {
 
       // once the unlockTime is increased,
       // fetch the newly updated mapped balances & votes.
-      dispatch(fetchMappedBalances());
-      dispatch(fetchVeolasDetails());
+      getData();
     } catch (error) {
       window.console.error(error);
       notifyError('Some error occured <IncreaseUnlockTime />');
@@ -70,7 +61,7 @@ export const IncreaseUnlockTime = () => {
             <Button
               type="primary"
               htmlType="submit"
-              disabled={!account || cannotIncreaseTime}
+              disabled={!account || isMappedAmountZero}
             >
               Add to lock
             </Button>

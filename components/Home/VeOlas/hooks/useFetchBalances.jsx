@@ -14,12 +14,16 @@ export const useFetchBalances = () => {
   const chainId = useSelector((state) => state?.setup?.chainId);
   const olasBalance = useSelector((state) => state?.setup?.olasBalance);
   const olasBalanceInEth = olasBalance ? parseToEth(olasBalance) : '0';
+  const hasNoOlasBalance = Number(olasBalance || '0') === 0;
   const veolasBalance = useSelector((state) => state?.setup?.veolasBalance);
   const mappedAmount = useSelector(
     (state) => state?.setup?.mappedBalances?.amount || null,
   );
   const mappedEndTime = useSelector(
     (state) => state?.setup?.mappedBalances?.endTime || null,
+  );
+  const isMappedAmountZero = useSelector(
+    (state) => state?.setup?.mappedBalances?.isMappedAmountZero || false,
   );
   const votes = useSelector((state) => state?.setup?.votes || null);
   const totalSupplyLocked = useSelector(
@@ -58,10 +62,12 @@ export const useFetchBalances = () => {
     account,
     chainId,
     olasBalance,
+    hasNoOlasBalance,
     olasBalanceInEth,
     veolasBalance,
     mappedAmount,
     mappedEndTime,
+    isMappedAmountZero,
     votes,
     totalSupplyLocked,
     canWithdrawVeolas,
