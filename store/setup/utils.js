@@ -9,12 +9,7 @@ export const getNextReleasableAmount = (lockedBalance, timestamp) => {
   const startTime = Number(lockedBalance.startTime);
   const endTime = Number(lockedBalance.endTime);
 
-  if (endTime === 0) {
-    // Revoke has been applied
-    buolasNextReleasableTime = new Date();
-    buolasNextReleasableAmount = 0;
-  } else {
-    // Else follow the calculation of what is currently left
+  if (endTime > 0) {
     const totalNumSteps = ((endTime - startTime) / STEP_TIME);
     const releasedSteps = ((timestamp - startTime) / STEP_TIME);
     const numNextStep = releasedSteps + 1;
@@ -26,12 +21,16 @@ export const getNextReleasableAmount = (lockedBalance, timestamp) => {
       buolasNextReleasableAmount = (lockedBalance.totalAmount * numNextStep) / totalNumSteps;
       buolasNextReleasableAmount -= lockedBalance.transferredAmount;
     }
+
+    // convert to display format
+    // multiplied by 1000 to convert to milliseconds
+    buolasNextReleasableTime *= 1000;
+    // format to eth for display
+    buolasNextReleasableAmount = formatToEth(ethers.BigNumber.from(`${buolasNextReleasableAmount}`));
   }
 
   return {
-    // multiplied by 1000 to convert to milliseconds
-    buolasNextReleasableTime: buolasNextReleasableTime * 1000,
-    // format to eth for display
-    buolasNextReleasableAmount: formatToEth(ethers.BigNumber.from(`${buolasNextReleasableAmount}`)),
+    buolasNextReleasableTime,
+    buolasNextReleasableAmount,
   };
 };
