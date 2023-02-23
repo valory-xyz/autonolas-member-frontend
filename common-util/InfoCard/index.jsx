@@ -3,13 +3,15 @@ import styled from 'styled-components';
 import { Typography } from 'antd/lib';
 import { Shimmer } from '../Shimmer';
 
-export const InfoCardContainer = styled.div`
+const { Title, Paragraph } = Typography;
+
+const InfoCardContainer = styled.div`
   h5 {
     min-height: 31.5px;
   }
 `;
 
-export const ValueText = styled.div`
+const ValueText = styled.div`
   font-style: normal;
   font-weight: 400;
   font-size: 48px;
@@ -17,8 +19,6 @@ export const ValueText = styled.div`
   letter-spacing: -0.02em;
   margin-bottom: 0.5rem;
 `;
-
-const { Title, Paragraph } = Typography;
 
 export const InfoCard = ({
   isLoading, title, value, subText,

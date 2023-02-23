@@ -8,6 +8,7 @@ export const BuOlas = () => (
   <div>
     <Title>buOLAS</Title>
     <Paragraph style={{ maxWidth: 550 }}>
+      {/* TODO: next text here */}
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis,
       corrupti?&nbsp;
       <a href="www.google.com" target="_blank">

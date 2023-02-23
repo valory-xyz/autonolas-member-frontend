@@ -38,6 +38,16 @@ export const formatToEth = (value, dv = 0) => {
  */
 export const parseToEth = (amount) => (amount ? ethers.utils.formatEther(`${amount}`) : 0);
 
+/**
+ * multiplies the amount by 10^18
+ */
+export const parseToWei = (amount) => ethers.utils.parseUnits(`${amount}`, 18).toString();
+
+/**
+ * parse eth
+ */
+export const parseEther = (n) => ethers.utils.parseEther(`${n}`);
+
 export const getBlockTimestamp = async () => {
   const temp = await window?.WEB3_PROVIDER.eth.getBlock('latest');
   return temp.timestamp * 1;
@@ -54,17 +64,6 @@ export const notifySuccess = (message = 'Successfull', description = null) => no
   style: { border: `1px solid ${COLOR.PRIMARY}` },
 });
 
-export const CannotIncreaseAlert = () => (
-  <Alert
-    message="You don't have any amount locked, please lock before increasing amount or unlockTime."
-    type="warning"
-  />
-);
-
-export const AlreadyAllAmountLocked = () => (
-  <Alert message="You don't have any OLAS to lock." type="warning" />
-);
-
 export const getTotalVotesPercentage = (votes, totalSupply) => {
   if (votes && totalSupply) {
     const votesInBg = ethers.BigNumber.from(votes);
@@ -74,7 +73,6 @@ export const getTotalVotesPercentage = (votes, totalSupply) => {
       .mul(100)
       .toNumber()
       .toFixed(2);
-
     return votingPowerInPercentage;
   }
 
@@ -95,7 +93,10 @@ export const getFormattedDate = (ms) => {
     day: '2-digit',
   }).format(ms);
 
+  // eg: 2023 converted to 23
   const yearInShortForm = dateInString.split(', ')[1].trim().substring(2, 4);
+
+  // eg: Feb 05 '23
   return `${dateInString.split(', ')[0]} '${yearInShortForm}`;
 };
 
@@ -103,3 +104,15 @@ export const getString = (x) => {
   if (isNil(x)) return NA;
   return isString(x) ? x : `${x}`;
 };
+
+// tiny components
+export const CannotIncreaseAlert = () => (
+  <Alert
+    message="You don't have any amount locked, please lock before increasing amount or unlockTime."
+    type="warning"
+  />
+);
+
+export const AlreadyAllAmountLocked = () => (
+  <Alert message="You don't have any OLAS to lock." type="warning" />
+);

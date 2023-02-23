@@ -23,7 +23,7 @@ export const updateIncreaseAmount = ({ amount, account, chainId }) => new Promis
     .send({ from: account })
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
-      window.console.log('Error occured on increasing amount:');
+      window.console.log('Error occured on increasing amount');
       reject(e);
     });
 });
@@ -39,7 +39,7 @@ export const updateIncreaseUnlockTime = ({ time, account, chainId }) => new Prom
     .send({ from: account })
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
-      window.console.log('Error occured on increasing unlock time:');
+      window.console.log('Error occured on increasing unlock time');
       reject(e);
     });
 });
@@ -80,7 +80,7 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
       resolve(response);
     })
     .catch((e) => {
-      window.console.log('Error occured on approving OLAS by owner:');
+      window.console.log('Error occured on approving OLAS by owner');
       reject(e);
     });
 });
@@ -100,7 +100,7 @@ export const createLockRequest = ({
       resolve(response?.transactionHash);
     })
     .catch((e) => {
-      window.console.log('Error occured on creating lock:');
+      window.console.log('Error occured on creating lock for veOlas');
       reject(e);
     });
 });

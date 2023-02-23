@@ -3,8 +3,7 @@ import {
   getBuolasContract,
   getOlasContract,
 } from 'common-util/Contracts';
-import { MAX_AMOUNT } from 'common-util/functions';
-import { parseEther } from 'components/Home/common';
+import { MAX_AMOUNT, parseEther } from 'common-util/functions';
 
 export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
@@ -24,11 +23,13 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
 
 /**
  * create lock for buOlas
+ * NOTE: this is a internal method and won't be exposed or visible to the user
  */
 export const createBuolasLockRequest = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
 
-  // creating lock for the signer with 100 ETH & locked for 4 years
+  // creating lock for the signer with 100 ETH & locked for 4 years.
+  // address is fetched when BE is connected locally
   const values = {
     signer: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
     amount: parseEther('100'),

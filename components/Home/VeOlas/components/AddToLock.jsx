@@ -3,9 +3,8 @@ import { useSelector } from 'react-redux';
 import {
   Alert, Button, Form, Modal,
 } from 'antd/lib';
-import { notifyError, notifySuccess } from 'common-util/functions';
+import { notifyError, notifySuccess, parseToWei } from 'common-util/functions';
 import {
-  parseToWei,
   parseToSeconds,
   FormItemDate,
   FormItemInputNumber,
@@ -77,9 +76,7 @@ export const VeolasAddToLock = () => {
 
   return (
     <CreateLockContainer>
-      <Button onClick={() => setIsModalVisible(true)}>
-        Add to lock
-      </Button>
+      <Button onClick={() => setIsModalVisible(true)}>Add to lock</Button>
 
       {isModalVisible && (
         <Modal
@@ -139,11 +136,16 @@ export const VeolasAddToLock = () => {
             htmlType="submit"
             style={{ right: 'calc(-100% + 100px)', position: 'relative' }}
             onClick={async () => {
-              await approveOlasByOwner({ account, chainId });
-              setIsApproveModalVisible(false);
+              try {
+                await approveOlasByOwner({ account, chainId });
+                setIsApproveModalVisible(false);
 
-              // once approved, create lock
-              await createLockHelper();
+                // once approved, create lock
+                await createLockHelper();
+              } catch (error) {
+                window.console.error(error);
+                notifyError('Some error occured');
+              }
             }}
           >
             Approve

@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import { ethers } from 'ethers';
 import moment from 'moment';
 import {
   Form, InputNumber, DatePicker, Button, Typography,
@@ -22,16 +21,6 @@ export const getToken = ({ tokenName, token, isLoading = false }) => (
     </div>
   </div>
 );
-
-/**
- * multiplies the amount by 10^18
- */
-export const parseToWei = (amount) => ethers.utils.parseUnits(`${amount}`, 18).toString();
-
-/**
- * parse eth
- */
-export const parseEther = (n) => ethers.utils.parseEther(`${n}`);
 
 /**
  * Parses to seconds by doing the following operation in order
