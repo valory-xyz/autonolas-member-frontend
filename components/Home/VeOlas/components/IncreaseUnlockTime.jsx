@@ -28,7 +28,7 @@ export const IncreaseUnlockTime = () => {
       getData();
     } catch (error) {
       window.console.error(error);
-      notifyError('Some error occured <IncreaseUnlockTime />');
+      notifyError('Some error occured');
     }
   };
 
