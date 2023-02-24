@@ -45,12 +45,12 @@ const NavigationBar = ({ children }) => {
           items={[
             {
               key: 'veolas',
-              label: 'veOlas',
+              label: 'veOLAS',
               onClick: handleMenuItemClick,
             },
             {
               key: 'buolas',
-              label: 'buOlas',
+              label: 'buOLAS',
               onClick: handleMenuItemClick,
             },
           ]}
