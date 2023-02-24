@@ -21,10 +21,15 @@ const ValueText = styled.div`
 `;
 
 export const InfoCard = ({
-  isLoading, title, value, subText,
+  isLoading,
+  title,
+  value,
+  subText,
+  hideTitle,
+  ...rest
 }) => (
-  <InfoCardContainer>
-    <Title level={5}>{title || ''}</Title>
+  <InfoCardContainer {...rest}>
+    {!hideTitle && <Title level={5}>{title || ''}</Title>}
     <ValueText>{isLoading ? <Shimmer /> : <>{value || ''}</>}</ValueText>
     <Paragraph>{subText || ' '}</Paragraph>
   </InfoCardContainer>
@@ -33,6 +38,7 @@ export const InfoCard = ({
 InfoCard.propTypes = {
   isLoading: PropTypes.bool,
   title: PropTypes.string,
+  hideTitle: PropTypes.bool,
   value: PropTypes.string,
   subText: PropTypes.string,
 };
@@ -40,6 +46,7 @@ InfoCard.propTypes = {
 InfoCard.defaultProps = {
   isLoading: false,
   title: null,
+  hideTitle: false,
   value: null,
   subText: null,
 };

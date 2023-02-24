@@ -48,18 +48,22 @@ export const useVeolasComponents = () => {
     />
   );
 
-  const getLockedAmountComponent = (title) => (
+  const getLockedAmountComponent = ({ title = 'Lock', hideTitle = false } = {}) => (
     <InfoCard
       isLoading={isLoading}
-      title={title || 'Lock'}
+      title={title}
+      hideTitle={hideTitle}
       value={getString(mappedAmount)}
       subText="locked OLAS"
     />
   );
 
-  const getUnlockTimeComponent = () => (
+  const getUnlockTimeComponent = (
+    { hideTitle = false } = {},
+  ) => (
     <InfoCard
       isLoading={isLoading}
+      hideTitle={hideTitle}
       value={getFormattedDate(mappedEndTime)}
       subText="unlock date"
     />
@@ -71,6 +75,7 @@ export const useVeolasComponents = () => {
       isLoading={isLoading}
       value="--"
       subText="unlocked OLAS"
+      style={{ display: 'none' }}
     />
   );
 

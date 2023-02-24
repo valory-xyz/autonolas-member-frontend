@@ -1,5 +1,6 @@
 import React from 'react';
-import { Typography, Button } from 'antd/lib';
+import { Typography } from 'antd/lib';
+import { AddToLock } from './components/AddToLock';
 import { VeolasManage } from './components';
 import { GetMoreOlasRow } from './styles';
 
@@ -19,7 +20,7 @@ export const VeOlas = () => (
     </Paragraph>
 
     <GetMoreOlasRow>
-      <Button type="danger">Get more veOLAS</Button>
+      <AddToLock />
     </GetMoreOlasRow>
 
     <VeolasManage />

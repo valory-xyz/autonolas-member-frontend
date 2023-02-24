@@ -3,27 +3,16 @@ import {
   Button, Row, Col, Modal,
 } from 'antd/lib';
 import { isNil } from 'lodash';
-import {
-  notifySuccess,
-  CannotIncreaseAlert,
-  AlreadyAllAmountLocked,
-} from 'common-util/functions';
+import { notifySuccess } from 'common-util/functions';
 import { withdrawVeolasRequest } from '../contractUtils';
 import { useFetchBalances, useVeolasComponents } from '../hooks';
 
-import { VeolasAddToLock as AddToLock } from './AddToLock';
 import { IncreaseAmount } from './IncreaseAmount';
 import { IncreaseUnlockTime } from './IncreaseUnlockTime';
-import { ModalAlertSection } from '../styles';
 
 export const VeolasManage = () => {
   const {
-    account,
-    chainId,
-    canWithdrawVeolas,
-    getData,
-    hasNoOlasBalance,
-    isMappedAmountZero,
+    account, chainId, canWithdrawVeolas, getData, isMappedAmountZero,
   } = useFetchBalances();
   const {
     getBalanceComponent,
@@ -66,7 +55,6 @@ export const VeolasManage = () => {
 
         <Col lg={4} xs={12}>
           {getLockedAmountComponent()}
-          <AddToLock />
         </Col>
 
         <Col lg={5} xs={12}>
@@ -76,19 +64,24 @@ export const VeolasManage = () => {
           is either true or false (default value is null) */}
           {!isNil(canWithdrawVeolas) && (
             <>
-              <Button onClick={() => setIsModalVisible(true)} className="mr-12">
-                Increase lock
-              </Button>
+              {/* do not show if lock does not exist
+              (ie. show if already exists) */}
+              {!isMappedAmountZero && (
+                <Button
+                  onClick={() => setIsModalVisible(true)}
+                  className="mr-12"
+                >
+                  Increase lock
+                </Button>
+              )}
+
+              {canWithdrawVeolas && (
+                <Button htmlType="submit" onClick={onWithdraw}>
+                  Claim all
+                </Button>
+              )}
             </>
           )}
-
-          <Button
-            htmlType="submit"
-            onClick={onWithdraw}
-            disabled={isNil(canWithdrawVeolas) || !canWithdrawVeolas}
-          >
-            Claim all
-          </Button>
         </Col>
 
         <Col lg={3} xs={12}>
@@ -106,26 +99,17 @@ export const VeolasManage = () => {
         >
           <Row align="top">
             <Col lg={10} xs={12}>
-              {getLockedAmountComponent()}
+              {getLockedAmountComponent({ hideTitle: true })}
             </Col>
 
             <Col lg={14} xs={12}>
-              {getUnlockTimeComponent()}
+              {getUnlockTimeComponent({ hideTitle: true })}
             </Col>
           </Row>
 
           <div className="forms-container">
             <IncreaseAmount />
             <IncreaseUnlockTime />
-
-            {account && (
-              <ModalAlertSection>
-                {isMappedAmountZero && <CannotIncreaseAlert />}
-                {hasNoOlasBalance && !isMappedAmountZero && (
-                  <AlreadyAllAmountLocked />
-                )}
-              </ModalAlertSection>
-            )}
           </div>
         </Modal>
       )}

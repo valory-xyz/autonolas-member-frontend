@@ -56,7 +56,10 @@ export const IncreaseAmount = () => {
         <div className="full-width">
           <FormItemInputNumber />
           <MaxButton
-            onMaxClick={() => form.setFieldsValue({ amount: olasBalanceInEth })}
+            onMaxClick={() => {
+              form.setFieldsValue({ amount: olasBalanceInEth });
+              form.validateFields(['amount']);
+            }}
           />
         </div>
 

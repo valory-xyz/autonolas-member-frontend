@@ -1,5 +1,5 @@
 import { ethers } from 'ethers';
-import { notification, Alert } from 'antd/lib';
+import { notification } from 'antd/lib';
 import { isNil, isString } from 'lodash';
 import { COLOR } from 'util/theme';
 import { NA } from 'common-util/constants';
@@ -48,8 +48,8 @@ export const parseToWei = (amount) => ethers.utils.parseUnits(`${amount}`, 18).t
  */
 export const parseEther = (n) => ethers.utils.parseEther(`${n}`);
 
-export const getBlockTimestamp = async () => {
-  const temp = await window?.WEB3_PROVIDER.eth.getBlock('latest');
+export const getBlockTimestamp = async (block = 'latest') => {
+  const temp = await window?.WEB3_PROVIDER.eth.getBlock(block);
   return temp.timestamp * 1;
 };
 
@@ -104,15 +104,3 @@ export const getString = (x) => {
   if (isNil(x)) return NA;
   return isString(x) ? x : `${x}`;
 };
-
-// tiny components
-export const CannotIncreaseAlert = () => (
-  <Alert
-    message="You don't have any amount locked, please lock before increasing amount or unlockTime."
-    type="warning"
-  />
-);
-
-export const AlreadyAllAmountLocked = () => (
-  <Alert message="You don't have any OLAS to lock." type="warning" />
-);

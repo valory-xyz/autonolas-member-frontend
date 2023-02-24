@@ -18,7 +18,7 @@ import {
 import { useFetchBalances } from '../hooks';
 import { CreateLockContainer } from '../styles';
 
-export const VeolasAddToLock = () => {
+export const AddToLock = () => {
   const [form] = Form.useForm();
   const {
     account, chainId, olasBalanceInEth, getData,
@@ -76,11 +76,13 @@ export const VeolasAddToLock = () => {
 
   return (
     <CreateLockContainer>
-      <Button onClick={() => setIsModalVisible(true)}>Add to lock</Button>
+      <Button type="danger" onClick={() => setIsModalVisible(true)}>
+        Get more veOLAS
+      </Button>
 
       {isModalVisible && (
         <Modal
-          title="Create Lock"
+          title="Add To Lock"
           visible={isModalVisible}
           footer={null}
           onCancel={() => setIsModalVisible(false)}
@@ -94,7 +96,10 @@ export const VeolasAddToLock = () => {
           >
             <FormItemInputNumber />
             <MaxButton
-              onMaxClick={() => form.setFieldsValue({ amount: olasBalanceInEth })}
+              onMaxClick={() => {
+                form.setFieldsValue({ amount: olasBalanceInEth });
+                form.validateFields(['amount']);
+              }}
             />
 
             <FormItemDate />
@@ -103,9 +108,12 @@ export const VeolasAddToLock = () => {
                 type="primary"
                 htmlType="submit"
                 disabled={!account || isSubmitBtnDisabled}
+                className="mr-12"
               >
-                Create Lock
+                Add To Lock
               </Button>
+
+              <Button onClick={() => setIsModalVisible(false)}>Cancel</Button>
             </Form.Item>
           </Form>
 
