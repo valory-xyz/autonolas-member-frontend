@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Button, Row, Col } from 'antd/lib';
-import { getString, getFormattedDate } from 'common-util/functions';
+import { getFormattedNumber, getFormattedDate } from 'common-util/functions';
 import { InfoCard } from 'common-util/InfoCard';
 import { withdrawRequest } from '../contractUtils';
 import { useFetchBuolasBalances } from '../hooks';
@@ -39,14 +39,14 @@ export const BuolasManage = () => {
         <Col lg={4} md={24} xs={24}>
           <InfoCard
             title="Your balance"
-            value={getString(buolasBalance)}
+            value={getFormattedNumber(buolasBalance)}
             subText="veOLAS"
           />
         </Col>
 
         <Col lg={4} md={24} xs={24}>
           <InfoCard
-            value={getString(buolasReleasableAmount)}
+            value={getFormattedNumber(buolasReleasableAmount)}
             subText="Vested amount"
           />
           <Button
@@ -78,7 +78,7 @@ export const BuolasManage = () => {
         <Col lg={4} md={24} xs={24}>
           <InfoCard
             title="Next vesting"
-            value={getString(buolasNextReleasableAmount)}
+            value={getFormattedNumber(buolasNextReleasableAmount)}
             subText="amount"
           />
         </Col>

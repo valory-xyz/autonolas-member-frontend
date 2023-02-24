@@ -16,6 +16,7 @@ const ValueText = styled.div`
   font-weight: 400;
   font-size: 48px;
   line-height: 58px;
+  min-height: 58px;
   letter-spacing: -0.02em;
   margin-bottom: 0.5rem;
 `;

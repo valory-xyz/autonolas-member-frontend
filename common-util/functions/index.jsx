@@ -25,7 +25,7 @@ export const getBalance = (account, p) => new Promise((resolve, reject) => {
  *
  * @param {BigNumebr} value value to be converted to Eth
  * @param {Number} dv Default value to be returned
- * @returns
+ * @returns {String} with 2 decimal places
  */
 export const formatToEth = (value, dv = 0) => {
   if (isNil(value)) return dv || 0;
@@ -34,7 +34,7 @@ export const formatToEth = (value, dv = 0) => {
 
 /**
  * Same as `formatToEth` but doesn't fixes the decimal to 8
- * eg. 1000000000000000000 => 1
+ * @returns {String} eg: 1000000000000000000 => 1
  */
 export const parseToEth = (amount) => (amount ? ethers.utils.formatEther(`${amount}`) : 0);
 
@@ -64,6 +64,21 @@ export const notifySuccess = (message = 'Successfull', description = null) => no
   style: { border: `1px solid ${COLOR.PRIMARY}` },
 });
 
+/**
+ * Converts a number to a compact format
+ * @param {Number} x
+ * @returns {String} eg: 1000000 => 1M, 12345.67 => 12.35K
+ */
+export const getFormattedNumber = (x) => {
+  if (isNil(x)) return '0';
+  return new Intl.NumberFormat('en', {
+    notation: 'compact',
+    maximumFractionDigits: 2,
+    // minimumSignificantDigits: 2,
+    // maximumSignificantDigits: 2,
+  }).format(x);
+};
+
 export const getTotalVotesPercentage = (votes, totalSupply) => {
   if (votes && totalSupply) {
     const votesInBg = ethers.BigNumber.from(votes);
@@ -71,9 +86,8 @@ export const getTotalVotesPercentage = (votes, totalSupply) => {
     const votingPowerInPercentage = votesInBg
       .div(totalSupplyInBg)
       .mul(100)
-      .toNumber()
-      .toFixed(2);
-    return votingPowerInPercentage;
+      .toNumber();
+    return getFormattedNumber(votingPowerInPercentage);
   }
 
   return null;

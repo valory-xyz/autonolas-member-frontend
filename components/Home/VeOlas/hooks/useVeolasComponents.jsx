@@ -2,7 +2,7 @@ import {
   getFormattedDate,
   formatToEth,
   getTotalVotesPercentage,
-  getString,
+  getFormattedNumber,
 } from 'common-util/functions';
 import { InfoCard } from 'common-util/InfoCard';
 import { useFetchBalances } from './useFetchBalances';
@@ -24,7 +24,7 @@ export const useVeolasComponents = () => {
     <InfoCard
       isLoading={isLoading}
       title={title || 'Your balance'}
-      value={getString(veolasBalance)}
+      value={getFormattedNumber(veolasBalance)}
       subText="veOLAS"
     />
   );
@@ -32,7 +32,7 @@ export const useVeolasComponents = () => {
   const getVotingPowerComponent = (title) => (
     <InfoCard
       title={title || 'Voting power'}
-      value={getString(formatToEth(votes))}
+      value={getFormattedNumber(formatToEth(votes))}
       subText="votes"
     />
   );
@@ -53,7 +53,7 @@ export const useVeolasComponents = () => {
       isLoading={isLoading}
       title={title}
       hideTitle={hideTitle}
-      value={getString(mappedAmount)}
+      value={getFormattedNumber(mappedAmount)}
       subText="locked OLAS"
     />
   );
