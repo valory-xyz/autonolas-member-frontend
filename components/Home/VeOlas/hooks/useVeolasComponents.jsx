@@ -8,11 +8,20 @@ import { InfoCard } from 'common-util/InfoCard';
 import { useFetchBalances } from './useFetchBalances';
 
 /**
+ * 1. unlocked OLAS = balanceOf(amount) of veOlas contract
+ *
+ *
+ * 2. Relock should be enabled only if withdraw is completed
+ *
+ */
+
+/**
  * This hook is used to get the components
  */
 export const useVeolasComponents = () => {
   const {
     isLoading,
+    olasBalanceInEth,
     veolasBalance,
     votes,
     totalSupplyLocked,
@@ -24,8 +33,8 @@ export const useVeolasComponents = () => {
     <InfoCard
       isLoading={isLoading}
       title={title || 'Your balance'}
-      value={getFormattedNumber(veolasBalance)}
-      subText="veOLAS"
+      value={getFormattedNumber(olasBalanceInEth)}
+      subText="OLAS"
     />
   );
 
@@ -33,7 +42,7 @@ export const useVeolasComponents = () => {
     <InfoCard
       title={title || 'Voting power'}
       value={getFormattedNumber(formatToEth(votes))}
-      subText="votes"
+      subText="veOLAS"
     />
   );
 
@@ -73,7 +82,7 @@ export const useVeolasComponents = () => {
   const getUnlockedAmountComponent = () => (
     <InfoCard
       isLoading={isLoading}
-      value="--"
+      value={getFormattedNumber(veolasBalance)}
       subText="unlocked OLAS"
       style={{ display: 'none' }}
     />
@@ -88,3 +97,12 @@ export const useVeolasComponents = () => {
     getUnlockedAmountComponent,
   };
 };
+
+/**
+ * 1st section -
+ *   it should be "OLAS"
+ *   balance should be of OLAS
+ *
+ *
+ * =>
+ */

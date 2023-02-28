@@ -46,6 +46,9 @@ export const fetchOlasBalance = () => async (dispatch, getState) => {
 };
 
 // veOlas
+/**
+ * balanceOf veOlas contract - it is the amount of veolas locked
+ */
 export const fetchVeolasBalance = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
   const chainId = getState()?.setup?.chainId;

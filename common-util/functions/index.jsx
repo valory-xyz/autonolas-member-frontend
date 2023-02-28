@@ -71,6 +71,10 @@ export const notifySuccess = (message = 'Successfull', description = null) => no
  */
 export const getFormattedNumber = (x) => {
   if (isNil(x)) return '0';
+
+  // if < 9999 then show 2 decimal places with comma
+  if (x < 9999) return x.toLocaleString('en', { maximumFractionDigits: 2 });
+
   return new Intl.NumberFormat('en', {
     notation: 'compact',
     maximumFractionDigits: 2,
