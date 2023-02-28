@@ -3,17 +3,10 @@ import {
   formatToEth,
   getTotalVotesPercentage,
   getFormattedNumber,
+  getCommaSeparatedNumber,
 } from 'common-util/functions';
 import { InfoCard } from 'common-util/InfoCard';
 import { useFetchBalances } from './useFetchBalances';
-
-/**
- * 1. unlocked OLAS = balanceOf(amount) of veOlas contract
- *
- *
- * 2. Relock should be enabled only if withdraw is completed
- *
- */
 
 /**
  * This hook is used to get the components
@@ -22,11 +15,12 @@ export const useVeolasComponents = () => {
   const {
     isLoading,
     olasBalanceInEth,
-    veolasBalance,
+    lockedVeolas,
     votes,
     totalSupplyLocked,
     mappedAmount,
     mappedEndTime,
+    canWithdrawVeolas,
   } = useFetchBalances();
 
   const getBalanceComponent = (title) => (
@@ -34,6 +28,7 @@ export const useVeolasComponents = () => {
       isLoading={isLoading}
       title={title || 'Your balance'}
       value={getFormattedNumber(olasBalanceInEth)}
+      tooltipValue={getCommaSeparatedNumber(olasBalanceInEth)}
       subText="OLAS"
     />
   );
@@ -42,6 +37,7 @@ export const useVeolasComponents = () => {
     <InfoCard
       title={title || 'Voting power'}
       value={getFormattedNumber(formatToEth(votes))}
+      tooltipValue={getCommaSeparatedNumber(formatToEth(votes))}
       subText="veOLAS"
     />
   );
@@ -57,19 +53,21 @@ export const useVeolasComponents = () => {
     />
   );
 
-  const getLockedAmountComponent = ({ title = 'Lock', hideTitle = false } = {}) => (
+  const getLockedAmountComponent = ({
+    title = 'Lock',
+    hideTitle = false,
+  } = {}) => (
     <InfoCard
       isLoading={isLoading}
       title={title}
       hideTitle={hideTitle}
       value={getFormattedNumber(mappedAmount)}
+      tooltipValue={getCommaSeparatedNumber(mappedAmount)}
       subText="locked OLAS"
     />
   );
 
-  const getUnlockTimeComponent = (
-    { hideTitle = false } = {},
-  ) => (
+  const getUnlockTimeComponent = ({ hideTitle = false } = {}) => (
     <InfoCard
       isLoading={isLoading}
       hideTitle={hideTitle}
@@ -78,15 +76,19 @@ export const useVeolasComponents = () => {
     />
   );
 
-  // TODO: how to fetch this data?
-  const getUnlockedAmountComponent = () => (
-    <InfoCard
-      isLoading={isLoading}
-      value={getFormattedNumber(veolasBalance)}
-      subText="unlocked OLAS"
-      style={{ display: 'none' }}
-    />
-  );
+  // unlocked OLAS = balanceOf(amount) of veOlas contract
+  const getUnlockedAmountComponent = () => {
+    // if the user has no locked OLAS, then don't show the component
+    if (!canWithdrawVeolas) return null;
+    return (
+      <InfoCard
+        isLoading={isLoading}
+        value={getFormattedNumber(lockedVeolas)}
+        tooltipValue={getCommaSeparatedNumber(lockedVeolas)}
+        subText="unlocked OLAS"
+      />
+    );
+  };
 
   return {
     getBalanceComponent,
@@ -97,12 +99,3 @@ export const useVeolasComponents = () => {
     getUnlockedAmountComponent,
   };
 };
-
-/**
- * 1st section -
- *   it should be "OLAS"
- *   balance should be of OLAS
- *
- *
- * =>
- */

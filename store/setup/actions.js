@@ -61,7 +61,7 @@ export const fetchVeolasBalance = () => async (dispatch, getState) => {
 
     dispatch({
       type: syncTypes.SET_VEOLAS_BALANCEOF,
-      data: { veolasBalance: formatToEth(response) },
+      data: { lockedVeolas: formatToEth(response) },
     });
   } catch (error) {
     console.error(error);

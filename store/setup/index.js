@@ -16,7 +16,7 @@ const initialState = {
   canWithdrawVeolas: null,
 
   // others
-  veolasBalance: null,
+  lockedVeolas: null,
   mappedBalances: {
     amount: null,
     endTime: null,

@@ -73,13 +73,26 @@ export const getFormattedNumber = (x) => {
   if (isNil(x)) return '0';
 
   // if < 9999 then show 2 decimal places with comma
-  if (x < 9999) return x.toLocaleString('en', { maximumFractionDigits: 2 });
+  // if (x < 9999) return x.toLocaleString('en', { maximumFractionDigits: 2 });
 
   return new Intl.NumberFormat('en', {
     notation: 'compact',
     maximumFractionDigits: 2,
     // minimumSignificantDigits: 2,
     // maximumSignificantDigits: 2,
+  }).format(x);
+};
+
+/**
+ * Converts a number to a comma separated format
+ * @param {Number} x
+ * @returns {String} eg: 1000000 => 1,000,000, 12345.67 => 12,345.67
+ */
+export const getCommaSeparatedNumber = (x) => {
+  if (isNil(x)) return '0';
+
+  return new Intl.NumberFormat('en', {
+    maximumFractionDigits: 2,
   }).format(x);
 };
 
