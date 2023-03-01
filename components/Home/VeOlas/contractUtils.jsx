@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { ethers } from 'ethers';
-import { MAX_AMOUNT } from 'common-util/functions';
+import { MAX_AMOUNT, parseEther } from 'common-util/functions';
 import {
   getVeolasContract,
   getOlasContract,
@@ -122,12 +122,25 @@ export const withdrawVeolasRequest = ({ account, chainId }) => new Promise((reso
 });
 
 /**
- * 1. create lock and increase amount
- * - should open single modal
- *
- * 2. create a lock with one account
- *    create a lock with different account
- *    look at both screen
- * - send OLAS from owner account to completely 2 new accounts
- * - `transfer` method in OLAS contract
+ * transfer OLAS to account
+ * NOTE: this is a internal method for testing and
+ * won't be exposed or visible to the user
  */
+export const transferOlasToAccountRequest = ({ account, chainId, signer }) => new Promise((resolve, reject) => {
+  const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
+
+  // transfering OLAS to the signer account with 100 ETH.
+  const values = {
+    signer,
+    amount: parseEther('10000'),
+  };
+
+  contract.methods
+    .transfer(values.signer, values.amount)
+    .send({ from: account })
+    .then((response) => resolve(response?.transactionHash))
+    .catch((e) => {
+      window.console.log('Error occured on transfering OLAS to account');
+      reject(e);
+    });
+});

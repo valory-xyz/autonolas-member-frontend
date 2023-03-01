@@ -44,7 +44,8 @@ export const parseToEth = (amount) => (amount ? ethers.utils.formatEther(`${amou
 export const parseToWei = (amount) => ethers.utils.parseUnits(`${amount}`, 18).toString();
 
 /**
- * parse eth
+ * parse eth to wei
+ * example 1 => 1000000000000000000
  */
 export const parseEther = (n) => ethers.utils.parseEther(`${n}`);
 
@@ -78,8 +79,6 @@ export const getFormattedNumber = (x) => {
   return new Intl.NumberFormat('en', {
     notation: 'compact',
     maximumFractionDigits: 2,
-    // minimumSignificantDigits: 2,
-    // maximumSignificantDigits: 2,
   }).format(x);
 };
 
@@ -96,14 +95,18 @@ export const getCommaSeparatedNumber = (x) => {
   }).format(x);
 };
 
+/**
+ * converts to percentage and returns a string with 2 decimal places
+ */
 export const getTotalVotesPercentage = (votes, totalSupply) => {
   if (votes && totalSupply) {
-    const votesInBg = ethers.BigNumber.from(votes);
-    const totalSupplyInBg = ethers.BigNumber.from(totalSupply);
-    const votingPowerInPercentage = votesInBg
-      .div(totalSupplyInBg)
-      .mul(100)
-      .toNumber();
+    const votesInEth = Number(parseToEth(votes));
+    const totalSupplyInEth = Number(parseToEth(totalSupply));
+    const votingPowerInPercentage = (
+      (votesInEth / totalSupplyInEth)
+      * 100
+    ).toFixed(2);
+
     return getFormattedNumber(votingPowerInPercentage);
   }
 

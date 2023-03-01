@@ -3,6 +3,7 @@ import {
   Typography, Space, Button, Alert,
 } from 'antd/lib';
 import { GetMoreVeolas } from './components/GetMoreVeolas';
+// import { TransferOlas } from './components/TransferOlas';
 import { VeolasManage } from './components';
 import { useFetchBalances } from './hooks';
 import { GetMoreOlasRow } from './styles';
@@ -66,6 +67,9 @@ export const VeOlas = () => {
         isModalVisible={isIncreaseModalVisible}
         setIsModalVisible={setIsIncreaseModalVisible}
       />
+
+      {/* Transfer button - only for testing */}
+      {/* <TransferOlas /> */}
     </div>
   );
 };
