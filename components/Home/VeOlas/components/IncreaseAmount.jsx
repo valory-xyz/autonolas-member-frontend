@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Button, Form } from 'antd/lib';
 import { notifyError, notifySuccess, parseToWei } from 'common-util/functions';
 import { FormItemInputNumber, MaxButton } from '../../common';
@@ -5,7 +6,7 @@ import { updateIncreaseAmount } from '../contractUtils';
 import { useFetchBalances } from '../hooks';
 import { FormContainer } from '../styles';
 
-export const IncreaseAmount = () => {
+export const IncreaseAmount = ({ closeModal }) => {
   const [form] = Form.useForm();
   const {
     account,
@@ -37,6 +38,9 @@ export const IncreaseAmount = () => {
       // once the amount is increased,
       // fetch the newly updated mapped balances & votes.
       getData();
+
+      // close the modal after successful locking
+      closeModal();
     } catch (error) {
       window.console.error(error);
       notifyError('Some error occured');
@@ -75,4 +79,8 @@ export const IncreaseAmount = () => {
       </Form>
     </FormContainer>
   );
+};
+
+IncreaseAmount.propTypes = {
+  closeModal: PropTypes.func.isRequired,
 };

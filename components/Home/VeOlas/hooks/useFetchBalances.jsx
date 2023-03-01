@@ -32,6 +32,7 @@ export const useFetchBalances = () => {
   const canWithdrawVeolas = useSelector(
     (state) => state?.setup?.canWithdrawVeolas,
   );
+
   const [isLoading, setIsLoading] = useState(!!account);
 
   const getData = () => {

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   Button, Row, Col, Modal,
 } from 'antd/lib';
@@ -10,9 +10,9 @@ import { useFetchBalances, useVeolasComponents } from '../hooks';
 import { IncreaseAmount } from './IncreaseAmount';
 import { IncreaseUnlockTime } from './IncreaseUnlockTime';
 
-export const VeolasManage = () => {
+export const VeolasManage = ({ isModalVisible, setIsModalVisible }) => {
   const {
-    account, chainId, canWithdrawVeolas, getData, isMappedAmountZero,
+    account, chainId, canWithdrawVeolas, getData,
   } = useFetchBalances();
   const {
     getBalanceComponent,
@@ -22,8 +22,6 @@ export const VeolasManage = () => {
     getUnlockTimeComponent,
     getUnlockedAmountComponent,
   } = useVeolasComponents();
-
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const onWithdraw = async () => {
     try {
@@ -36,6 +34,10 @@ export const VeolasManage = () => {
     } catch (error) {
       window.console.error(error);
     }
+  };
+
+  const closeModalOnSuccess = () => {
+    setIsModalVisible(false);
   };
 
   return (
@@ -64,17 +66,6 @@ export const VeolasManage = () => {
           is either true or false (default value is null) */}
           {!isNil(canWithdrawVeolas) && (
             <>
-              {/* do not show if lock does not exist
-              (ie. show if already exists) */}
-              {!isMappedAmountZero && (
-                <Button
-                  onClick={() => setIsModalVisible(true)}
-                  className="mr-12"
-                >
-                  Increase lock
-                </Button>
-              )}
-
               {canWithdrawVeolas && (
                 <Button htmlType="submit" onClick={onWithdraw}>
                   Claim all
@@ -108,11 +99,21 @@ export const VeolasManage = () => {
           </Row>
 
           <div className="forms-container">
-            <IncreaseAmount />
-            <IncreaseUnlockTime />
+            <IncreaseAmount closeModal={closeModalOnSuccess} />
+            <IncreaseUnlockTime closeModal={closeModalOnSuccess} />
           </div>
         </Modal>
       )}
     </>
   );
+};
+
+VeolasManage.propTypes = {
+  isModalVisible: PropTypes.bool,
+  setIsModalVisible: PropTypes.func,
+};
+
+VeolasManage.defaultProps = {
+  isModalVisible: false,
+  setIsModalVisible: () => {},
 };

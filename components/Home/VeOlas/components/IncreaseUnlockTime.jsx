@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Button, Form } from 'antd/lib';
 import { notifyError, notifySuccess } from 'common-util/functions';
 import { parseToSeconds, FormItemDate } from '../../common';
@@ -5,7 +6,7 @@ import { updateIncreaseUnlockTime } from '../contractUtils';
 import { useFetchBalances } from '../hooks';
 import { FormContainer } from '../styles';
 
-export const IncreaseUnlockTime = () => {
+export const IncreaseUnlockTime = ({ closeModal }) => {
   const [form] = Form.useForm();
   const {
     account, chainId, mappedEndTime, isMappedAmountZero, getData,
@@ -26,6 +27,9 @@ export const IncreaseUnlockTime = () => {
       // once the unlockTime is increased,
       // fetch the newly updated mapped balances & votes.
       getData();
+
+      // close the modal after successful locking
+      closeModal();
     } catch (error) {
       window.console.error(error);
       notifyError('Some error occured');
@@ -58,4 +62,8 @@ export const IncreaseUnlockTime = () => {
       </Form>
     </FormContainer>
   );
+};
+
+IncreaseUnlockTime.propTypes = {
+  closeModal: PropTypes.func.isRequired,
 };

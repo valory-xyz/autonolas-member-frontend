@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
-  Alert, Button, Form, Modal, Space,
+  Alert, Button, Form, Modal,
 } from 'antd/lib';
 import { notifyError, notifySuccess, parseToWei } from 'common-util/functions';
 import {
@@ -18,16 +18,13 @@ import {
 import { useFetchBalances } from '../hooks';
 import { CreateLockContainer } from '../styles';
 
-export const AddToLock = () => {
+export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
   const [form] = Form.useForm();
   const {
-    account, chainId, olasBalanceInEth, canWithdrawVeolas, getData,
+    account, chainId, olasBalanceInEth, isMappedAmountZero, getData,
   } = useFetchBalances();
-  const isSubmitBtnDisabled = useSelector(
-    (state) => !state?.setup?.mappedBalances?.isMappedAmountZero,
-  );
+  const cannotCreateLock = !isMappedAmountZero;
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isApproveModalVisible, setIsApproveModalVisible] = useState(false);
 
   useEffect(() => {
@@ -76,24 +73,6 @@ export const AddToLock = () => {
 
   return (
     <CreateLockContainer>
-      <Space size="middle">
-        <Button
-          type="danger"
-          disabled={canWithdrawVeolas}
-          onClick={() => setIsModalVisible(true)}
-        >
-          Get more veOLAS
-        </Button>
-
-        {canWithdrawVeolas && (
-          <Alert
-            message="Please claim your OLAS before locking again"
-            type="warning"
-            showIcon
-          />
-        )}
-      </Space>
-
       {isModalVisible && (
         <Modal
           title="Add To Lock"
@@ -121,7 +100,7 @@ export const AddToLock = () => {
               <Button
                 type="primary"
                 htmlType="submit"
-                disabled={!account || isSubmitBtnDisabled}
+                disabled={!account || cannotCreateLock}
                 className="mr-12"
               >
                 Add To Lock
@@ -131,7 +110,7 @@ export const AddToLock = () => {
             </Form.Item>
           </Form>
 
-          {isSubmitBtnDisabled && (
+          {cannotCreateLock && (
             <Alert
               message="Amount already locked, please wait until the lock expires."
               type="warning"
@@ -176,4 +155,14 @@ export const AddToLock = () => {
       )}
     </CreateLockContainer>
   );
+};
+
+GetMoreVeolas.propTypes = {
+  isModalVisible: PropTypes.bool,
+  setIsModalVisible: PropTypes.func,
+};
+
+GetMoreVeolas.defaultProps = {
+  isModalVisible: false,
+  setIsModalVisible: () => {},
 };
