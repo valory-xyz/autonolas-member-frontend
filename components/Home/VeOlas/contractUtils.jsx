@@ -120,3 +120,20 @@ export const withdrawVeolasRequest = ({ account, chainId }) => new Promise((reso
       reject(e);
     });
 });
+
+/**
+ * 1. create lock and increase amount
+ * - should open single modal
+ *
+ * 2. create a lock with one account
+ *    create a lock with different account
+ *    look at both screen
+ * - send OLAS from owner account to completely 2 new accounts
+ * - `transfer` method in OLAS contract
+ *
+ *
+ * 3. Disable a button if LOCKED expired
+ *   - show a message `you should claim your OLAS before locking again`
+ *
+ * 4.
+ */

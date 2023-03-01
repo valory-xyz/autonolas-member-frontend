@@ -39,14 +39,14 @@ export const parseToSeconds = (unlockTime) => {
 /**
  * @returns Amount Input
  */
-export const FormItemInputNumber = () => {
+export const FormItemInputNumber = ({ text = 'Lock OLAS' }) => {
   const { olasBalanceInEth } = useFetchBalances();
 
   return (
     <Form.Item
       className="custom-form-item-lock"
       name="amount"
-      label="Lock more OLAS"
+      label={text}
       rules={[
         { required: true, message: 'Amount is required' },
         () => ({

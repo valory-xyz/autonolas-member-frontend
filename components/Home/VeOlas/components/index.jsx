@@ -28,7 +28,7 @@ export const VeolasManage = () => {
   const onWithdraw = async () => {
     try {
       await withdrawVeolasRequest({ account, chainId });
-      notifySuccess('Withdrawn successfully');
+      notifySuccess('Claimed successfully');
 
       // fetch all the data again to update
       // amount, time, votes, etc

@@ -54,7 +54,7 @@ export const IncreaseAmount = () => {
         onFinish={onFinish}
       >
         <div className="full-width">
-          <FormItemInputNumber />
+          <FormItemInputNumber text="Lock more OLAS" />
           <MaxButton
             onMaxClick={() => {
               form.setFieldsValue({ amount: olasBalanceInEth });
