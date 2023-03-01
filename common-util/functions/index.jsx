@@ -89,7 +89,7 @@ export const getFormattedNumber = (x) => {
  * @returns {String} eg: 1000000 => 1,000,000, 12345.67 => 12,345.67
  */
 export const getCommaSeparatedNumber = (x) => {
-  if (isNil(x)) return '0';
+  if (isNil(x) || Number(x) === 0) return '0.0';
 
   return new Intl.NumberFormat('en', {
     maximumFractionDigits: 2,
