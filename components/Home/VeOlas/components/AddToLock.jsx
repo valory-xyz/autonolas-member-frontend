@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import {
-  Alert, Button, Form, Modal,
+  Alert, Button, Form, Modal, Space,
 } from 'antd/lib';
 import { notifyError, notifySuccess, parseToWei } from 'common-util/functions';
 import {
@@ -21,7 +21,7 @@ import { CreateLockContainer } from '../styles';
 export const AddToLock = () => {
   const [form] = Form.useForm();
   const {
-    account, chainId, olasBalanceInEth, getData,
+    account, chainId, olasBalanceInEth, canWithdrawVeolas, getData,
   } = useFetchBalances();
   const isSubmitBtnDisabled = useSelector(
     (state) => !state?.setup?.mappedBalances?.isMappedAmountZero,
@@ -76,9 +76,23 @@ export const AddToLock = () => {
 
   return (
     <CreateLockContainer>
-      <Button type="danger" onClick={() => setIsModalVisible(true)}>
-        Get more veOLAS
-      </Button>
+      <Space size="middle">
+        <Button
+          type="danger"
+          disabled={canWithdrawVeolas}
+          onClick={() => setIsModalVisible(true)}
+        >
+          Get more veOLAS
+        </Button>
+
+        {canWithdrawVeolas && (
+          <Alert
+            message="Please claim your OLAS before locking again"
+            type="warning"
+            showIcon
+          />
+        )}
+      </Space>
 
       {isModalVisible && (
         <Modal

@@ -130,10 +130,4 @@ export const withdrawVeolasRequest = ({ account, chainId }) => new Promise((reso
  *    look at both screen
  * - send OLAS from owner account to completely 2 new accounts
  * - `transfer` method in OLAS contract
- *
- *
- * 3. Disable a button if LOCKED expired
- *   - show a message `you should claim your OLAS before locking again`
- *
- * 4.
  */
