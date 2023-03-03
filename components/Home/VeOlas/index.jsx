@@ -3,7 +3,7 @@ import {
   Typography, Space, Button, Alert,
 } from 'antd/lib';
 import { GetMoreVeolas } from './components/GetMoreVeolas';
-// import { TransferOlas } from './components/TransferOlas';
+import { TransferOlas } from './components/TransferOlas';
 import { VeolasManage } from './components';
 import { useFetchBalances } from './hooks';
 import { GetMoreOlasRow } from './styles';
@@ -69,7 +69,7 @@ export const VeOlas = () => {
       />
 
       {/* Transfer button - only for testing */}
-      {/* <TransferOlas /> */}
+      <TransferOlas />
     </div>
   );
 };

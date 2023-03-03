@@ -102,6 +102,12 @@ export const getTotalVotesPercentage = (votes, totalSupply) => {
   if (votes && totalSupply) {
     const votesInEth = Number(parseToEth(votes));
     const totalSupplyInEth = Number(parseToEth(totalSupply));
+
+    console.log({
+      votesInEth,
+      totalSupplyInEth,
+    });
+
     const votingPowerInPercentage = (
       (votesInEth / totalSupplyInEth)
       * 100
@@ -118,6 +124,7 @@ export const getTotalVotesPercentage = (votes, totalSupply) => {
  * example, 1678320000000 => Mar 09 '23
  */
 export const getFormattedDate = (ms) => {
+  console.log(ms);
   if (!ms) return NA;
 
   // eg: Feb 23, 2023;

@@ -29,11 +29,14 @@ export const getToken = ({ tokenName, token, isLoading = false }) => (
  * 3. remove decimals
  */
 export const parseToSeconds = (unlockTime) => {
-  const futureDateInTimeStamp = Math.round(
-    new Date(unlockTime).getTime() / 1000,
-  );
-  const todayDateInTimeStamp = Math.round(new Date().getTime() / 1000);
-  return futureDateInTimeStamp - todayDateInTimeStamp;
+  const futureDateInTimeStamp = Math.round(new Date(unlockTime).getTime() / 1000) + 1;
+  const todayDateInTimeStamp = Math.round(new Date().getTime() / 1000) + 1;
+  console.log({
+    futureDateInTimeStamp,
+    todayDateInTimeStamp,
+    calc: (futureDateInTimeStamp - todayDateInTimeStamp),
+  });
+  return (futureDateInTimeStamp - todayDateInTimeStamp);
 };
 
 /**
@@ -122,8 +125,9 @@ export const FormItemDate = ({ startDate }) => {
     >
       <DatePicker
         disabledDate={disableDateForUnlockTime}
-        format="MM/DD/YYYY"
+        format="MM/DD/YYYY HH:mm"
         style={fullWidth}
+        showTime={{ format: 'HH:mm' }}
       />
     </Form.Item>
   );
