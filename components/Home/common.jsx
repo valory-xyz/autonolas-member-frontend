@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import moment from 'moment';
+import dayjs from 'dayjs';
 import {
   Form, InputNumber, DatePicker, Button, Typography,
 } from 'antd/lib';
@@ -33,7 +33,6 @@ export const parseToSeconds = (unlockTime) => {
     new Date(unlockTime).getTime() / 1000,
   );
   const todayDateInTimeStamp = Math.round(new Date().getTime() / 1000);
-
   return futureDateInTimeStamp - todayDateInTimeStamp;
 };
 
@@ -106,11 +105,11 @@ export const FormItemDate = ({ startDate }) => {
    */
   const disableDateForUnlockTime = (current) => {
     const pastDate = startDate
-      ? current < moment(new Date(startDate)).add(6, 'days').endOf('day')
-      : current < moment().add(7, 'days').endOf('day');
+      ? current < dayjs(new Date(startDate)).add(6, 'days').endOf('day')
+      : current < dayjs().add(7, 'days').endOf('day');
 
     // do not allow selection for more than 4 years
-    const futureDate = current > moment().add(4, 'years');
+    const futureDate = current > dayjs().add(4, 'years');
     return (current && pastDate) || futureDate;
   };
 

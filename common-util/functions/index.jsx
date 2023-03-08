@@ -102,7 +102,6 @@ export const getTotalVotesPercentage = (votes, totalSupply) => {
   if (votes && totalSupply) {
     const votesInEth = Number(parseToEth(votes));
     const totalSupplyInEth = Number(parseToEth(totalSupply));
-
     const votingPowerInPercentage = (
       (votesInEth / totalSupplyInEth)
       * 100
