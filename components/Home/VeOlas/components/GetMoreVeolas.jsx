@@ -34,14 +34,9 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
   }, [account, chainId]);
 
   const createLockHelper = async () => {
-    console.log({
-      amount: parseToWei(form.getFieldValue('amount')),
-      actualTime: form.getFieldValue('unlockTime'),
-      unlockTime: await parseToSeconds(form.getFieldValue('unlockTime')),
-    });
     const txHash = await createLockRequest({
       amount: parseToWei(form.getFieldValue('amount')),
-      unlockTime: await parseToSeconds(form.getFieldValue('unlockTime')),
+      unlockTime: parseToSeconds(form.getFieldValue('unlockTime')),
       account,
       chainId,
     });

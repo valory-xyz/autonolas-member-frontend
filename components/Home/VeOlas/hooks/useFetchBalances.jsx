@@ -23,7 +23,6 @@ export const useFetchBalances = () => {
     (state) => state?.setup?.mappedBalances?.endTime || null,
   );
 
-  console.log({ mappedEndTime });
   const isMappedAmountZero = useSelector(
     (state) => state?.setup?.mappedBalances?.isMappedAmountZero || false,
   );

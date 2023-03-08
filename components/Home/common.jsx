@@ -5,7 +5,6 @@ import {
 } from 'antd/lib';
 import isNil from 'lodash/isNil';
 import { Shimmer } from 'common-util/Shimmer';
-import { getBlockTimestamp } from 'common-util/functions';
 import { useFetchBalances } from './VeOlas/hooks';
 
 const { Text } = Typography;
@@ -29,30 +28,13 @@ export const getToken = ({ tokenName, token, isLoading = false }) => (
  * 2. divide by 100 to convert to seconds
  * 3. remove decimals
  */
-export const parseToSeconds = async (unlockTime) => {
+export const parseToSeconds = (unlockTime) => {
   const futureDateInTimeStamp = Math.round(
     new Date(unlockTime).getTime() / 1000,
   );
-  const todayDateInTimeStamp = Math.round(new Date().getTime() / 1000) + 1;
+  const todayDateInTimeStamp = Math.round(new Date().getTime() / 1000);
 
-  // const futureDateInTimeStamp = (365 * 24 * 60 * 60 * 4) + 0;
-  // console.log({
-  //   futureDateInTimeStamp,
-  //   todayDateInTimeStamp,
-  //   calc: futureDateInTimeStamp - todayDateInTimeStamp,
-  // });
-
-  // return (365 * 24 * 60 * 60 * 4) + 0;
   return futureDateInTimeStamp - todayDateInTimeStamp;
-
-  // const blockTimestamp = await getBlockTimestamp();
-  // const oneWeek = 604800;
-  // const value = Math.floor((futureDateInTimeStamp - blockTimestamp) / oneWeek) * oneWeek;
-  // console.log(value);
-  // return value;
-
-  // console.log(futureDateInTimeStamp);
-  // return futureDateInTimeStamp;
 };
 
 /**

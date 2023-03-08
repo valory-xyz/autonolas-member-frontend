@@ -83,8 +83,6 @@ export const fetchMappedBalances = () => async (dispatch, getState) => {
       .mapLockedBalances(account)
       .call();
 
-    console.log({ response });
-
     dispatch({
       type: syncTypes.SET_MAPPED_BALANCES,
       data: {
@@ -106,8 +104,6 @@ export const fetchVotes = () => async (dispatch, getState) => {
     const response = await contract.methods
       .getVotes(account)
       .call();
-
-    console.log({ votesResponse: response });
 
     dispatch({
       type: syncTypes.SET_VOTES,
@@ -159,12 +155,6 @@ export const fetchIfCanWithdrawVeolas = () => async (dispatch, getState) => {
 
     const blockNumber = await window?.WEB3_PROVIDER.eth.getBlockNumber();
     const blockTimestamp = await getBlockTimestamp(blockNumber);
-
-    // const oneWeek = 604800;
-    // const abc = Math.floor((blockTimestamp + 604800) / oneWeek) * oneWeek;
-
-    // console.log({ lockedEnd, blockTimestamp, abc });
-
     const canWithdrawVeolas = Number(balance) > 0 && lockedEnd <= blockTimestamp;
 
     dispatch({
