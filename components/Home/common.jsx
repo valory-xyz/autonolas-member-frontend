@@ -5,6 +5,7 @@ import {
 } from 'antd/lib';
 import isNil from 'lodash/isNil';
 import { Shimmer } from 'common-util/Shimmer';
+import { getCommaSeparatedNumber } from 'common-util/functions';
 import { useFetchBalances } from './VeOlas/hooks';
 
 const { Text } = Typography;
@@ -76,7 +77,7 @@ export const MaxButton = ({ onMaxClick }) => {
   return (
     <Text type="secondary">
       OLAS balance:&nbsp;
-      {olasBalanceInEth}
+      {getCommaSeparatedNumber(olasBalanceInEth)}
       <Button
         htmlType="button"
         type="link"
