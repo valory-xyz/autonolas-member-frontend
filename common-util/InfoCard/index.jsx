@@ -21,6 +21,11 @@ const ValueText = styled.div`
   letter-spacing: -0.02em;
   margin-bottom: 0.5rem;
   cursor: help;
+
+  /* ellipsis */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const InfoCard = ({
