@@ -1,4 +1,5 @@
 import { ethers } from 'ethers';
+import dayjs from 'dayjs';
 import { notification } from 'antd/lib';
 import { isNil, isString } from 'lodash';
 import { COLOR } from 'util/theme';
@@ -119,19 +120,7 @@ export const getTotalVotesPercentage = (votes, totalSupply) => {
  */
 export const getFormattedDate = (ms) => {
   if (!ms) return NA;
-
-  // eg: Feb 23, 2023;
-  const dateInString = new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit',
-  }).format(ms);
-
-  // eg: 2023 converted to 23
-  const yearInShortForm = dateInString.split(', ')[1].trim().substring(2, 4);
-
-  // eg: Feb 05 '23
-  return `${dateInString.split(', ')[0]} '${yearInShortForm}`;
+  return dayjs(ms).format("MMM DD 'YY");
 };
 
 export const getString = (x) => {
