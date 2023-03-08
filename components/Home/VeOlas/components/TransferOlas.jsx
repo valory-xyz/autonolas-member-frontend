@@ -32,7 +32,7 @@ export const TransferOlas = () => {
     // await transferHelper('0x888465C3A8Eb71B998A814Bb70BED64D2F3c50F9');
 
     // account from local backend
-    await transferHelper('0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC');
+    await transferHelper('0x70997970C51812dc3A010C7d01b50e0d17dc79C8');
   };
 
   return (

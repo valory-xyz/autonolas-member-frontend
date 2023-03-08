@@ -93,8 +93,11 @@ export const createLockRequest = ({
 }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 
+  // const t = (365 * 24 * 60 * 60 * 4) + 0;
+
   contract.methods
     .createLock(amount, unlockTime)
+    // .createLock(amount, `${604800}`)
     .send({ from: account })
     .then((response) => {
       resolve(response?.transactionHash);
