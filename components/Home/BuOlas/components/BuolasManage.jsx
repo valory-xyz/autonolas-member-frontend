@@ -4,6 +4,7 @@ import {
   getFormattedNumber,
   getFormattedDate,
   getCommaSeparatedNumber,
+  getFullFormattedDate,
 } from 'common-util/functions';
 import { InfoCard } from 'common-util/InfoCard';
 import { withdrawRequest } from '../contractUtils';
@@ -67,6 +68,7 @@ export const BuolasManage = () => {
         <Col lg={6} md={24} xs={24}>
           <InfoCard
             value={getFormattedDate(mappedBalances?.startTime)}
+            tooltipValue={getFullFormattedDate(mappedBalances?.startTime)}
             subText="Vesting time"
           />
         </Col>
@@ -74,6 +76,7 @@ export const BuolasManage = () => {
         <Col lg={6} md={24} xs={24}>
           <InfoCard
             value={getFormattedDate(mappedBalances?.endTime)}
+            tooltipValue={getFullFormattedDate(mappedBalances?.endTime)}
             subText="Time to vest"
           />
         </Col>
@@ -93,6 +96,7 @@ export const BuolasManage = () => {
         <Col lg={6} md={24} xs={24}>
           <InfoCard
             value={getFormattedDate(buolasNextReleasableTime)}
+            tooltipValue={getFullFormattedDate(buolasNextReleasableTime)}
             subText="time"
           />
         </Col>

@@ -1,5 +1,5 @@
 import { Typography } from 'antd/lib';
-// import { BuolasCreateLock } from './components/GetMoreVeolas';
+// import { BuolasCreateLock } from './components/AddToLock';
 import { BuolasManage } from './components/BuolasManage';
 
 const { Title, Paragraph, Text } = Typography;

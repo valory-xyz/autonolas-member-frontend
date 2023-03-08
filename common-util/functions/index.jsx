@@ -123,6 +123,15 @@ export const getFormattedDate = (ms) => {
   return dayjs(ms).format("MMM DD 'YY");
 };
 
+/**
+ * Get formatted date from milliseconds including time
+ * example, 1678320000000 => Mar 09 '2023 16:00
+ */
+export const getFullFormattedDate = (ms) => {
+  if (!ms) return NA;
+  return dayjs(ms).format("MMM DD 'YYYY, HH:mm");
+};
+
 export const getString = (x) => {
   if (isNil(x)) return NA;
   return isString(x) ? x : `${x}`;

@@ -1,9 +1,9 @@
-import dayjs from 'dayjs';
 import {
   getFormattedDate,
   formatToEth,
   getTotalVotesPercentage,
   getFormattedNumber,
+  getFullFormattedDate,
   getCommaSeparatedNumber,
 } from 'common-util/functions';
 import { InfoCard } from 'common-util/InfoCard';
@@ -73,7 +73,7 @@ export const useVeolasComponents = () => {
       isLoading={isLoading}
       hideTitle={hideTitle}
       value={getFormattedDate(mappedEndTime)}
-      tooltipValue={dayjs(mappedEndTime).format('MMM DD \'YYYY, HH:mm')}
+      tooltipValue={getFullFormattedDate(mappedEndTime)}
       subText="unlock date"
     />
   );
