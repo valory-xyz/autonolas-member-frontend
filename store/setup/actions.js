@@ -155,7 +155,6 @@ export const fetchIfCanWithdrawVeolas = () => async (dispatch, getState) => {
 
     const blockNumber = await window?.WEB3_PROVIDER.eth.getBlockNumber();
     const blockTimestamp = await getBlockTimestamp(blockNumber);
-
     const canWithdrawVeolas = Number(balance) > 0 && lockedEnd <= blockTimestamp;
 
     dispatch({

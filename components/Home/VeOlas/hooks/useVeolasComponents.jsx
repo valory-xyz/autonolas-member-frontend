@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import {
   getFormattedDate,
   formatToEth,
@@ -72,6 +73,7 @@ export const useVeolasComponents = () => {
       isLoading={isLoading}
       hideTitle={hideTitle}
       value={getFormattedDate(mappedEndTime)}
+      tooltipValue={dayjs(mappedEndTime).format('MMM DD \'YYYY, HH:mm')}
       subText="unlock date"
     />
   );

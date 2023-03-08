@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
-import moment from 'moment';
+import dayjs from 'dayjs';
 import {
   Form, InputNumber, DatePicker, Button, Typography,
 } from 'antd/lib';
 import isNil from 'lodash/isNil';
 import { Shimmer } from 'common-util/Shimmer';
+import { getCommaSeparatedNumber } from 'common-util/functions';
 import { useFetchBalances } from './VeOlas/hooks';
 
 const { Text } = Typography;
@@ -76,7 +77,7 @@ export const MaxButton = ({ onMaxClick }) => {
   return (
     <Text type="secondary">
       OLAS balance:&nbsp;
-      {olasBalanceInEth}
+      {getCommaSeparatedNumber(olasBalanceInEth)}
       <Button
         htmlType="button"
         type="link"
@@ -105,11 +106,11 @@ export const FormItemDate = ({ startDate }) => {
    */
   const disableDateForUnlockTime = (current) => {
     const pastDate = startDate
-      ? current < moment(new Date(startDate)).add(6, 'days').endOf('day')
-      : current < moment().add(7, 'days').endOf('day');
+      ? current < dayjs(new Date(startDate)).add(6, 'days').endOf('day')
+      : current < dayjs().add(7, 'days').endOf('day');
 
     // do not allow selection for more than 4 years
-    const futureDate = current > moment().add(4, 'years');
+    const futureDate = current > dayjs().add(4, 'years');
     return (current && pastDate) || futureDate;
   };
 
@@ -122,8 +123,9 @@ export const FormItemDate = ({ startDate }) => {
     >
       <DatePicker
         disabledDate={disableDateForUnlockTime}
-        format="MM/DD/YYYY"
+        format="MM/DD/YYYY HH:mm"
         style={fullWidth}
+        showTime={{ format: 'HH:mm' }}
       />
     </Form.Item>
   );
