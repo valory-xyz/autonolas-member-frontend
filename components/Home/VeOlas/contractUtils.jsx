@@ -49,7 +49,7 @@ export const updateIncreaseUnlockTime = ({ time, account, chainId }) => new Prom
  * MAX_AMOUNT if already approved. Can read more
  * [here](https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#IERC20-allowance-address-address-).
  */
-export const cannotApproveTokens = ({ account, chainId }) => new Promise((resolve, reject) => {
+export const hasSufficientTokensRequest = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
   const spender = getContractAddress('veOlas', chainId);
 

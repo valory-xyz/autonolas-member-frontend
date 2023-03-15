@@ -11,7 +11,7 @@ import {
   MaxButton,
 } from '../../common';
 import {
-  cannotApproveTokens,
+  hasSufficientTokensRequest,
   approveOlasByOwner,
   createLockRequest,
 } from '../contractUtils';
@@ -52,7 +52,7 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
   const onFinish = async () => {
     try {
       await form.validateFields();
-      const hasSufficientTokes = await cannotApproveTokens({
+      const hasSufficientTokens = await hasSufficientTokensRequest({
         account,
         chainId,
       });
@@ -60,7 +60,7 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
       // Approve can be clicked only once. Meaning, the user
       // will approve the maximum token, and no need to do it again.
       // Hence, if user has sufficient tokens, create lock without approval
-      if (hasSufficientTokes) {
+      if (hasSufficientTokens) {
         createLockHelper();
       } else {
         setIsApproveModalVisible(true);
@@ -145,6 +145,7 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
                 await createLockHelper();
               } catch (error) {
                 window.console.error(error);
+                setIsApproveModalVisible(false);
                 notifyError('Some error occured');
               }
             }}
