@@ -23,7 +23,11 @@ export const VeOlas = () => {
       <Paragraph style={{ maxWidth: 550 }}>
         veOLAS gives you voting power in Autonolas governance. Lock OLAS for
         longer periods to get more veOLAS.&nbsp;
-        <a href="www.google.com" target="_blank">
+        <a
+          href="https://github.com/valory-xyz/autonolas-governance/blob/main/docs/Specs%20of%20governance%20contracts_v1.1.0.pdf"
+          target="_blank"
+          rel="noreferrer"
+        >
           <Text type="secondary" underline>
             Learn more
           </Text>
