@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Typography, Tooltip } from 'antd/lib';
@@ -35,28 +36,35 @@ export const InfoCard = ({
   tooltipValue,
   subText,
   hideTitle,
+  avoidLogin = false,
   ...rest
-}) => (
-  <InfoCardContainer {...rest}>
-    {!hideTitle && <Title level={5}>{title || ''}</Title>}
+}) => {
+  const isLoggedIn = avoidLogin
+    ? true
+    : !!useSelector((state) => state?.setup?.account);
 
-    <ValueText>
-      {isLoading ? (
-        <Shimmer />
-      ) : (
-        <Tooltip
-          placement="topLeft"
-          title={tooltipValue || value}
-          color={COLOR.BLACK}
-        >
-          {value}
-        </Tooltip>
-      )}
-    </ValueText>
+  return (
+    <InfoCardContainer {...rest}>
+      {!hideTitle && <Title level={5}>{title || ''}</Title>}
 
-    <Paragraph>{subText || ' '}</Paragraph>
-  </InfoCardContainer>
-);
+      <ValueText>
+        {isLoading ? (
+          <Shimmer />
+        ) : (
+          <Tooltip
+            placement="topLeft"
+            title={isLoggedIn ? tooltipValue || value : '--'}
+            color={COLOR.BLACK}
+          >
+            {isLoggedIn ? value : '--'}
+          </Tooltip>
+        )}
+      </ValueText>
+
+      <Paragraph>{subText || ' '}</Paragraph>
+    </InfoCardContainer>
+  );
+};
 
 InfoCard.propTypes = {
   isLoading: PropTypes.bool,
@@ -65,6 +73,11 @@ InfoCard.propTypes = {
   value: PropTypes.string,
   tooltipValue: PropTypes.string,
   subText: PropTypes.string,
+  /**
+   * if the user is not logged in, instead of the actual value,
+   * it will show '--'
+   */
+  avoidLogin: PropTypes.bool,
 };
 
 InfoCard.defaultProps = {
@@ -74,4 +87,5 @@ InfoCard.defaultProps = {
   value: null,
   tooltipValue: null,
   subText: null,
+  avoidLogin: false,
 };

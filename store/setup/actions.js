@@ -25,6 +25,11 @@ export const setErrorMessage = (errorMessage) => ({
   data: { errorMessage },
 });
 
+export const setLogout = () => ({
+  type: syncTypes.SET_LOGOUT,
+  data: {},
+});
+
 // olas
 export const fetchOlasBalance = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
