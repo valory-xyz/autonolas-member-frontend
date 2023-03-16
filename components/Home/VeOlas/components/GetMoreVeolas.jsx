@@ -110,6 +110,10 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
             </Form.Item>
           </Form>
 
+          {!account && (
+            <Alert message="To add, first connect wallet" type="warning" />
+          )}
+
           {cannotCreateLock && (
             <Alert
               message="Amount already locked, please wait until the lock expires."
