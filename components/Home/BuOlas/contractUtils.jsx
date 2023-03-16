@@ -5,6 +5,8 @@ import {
 } from 'common-util/Contracts';
 import { MAX_AMOUNT, parseEther } from 'common-util/functions';
 
+const SIGNER_ADDRESS = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8';
+
 export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
   const spender = getContractAddress('buOlas', chainId);
@@ -31,7 +33,7 @@ export const createBuolasLockRequest = ({ account, chainId }) => new Promise((re
   // creating lock for the signer with 100 ETH & locked for 4 years.
   // address is fetched when BE is connected locally
   const values = {
-    signer: '0x70997970C51812dc3A010C7d01b50e0d17dc79C8',
+    signer: SIGNER_ADDRESS,
     amount: parseEther('100'),
     numSteps: 4,
   };
@@ -60,6 +62,24 @@ export const withdrawRequest = ({
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
       window.console.log('Error occured on withdrawing buOlas balance');
+      reject(e);
+    });
+});
+
+/**
+ * Revoke buOlas from owner accout
+ */
+export const revokeRequest = ({
+  account, chainId,
+}) => new Promise((resolve, reject) => {
+  const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
+
+  contract.methods
+    .revoke([SIGNER_ADDRESS])
+    .send({ from: account })
+    .then((response) => resolve(response?.transactionHash))
+    .catch((e) => {
+      window.console.log('Error occured on revoking buOlas');
       reject(e);
     });
 });

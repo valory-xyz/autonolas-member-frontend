@@ -67,7 +67,7 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
       }
     } catch (error) {
       window.console.error(error);
-      notifyError('Some error occured');
+      notifyError();
     }
   };
 
@@ -146,7 +146,7 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
               } catch (error) {
                 window.console.error(error);
                 setIsApproveModalVisible(false);
-                notifyError('Some error occured');
+                notifyError();
               }
             }}
           >

@@ -32,7 +32,7 @@ export const IncreaseUnlockTime = ({ closeModal }) => {
       closeModal();
     } catch (error) {
       window.console.error(error);
-      notifyError('Some error occured');
+      notifyError();
     }
   };
 

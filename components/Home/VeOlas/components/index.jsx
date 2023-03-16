@@ -3,7 +3,7 @@ import {
   Button, Row, Col, Modal,
 } from 'antd/lib';
 import { isNil } from 'lodash';
-import { notifySuccess } from 'common-util/functions';
+import { notifySuccess, notifyError } from 'common-util/functions';
 import { withdrawVeolasRequest } from '../contractUtils';
 import { useFetchBalances, useVeolasComponents } from '../hooks';
 
@@ -33,6 +33,7 @@ export const VeolasManage = ({ isModalVisible, setIsModalVisible }) => {
       getData();
     } catch (error) {
       window.console.error(error);
+      notifyError();
     }
   };
 

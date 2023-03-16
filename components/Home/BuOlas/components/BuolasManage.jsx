@@ -5,6 +5,8 @@ import {
   getFormattedDate,
   getCommaSeparatedNumber,
   getFullFormattedDate,
+  notifySuccess,
+  notifyError,
 } from 'common-util/functions';
 import { InfoCard } from 'common-util/InfoCard';
 import { withdrawRequest } from '../contractUtils';
@@ -24,14 +26,25 @@ export const BuolasManage = () => {
 
   const [isWithdrawLoading, setIsWithdrawLoading] = useState(false);
 
+  // uncomment this to revoke all vested amount (just for testing)
+  // useEffect(() => {
+  //   if (account && chainId) {
+  //     revokeRequest({ account, chainId });
+  //   }
+  // }, [account, chainId]);
+
   const onWithdraw = async () => {
     if (account && chainId) {
       setIsWithdrawLoading(true);
       try {
         await withdrawRequest({ account, chainId });
+        notifySuccess('Claimed successfully!');
+
+        // fetch all the data again to update
         getData();
       } catch (error) {
         window.console.error(error);
+        notifyError();
       } finally {
         setIsWithdrawLoading(false);
       }
