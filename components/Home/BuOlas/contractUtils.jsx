@@ -1,3 +1,4 @@
+import { sendTransaction } from '@autonolas/frontend-library';
 import {
   getContractAddress,
   getBuolasContract,
@@ -11,9 +12,11 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
   const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
   const spender = getContractAddress('buOlas', chainId);
 
-  contract.methods
+  const fn = contract.methods
     .approve(spender, MAX_AMOUNT)
-    .send({ from: account })
+    .send({ from: account });
+
+  sendTransaction(fn, account)
     .then((response) => {
       resolve(response);
     })
@@ -38,9 +41,11 @@ export const createBuolasLockRequest = ({ account, chainId }) => new Promise((re
     numSteps: 4,
   };
 
-  contract.methods
+  const fn = contract.methods
     .createLockFor(values.signer, values.amount, values.numSteps)
-    .send({ from: account })
+    .send({ from: account });
+
+  sendTransaction(fn, account)
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
       window.console.log('Error occured on creating buOlas lock');
@@ -51,14 +56,12 @@ export const createBuolasLockRequest = ({ account, chainId }) => new Promise((re
 /**
  * Withdraw buOlas
  */
-export const withdrawRequest = ({
-  account, chainId,
-}) => new Promise((resolve, reject) => {
+export const withdrawRequest = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
 
-  contract.methods
-    .withdraw()
-    .send({ from: account })
+  const fn = contract.methods.withdraw().send({ from: account });
+
+  sendTransaction(fn, account)
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
       window.console.log('Error occured on withdrawing buOlas balance');
@@ -69,14 +72,14 @@ export const withdrawRequest = ({
 /**
  * Revoke buOlas from owner accout
  */
-export const revokeRequest = ({
-  account, chainId,
-}) => new Promise((resolve, reject) => {
+export const revokeRequest = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
 
-  contract.methods
+  const fn = contract.methods
     .revoke([SIGNER_ADDRESS])
-    .send({ from: account })
+    .send({ from: account });
+
+  sendTransaction(fn, account)
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
       window.console.log('Error occured on revoking buOlas');

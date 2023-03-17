@@ -1,5 +1,6 @@
 /* eslint-disable max-len */
 import { ethers } from 'ethers';
+import { sendTransaction } from '@autonolas/frontend-library';
 import { MAX_AMOUNT, parseEther } from 'common-util/functions';
 import {
   getVeolasContract,
@@ -18,9 +19,9 @@ import {
 export const updateIncreaseAmount = ({ amount, account, chainId }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 
-  contract.methods
-    .increaseAmount(amount)
-    .send({ from: account })
+  const fn = contract.methods.increaseAmount(amount).send({ from: account });
+
+  sendTransaction(fn, account)
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
       window.console.log('Error occured on increasing amount');
@@ -34,9 +35,11 @@ export const updateIncreaseAmount = ({ amount, account, chainId }) => new Promis
 export const updateIncreaseUnlockTime = ({ time, account, chainId }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 
-  contract.methods
+  const fn = contract.methods
     .increaseUnlockTime(time)
-    .send({ from: account })
+    .send({ from: account });
+
+  sendTransaction(fn, account)
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
       window.console.log('Error occured on increasing unlock time');
@@ -73,9 +76,11 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
   const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
   const spender = getContractAddress('veOlas', chainId);
 
-  contract.methods
+  const fn = contract.methods
     .approve(spender, MAX_AMOUNT)
-    .send({ from: account })
+    .send({ from: account });
+
+  sendTransaction(fn, account)
     .then((response) => {
       resolve(response);
     })
@@ -93,9 +98,11 @@ export const createLockRequest = ({
 }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 
-  contract.methods
+  const fn = contract.methods
     .createLock(amount, unlockTime)
-    .send({ from: account })
+    .send({ from: account });
+
+  sendTransaction(fn, account)
     .then((response) => {
       resolve(response?.transactionHash);
     })
@@ -111,9 +118,9 @@ export const createLockRequest = ({
 export const withdrawVeolasRequest = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
 
-  contract.methods
-    .withdraw()
-    .send({ from: account })
+  const fn = contract.methods.withdraw().send({ from: account });
+
+  sendTransaction(fn, account)
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
       window.console.log('Error occured on withdrawing veOlas');
@@ -135,9 +142,11 @@ export const transferOlasToAccountRequest = ({ account, chainId, signer }) => ne
     amount: parseEther('10000'),
   };
 
-  contract.methods
+  const fn = contract.methods
     .transfer(values.signer, values.amount)
-    .send({ from: account })
+    .send({ from: account });
+
+  sendTransaction(fn, account)
     .then((response) => resolve(response?.transactionHash))
     .catch((e) => {
       window.console.log('Error occured on transfering OLAS to account');
