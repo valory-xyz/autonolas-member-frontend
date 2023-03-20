@@ -26,7 +26,7 @@ export const BuolasCreateLock = () => {
       getData();
     } catch (error) {
       window.console.error(error);
-      notifyError('Some error occured');
+      notifyError();
     }
   };
 

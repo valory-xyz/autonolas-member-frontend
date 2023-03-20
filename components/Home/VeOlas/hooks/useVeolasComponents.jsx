@@ -2,7 +2,9 @@ import {
   getFormattedDate,
   formatToEth,
   getTotalVotesPercentage,
-  getString,
+  getFormattedNumber,
+  getFullFormattedDate,
+  getCommaSeparatedNumber,
 } from 'common-util/functions';
 import { InfoCard } from 'common-util/InfoCard';
 import { useFetchBalances } from './useFetchBalances';
@@ -13,27 +15,31 @@ import { useFetchBalances } from './useFetchBalances';
 export const useVeolasComponents = () => {
   const {
     isLoading,
-    veolasBalance,
+    olasBalanceInEth,
+    lockedVeolas,
     votes,
     totalSupplyLocked,
     mappedAmount,
     mappedEndTime,
+    canWithdrawVeolas,
   } = useFetchBalances();
 
   const getBalanceComponent = (title) => (
     <InfoCard
       isLoading={isLoading}
       title={title || 'Your balance'}
-      value={getString(veolasBalance)}
-      subText="veOLAS"
+      value={getFormattedNumber(olasBalanceInEth)}
+      tooltipValue={getCommaSeparatedNumber(olasBalanceInEth)}
+      subText="OLAS"
     />
   );
 
   const getVotingPowerComponent = (title) => (
     <InfoCard
       title={title || 'Voting power'}
-      value={getString(formatToEth(votes))}
-      subText="votes"
+      value={getFormattedNumber(formatToEth(votes))}
+      tooltipValue={getCommaSeparatedNumber(formatToEth(votes))}
+      subText="veOLAS"
     />
   );
 
@@ -48,31 +54,43 @@ export const useVeolasComponents = () => {
     />
   );
 
-  const getLockedAmountComponent = (title) => (
+  const getLockedAmountComponent = ({
+    title = 'Lock',
+    hideTitle = false,
+  } = {}) => (
     <InfoCard
       isLoading={isLoading}
-      title={title || 'Lock'}
-      value={getString(mappedAmount)}
+      title={title}
+      hideTitle={hideTitle}
+      value={getFormattedNumber(mappedAmount)}
+      tooltipValue={getCommaSeparatedNumber(mappedAmount)}
       subText="locked OLAS"
     />
   );
 
-  const getUnlockTimeComponent = () => (
+  const getUnlockTimeComponent = ({ hideTitle = false } = {}) => (
     <InfoCard
       isLoading={isLoading}
+      hideTitle={hideTitle}
       value={getFormattedDate(mappedEndTime)}
+      tooltipValue={getFullFormattedDate(mappedEndTime)}
       subText="unlock date"
     />
   );
 
-  // TODO: how to fetch this data?
-  const getUnlockedAmountComponent = () => (
-    <InfoCard
-      isLoading={isLoading}
-      value="--"
-      subText="unlocked OLAS"
-    />
-  );
+  // unlocked OLAS = balanceOf(amount) of veOlas contract
+  const getUnlockedAmountComponent = () => {
+    // if the user has no locked OLAS, then don't show the component
+    if (!canWithdrawVeolas) return null;
+    return (
+      <InfoCard
+        isLoading={isLoading}
+        value={getFormattedNumber(lockedVeolas)}
+        tooltipValue={getCommaSeparatedNumber(lockedVeolas)}
+        subText="unlocked OLAS"
+      />
+    );
+  };
 
   return {
     getBalanceComponent,

@@ -1,5 +1,6 @@
 import { ethers } from 'ethers';
-import { notification, Alert } from 'antd/lib';
+import dayjs from 'dayjs';
+import { notification } from 'antd/lib';
 import { isNil, isString } from 'lodash';
 import { COLOR } from 'util/theme';
 import { NA } from 'common-util/constants';
@@ -25,7 +26,7 @@ export const getBalance = (account, p) => new Promise((resolve, reject) => {
  *
  * @param {BigNumebr} value value to be converted to Eth
  * @param {Number} dv Default value to be returned
- * @returns
+ * @returns {String} with 2 decimal places
  */
 export const formatToEth = (value, dv = 0) => {
   if (isNil(value)) return dv || 0;
@@ -34,7 +35,7 @@ export const formatToEth = (value, dv = 0) => {
 
 /**
  * Same as `formatToEth` but doesn't fixes the decimal to 8
- * eg. 1000000000000000000 => 1
+ * @returns {String} eg: 1000000000000000000 => 1
  */
 export const parseToEth = (amount) => (amount ? ethers.utils.formatEther(`${amount}`) : 0);
 
@@ -44,12 +45,13 @@ export const parseToEth = (amount) => (amount ? ethers.utils.formatEther(`${amou
 export const parseToWei = (amount) => ethers.utils.parseUnits(`${amount}`, 18).toString();
 
 /**
- * parse eth
+ * parse eth to wei
+ * example 1 => 1000000000000000000
  */
 export const parseEther = (n) => ethers.utils.parseEther(`${n}`);
 
-export const getBlockTimestamp = async () => {
-  const temp = await window?.WEB3_PROVIDER.eth.getBlock('latest');
+export const getBlockTimestamp = async (block = 'latest') => {
+  const temp = await window?.WEB3_PROVIDER.eth.getBlock(block);
   return temp.timestamp * 1;
 };
 
@@ -64,16 +66,49 @@ export const notifySuccess = (message = 'Successfull', description = null) => no
   style: { border: `1px solid ${COLOR.PRIMARY}` },
 });
 
+/**
+ * Converts a number to a compact format
+ * @param {Number} x
+ * @returns {String} eg: 1000000 => 1M, 12345.67 => 12.35K
+ */
+export const getFormattedNumber = (x) => {
+  if (isNil(x)) return '0';
+
+  // if < 9999 then show 2 decimal places with comma
+  // if (x < 9999) return x.toLocaleString('en', { maximumFractionDigits: 2 });
+
+  return new Intl.NumberFormat('en', {
+    notation: 'compact',
+    maximumFractionDigits: 2,
+  }).format(x);
+};
+
+/**
+ * Converts a number to a comma separated format
+ * @param {Number} x
+ * @returns {String} eg: 1000000 => 1,000,000, 12345.67 => 12,345.67
+ */
+export const getCommaSeparatedNumber = (x) => {
+  if (isNil(x) || Number(x) === 0) return '0.0';
+
+  return new Intl.NumberFormat('en', {
+    maximumFractionDigits: 2,
+  }).format(x);
+};
+
+/**
+ * converts to percentage and returns a string with 2 decimal places
+ */
 export const getTotalVotesPercentage = (votes, totalSupply) => {
   if (votes && totalSupply) {
-    const votesInBg = ethers.BigNumber.from(votes);
-    const totalSupplyInBg = ethers.BigNumber.from(totalSupply);
-    const votingPowerInPercentage = votesInBg
-      .div(totalSupplyInBg)
-      .mul(100)
-      .toNumber()
-      .toFixed(2);
-    return votingPowerInPercentage;
+    const votesInEth = Number(parseToEth(votes));
+    const totalSupplyInEth = Number(parseToEth(totalSupply));
+    const votingPowerInPercentage = (
+      (votesInEth / totalSupplyInEth)
+      * 100
+    ).toFixed(2);
+
+    return getFormattedNumber(votingPowerInPercentage);
   }
 
   return null;
@@ -85,34 +120,19 @@ export const getTotalVotesPercentage = (votes, totalSupply) => {
  */
 export const getFormattedDate = (ms) => {
   if (!ms) return NA;
+  return dayjs(ms).format("MMM DD 'YY");
+};
 
-  // eg: Feb 23, 2023;
-  const dateInString = new Intl.DateTimeFormat('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: '2-digit',
-  }).format(ms);
-
-  // eg: 2023 converted to 23
-  const yearInShortForm = dateInString.split(', ')[1].trim().substring(2, 4);
-
-  // eg: Feb 05 '23
-  return `${dateInString.split(', ')[0]} '${yearInShortForm}`;
+/**
+ * Get formatted date from milliseconds including time
+ * example, 1678320000000 => Mar 09 '2023 16:00
+ */
+export const getFullFormattedDate = (ms) => {
+  if (!ms) return NA;
+  return dayjs(ms).format("MMM DD 'YYYY, HH:mm");
 };
 
 export const getString = (x) => {
   if (isNil(x)) return NA;
   return isString(x) ? x : `${x}`;
 };
-
-// tiny components
-export const CannotIncreaseAlert = () => (
-  <Alert
-    message="You don't have any amount locked, please lock before increasing amount or unlockTime."
-    type="warning"
-  />
-);
-
-export const AlreadyAllAmountLocked = () => (
-  <Alert message="You don't have any OLAS to lock." type="warning" />
-);

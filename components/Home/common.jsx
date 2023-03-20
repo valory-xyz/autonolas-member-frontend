@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
-import moment from 'moment';
+import dayjs from 'dayjs';
 import {
   Form, InputNumber, DatePicker, Button, Typography,
 } from 'antd/lib';
-import isNil from 'lodash/isNil';
+import { range, isNil } from 'lodash';
 import { Shimmer } from 'common-util/Shimmer';
+import { getCommaSeparatedNumber } from 'common-util/functions';
 import { useFetchBalances } from './VeOlas/hooks';
 
 const { Text } = Typography;
@@ -39,14 +40,14 @@ export const parseToSeconds = (unlockTime) => {
 /**
  * @returns Amount Input
  */
-export const FormItemInputNumber = () => {
+export const FormItemInputNumber = ({ text = 'Lock OLAS' }) => {
   const { olasBalanceInEth } = useFetchBalances();
 
   return (
     <Form.Item
       className="custom-form-item-lock"
       name="amount"
-      label="Lock more OLAS"
+      label={text}
       rules={[
         { required: true, message: 'Amount is required' },
         () => ({
@@ -76,7 +77,7 @@ export const MaxButton = ({ onMaxClick }) => {
   return (
     <Text type="secondary">
       OLAS balance:&nbsp;
-      {olasBalanceInEth}
+      {getCommaSeparatedNumber(olasBalanceInEth)}
       <Button
         htmlType="button"
         type="link"
@@ -98,19 +99,25 @@ export const MaxButton = ({ onMaxClick }) => {
  * then the user can select ONLY from the date from 5th March 2023
  */
 export const FormItemDate = ({ startDate }) => {
+  const tempStartDate = startDate ? new Date(startDate) : new Date();
   /**
    * (can select days after 7 days from today OR
    * can select from [startDate + 7 days]) AND
    * less than 4 years from today
    */
   const disableDateForUnlockTime = (current) => {
-    const pastDate = startDate
-      ? current < moment(new Date(startDate)).add(6, 'days').endOf('day')
-      : current < moment().add(7, 'days').endOf('day');
+    const pastDate = current < dayjs(tempStartDate).add(6, 'days').endOf('day');
+
+    /**
+     * if the current date is 4th May 2023 (Thursday),
+     * the user can select only same day in future
+     * ie. 11th May 2023, 18th May 2023, 25th May 2023 and so on
+     */
+    const notSameDayInFuture = dayjs(current).day() !== dayjs().day();
 
     // do not allow selection for more than 4 years
-    const futureDate = current > moment().add(4, 'years');
-    return (current && pastDate) || futureDate;
+    const futureDate = current > dayjs().add(4, 'years');
+    return (current && pastDate) || futureDate || notSameDayInFuture;
   };
 
   return (
@@ -122,8 +129,18 @@ export const FormItemDate = ({ startDate }) => {
     >
       <DatePicker
         disabledDate={disableDateForUnlockTime}
-        format="MM/DD/YYYY"
+        disabledTime={() => {
+          const currentHour = dayjs().hour();
+          const currentMinute = dayjs().minute();
+
+          return {
+            disabledHours: () => range(0, currentHour).map((i) => i),
+            disabledMinutes: () => range(0, currentMinute).map((i) => i),
+          };
+        }}
+        format="MM/DD/YYYY HH:mm"
         style={fullWidth}
+        showTime={{ format: 'HH:mm' }}
       />
     </Form.Item>
   );

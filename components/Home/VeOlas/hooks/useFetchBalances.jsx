@@ -15,7 +15,7 @@ export const useFetchBalances = () => {
   const olasBalance = useSelector((state) => state?.setup?.olasBalance);
   const olasBalanceInEth = olasBalance ? parseToEth(olasBalance) : '0';
   const hasNoOlasBalance = Number(olasBalance || '0') === 0;
-  const veolasBalance = useSelector((state) => state?.setup?.veolasBalance);
+  const lockedVeolas = useSelector((state) => state?.setup?.lockedVeolas);
   const mappedAmount = useSelector(
     (state) => state?.setup?.mappedBalances?.amount || null,
   );
@@ -32,6 +32,7 @@ export const useFetchBalances = () => {
   const canWithdrawVeolas = useSelector(
     (state) => state?.setup?.canWithdrawVeolas,
   );
+
   const [isLoading, setIsLoading] = useState(!!account);
 
   const getData = () => {
@@ -64,7 +65,7 @@ export const useFetchBalances = () => {
     olasBalance,
     hasNoOlasBalance,
     olasBalanceInEth,
-    veolasBalance,
+    lockedVeolas,
     mappedAmount,
     mappedEndTime,
     isMappedAmountZero,

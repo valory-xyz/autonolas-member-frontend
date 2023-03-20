@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
   Alert, Button, Form, Modal,
 } from 'antd/lib';
@@ -11,23 +11,20 @@ import {
   MaxButton,
 } from '../../common';
 import {
-  cannotApproveTokens,
+  hasSufficientTokensRequest,
   approveOlasByOwner,
   createLockRequest,
 } from '../contractUtils';
 import { useFetchBalances } from '../hooks';
 import { CreateLockContainer } from '../styles';
 
-export const VeolasAddToLock = () => {
+export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
   const [form] = Form.useForm();
   const {
-    account, chainId, olasBalanceInEth, getData,
+    account, chainId, olasBalanceInEth, isMappedAmountZero, getData,
   } = useFetchBalances();
-  const isSubmitBtnDisabled = useSelector(
-    (state) => !state?.setup?.mappedBalances?.isMappedAmountZero,
-  );
+  const cannotCreateLock = !isMappedAmountZero;
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [isApproveModalVisible, setIsApproveModalVisible] = useState(false);
 
   useEffect(() => {
@@ -55,7 +52,7 @@ export const VeolasAddToLock = () => {
   const onFinish = async () => {
     try {
       await form.validateFields();
-      const hasSufficientTokes = await cannotApproveTokens({
+      const hasSufficientTokens = await hasSufficientTokensRequest({
         account,
         chainId,
       });
@@ -63,24 +60,22 @@ export const VeolasAddToLock = () => {
       // Approve can be clicked only once. Meaning, the user
       // will approve the maximum token, and no need to do it again.
       // Hence, if user has sufficient tokens, create lock without approval
-      if (hasSufficientTokes) {
+      if (hasSufficientTokens) {
         createLockHelper();
       } else {
         setIsApproveModalVisible(true);
       }
     } catch (error) {
       window.console.error(error);
-      notifyError('Some error occured');
+      notifyError();
     }
   };
 
   return (
     <CreateLockContainer>
-      <Button onClick={() => setIsModalVisible(true)}>Add to lock</Button>
-
       {isModalVisible && (
         <Modal
-          title="Create Lock"
+          title="Add To Lock"
           visible={isModalVisible}
           footer={null}
           onCancel={() => setIsModalVisible(false)}
@@ -94,7 +89,10 @@ export const VeolasAddToLock = () => {
           >
             <FormItemInputNumber />
             <MaxButton
-              onMaxClick={() => form.setFieldsValue({ amount: olasBalanceInEth })}
+              onMaxClick={() => {
+                form.setFieldsValue({ amount: olasBalanceInEth });
+                form.validateFields(['amount']);
+              }}
             />
 
             <FormItemDate />
@@ -102,14 +100,21 @@ export const VeolasAddToLock = () => {
               <Button
                 type="primary"
                 htmlType="submit"
-                disabled={!account || isSubmitBtnDisabled}
+                disabled={!account || cannotCreateLock}
+                className="mr-12"
               >
-                Create Lock
+                Add To Lock
               </Button>
+
+              <Button onClick={() => setIsModalVisible(false)}>Cancel</Button>
             </Form.Item>
           </Form>
 
-          {isSubmitBtnDisabled && (
+          {!account && (
+            <Alert message="To add, first connect wallet" type="warning" />
+          )}
+
+          {cannotCreateLock && (
             <Alert
               message="Amount already locked, please wait until the lock expires."
               type="warning"
@@ -144,7 +149,8 @@ export const VeolasAddToLock = () => {
                 await createLockHelper();
               } catch (error) {
                 window.console.error(error);
-                notifyError('Some error occured');
+                setIsApproveModalVisible(false);
+                notifyError();
               }
             }}
           >
@@ -154,4 +160,14 @@ export const VeolasAddToLock = () => {
       )}
     </CreateLockContainer>
   );
+};
+
+GetMoreVeolas.propTypes = {
+  isModalVisible: PropTypes.bool,
+  setIsModalVisible: PropTypes.func,
+};
+
+GetMoreVeolas.defaultProps = {
+  isModalVisible: false,
+  setIsModalVisible: () => {},
 };

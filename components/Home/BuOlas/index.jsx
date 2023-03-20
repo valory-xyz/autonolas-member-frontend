@@ -1,5 +1,5 @@
 import { Typography } from 'antd/lib';
-// import { BuolasCreateLock } from './components/CreateLock';
+// import { BuolasCreateLock } from './components/AddToLock';
 import { BuolasManage } from './components/BuolasManage';
 
 const { Title, Paragraph, Text } = Typography;
@@ -8,10 +8,14 @@ export const BuOlas = () => (
   <div>
     <Title>buOLAS</Title>
     <Paragraph style={{ maxWidth: 550 }}>
-      {/* TODO: next text here */}
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis,
-      corrupti?&nbsp;
-      <a href="www.google.com" target="_blank">
+      buOLAS is a token vesting contract that allows to lock and linearly
+      released OLAS tokens. Usually, this is used for the project team members
+      and consultants.&nbsp;
+      <a
+        href="https://github.com/valory-xyz/autonolas-governance/blob/main/docs/Specs%20of%20governance%20contracts_v1.1.0.pdf"
+        target="_blank"
+        rel="noreferrer"
+      >
         <Text type="secondary" underline>
           Learn more
         </Text>

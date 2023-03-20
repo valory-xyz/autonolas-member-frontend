@@ -1,6 +1,13 @@
 import { useState } from 'react';
 import { Button, Row, Col } from 'antd/lib';
-import { getString, getFormattedDate } from 'common-util/functions';
+import {
+  getFormattedNumber,
+  getFormattedDate,
+  getCommaSeparatedNumber,
+  getFullFormattedDate,
+  notifySuccess,
+  notifyError,
+} from 'common-util/functions';
 import { InfoCard } from 'common-util/InfoCard';
 import { withdrawRequest } from '../contractUtils';
 import { useFetchBuolasBalances } from '../hooks';
@@ -19,14 +26,25 @@ export const BuolasManage = () => {
 
   const [isWithdrawLoading, setIsWithdrawLoading] = useState(false);
 
+  // uncomment this to revoke all vested amount (just for testing)
+  // useEffect(() => {
+  //   if (account && chainId) {
+  //     revokeRequest({ account, chainId });
+  //   }
+  // }, [account, chainId]);
+
   const onWithdraw = async () => {
     if (account && chainId) {
       setIsWithdrawLoading(true);
       try {
         await withdrawRequest({ account, chainId });
+        notifySuccess('Claimed successfully!');
+
+        // fetch all the data again to update
         getData();
       } catch (error) {
         window.console.error(error);
+        notifyError();
       } finally {
         setIsWithdrawLoading(false);
       }
@@ -39,14 +57,16 @@ export const BuolasManage = () => {
         <Col lg={4} md={24} xs={24}>
           <InfoCard
             title="Your balance"
-            value={getString(buolasBalance)}
-            subText="veOLAS"
+            value={getFormattedNumber(buolasBalance)}
+            tooltipValue={getCommaSeparatedNumber(buolasBalance)}
+            subText="buOLAS"
           />
         </Col>
 
         <Col lg={4} md={24} xs={24}>
           <InfoCard
-            value={getString(buolasReleasableAmount)}
+            value={getFormattedNumber(buolasReleasableAmount)}
+            tooltipValue={getCommaSeparatedNumber(buolasReleasableAmount)}
             subText="Vested amount"
           />
           <Button
@@ -61,6 +81,7 @@ export const BuolasManage = () => {
         <Col lg={6} md={24} xs={24}>
           <InfoCard
             value={getFormattedDate(mappedBalances?.startTime)}
+            tooltipValue={getFullFormattedDate(mappedBalances?.startTime)}
             subText="Vesting time"
           />
         </Col>
@@ -68,6 +89,7 @@ export const BuolasManage = () => {
         <Col lg={6} md={24} xs={24}>
           <InfoCard
             value={getFormattedDate(mappedBalances?.endTime)}
+            tooltipValue={getFullFormattedDate(mappedBalances?.endTime)}
             subText="Time to vest"
           />
         </Col>
@@ -78,7 +100,8 @@ export const BuolasManage = () => {
         <Col lg={4} md={24} xs={24}>
           <InfoCard
             title="Next vesting"
-            value={getString(buolasNextReleasableAmount)}
+            value={getFormattedNumber(buolasNextReleasableAmount)}
+            tooltipValue={getCommaSeparatedNumber(buolasNextReleasableAmount)}
             subText="amount"
           />
         </Col>
@@ -86,6 +109,7 @@ export const BuolasManage = () => {
         <Col lg={6} md={24} xs={24}>
           <InfoCard
             value={getFormattedDate(buolasNextReleasableTime)}
+            tooltipValue={getFullFormattedDate(buolasNextReleasableTime)}
             subText="time"
           />
         </Col>

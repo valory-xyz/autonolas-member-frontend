@@ -1,29 +1,18 @@
-import { useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   Button, Row, Col, Modal,
 } from 'antd/lib';
 import { isNil } from 'lodash';
-import {
-  notifySuccess,
-  CannotIncreaseAlert,
-  AlreadyAllAmountLocked,
-} from 'common-util/functions';
+import { notifySuccess, notifyError } from 'common-util/functions';
 import { withdrawVeolasRequest } from '../contractUtils';
 import { useFetchBalances, useVeolasComponents } from '../hooks';
 
-import { VeolasAddToLock as AddToLock } from './AddToLock';
 import { IncreaseAmount } from './IncreaseAmount';
 import { IncreaseUnlockTime } from './IncreaseUnlockTime';
-import { ModalAlertSection } from '../styles';
 
-export const VeolasManage = () => {
+export const VeolasManage = ({ isModalVisible, setIsModalVisible }) => {
   const {
-    account,
-    chainId,
-    canWithdrawVeolas,
-    getData,
-    hasNoOlasBalance,
-    isMappedAmountZero,
+    account, chainId, canWithdrawVeolas, getData,
   } = useFetchBalances();
   const {
     getBalanceComponent,
@@ -34,19 +23,22 @@ export const VeolasManage = () => {
     getUnlockedAmountComponent,
   } = useVeolasComponents();
 
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
   const onWithdraw = async () => {
     try {
       await withdrawVeolasRequest({ account, chainId });
-      notifySuccess('Withdrawn successfully');
+      notifySuccess('Claimed successfully');
 
       // fetch all the data again to update
       // amount, time, votes, etc
       getData();
     } catch (error) {
       window.console.error(error);
+      notifyError();
     }
+  };
+
+  const closeModalOnSuccess = () => {
+    setIsModalVisible(false);
   };
 
   return (
@@ -66,7 +58,6 @@ export const VeolasManage = () => {
 
         <Col lg={4} xs={12}>
           {getLockedAmountComponent()}
-          <AddToLock />
         </Col>
 
         <Col lg={5} xs={12}>
@@ -76,19 +67,13 @@ export const VeolasManage = () => {
           is either true or false (default value is null) */}
           {!isNil(canWithdrawVeolas) && (
             <>
-              <Button onClick={() => setIsModalVisible(true)} className="mr-12">
-                Increase lock
-              </Button>
+              {canWithdrawVeolas && (
+                <Button htmlType="submit" onClick={onWithdraw}>
+                  Claim all
+                </Button>
+              )}
             </>
           )}
-
-          <Button
-            htmlType="submit"
-            onClick={onWithdraw}
-            disabled={isNil(canWithdrawVeolas) || !canWithdrawVeolas}
-          >
-            Claim all
-          </Button>
         </Col>
 
         <Col lg={3} xs={12}>
@@ -106,29 +91,30 @@ export const VeolasManage = () => {
         >
           <Row align="top">
             <Col lg={10} xs={12}>
-              {getLockedAmountComponent()}
+              {getLockedAmountComponent({ hideTitle: true })}
             </Col>
 
             <Col lg={14} xs={12}>
-              {getUnlockTimeComponent()}
+              {getUnlockTimeComponent({ hideTitle: true })}
             </Col>
           </Row>
 
           <div className="forms-container">
-            <IncreaseAmount />
-            <IncreaseUnlockTime />
-
-            {account && (
-              <ModalAlertSection>
-                {isMappedAmountZero && <CannotIncreaseAlert />}
-                {hasNoOlasBalance && !isMappedAmountZero && (
-                  <AlreadyAllAmountLocked />
-                )}
-              </ModalAlertSection>
-            )}
+            <IncreaseAmount closeModal={closeModalOnSuccess} />
+            <IncreaseUnlockTime closeModal={closeModalOnSuccess} />
           </div>
         </Modal>
       )}
     </>
   );
+};
+
+VeolasManage.propTypes = {
+  isModalVisible: PropTypes.bool,
+  setIsModalVisible: PropTypes.func,
+};
+
+VeolasManage.defaultProps = {
+  isModalVisible: false,
+  setIsModalVisible: () => {},
 };

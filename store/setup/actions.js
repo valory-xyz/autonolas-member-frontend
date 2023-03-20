@@ -25,6 +25,11 @@ export const setErrorMessage = (errorMessage) => ({
   data: { errorMessage },
 });
 
+export const setLogout = () => ({
+  type: syncTypes.SET_LOGOUT,
+  data: {},
+});
+
 // olas
 export const fetchOlasBalance = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
@@ -46,6 +51,9 @@ export const fetchOlasBalance = () => async (dispatch, getState) => {
 };
 
 // veOlas
+/**
+ * balanceOf veOlas contract - it is the amount of veolas locked
+ */
 export const fetchVeolasBalance = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
   const chainId = getState()?.setup?.chainId;
@@ -58,7 +66,7 @@ export const fetchVeolasBalance = () => async (dispatch, getState) => {
 
     dispatch({
       type: syncTypes.SET_VEOLAS_BALANCEOF,
-      data: { veolasBalance: formatToEth(response) },
+      data: { lockedVeolas: formatToEth(response) },
     });
   } catch (error) {
     console.error(error);
@@ -151,9 +159,8 @@ export const fetchIfCanWithdrawVeolas = () => async (dispatch, getState) => {
       .call();
 
     const blockNumber = await window?.WEB3_PROVIDER.eth.getBlockNumber();
-    const blockDetails = await window?.WEB3_PROVIDER.eth.getBlock(blockNumber);
-
-    const canWithdrawVeolas = Number(balance) > 0 && lockedEnd <= blockDetails.timestamp;
+    const blockTimestamp = await getBlockTimestamp(blockNumber);
+    const canWithdrawVeolas = Number(balance) > 0 && lockedEnd <= blockTimestamp;
 
     dispatch({
       type: syncTypes.SET_CAN_WITHDRAW_VEOLAS,

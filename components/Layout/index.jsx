@@ -32,7 +32,7 @@ const NavigationBar = ({ children }) => {
     <CustomLayout pathname={router.pathname}>
       <Header>
         <div className="column-1">
-          <Logo data-testid="protocol-logo">
+          <Logo data-testid="investor-logo">
             <LogoSvg />
             <span>Investors</span>
           </Logo>
@@ -45,12 +45,12 @@ const NavigationBar = ({ children }) => {
           items={[
             {
               key: 'veolas',
-              label: 'veOlas',
+              label: 'veOLAS',
               onClick: handleMenuItemClick,
             },
             {
               key: 'buolas',
-              label: 'buOlas',
+              label: 'buOLAS',
               onClick: handleMenuItemClick,
             },
           ]}

@@ -1,7 +1,7 @@
 import { apiTypes, syncTypes } from './_types';
 
 /**
- * [key]Unformatted: value received from the backend
+ * initialState of the store
  */
 const initialState = {
   account: null,
@@ -16,7 +16,7 @@ const initialState = {
   canWithdrawVeolas: null,
 
   // others
-  veolasBalance: null,
+  lockedVeolas: null,
   mappedBalances: {
     amount: null,
     endTime: null,
@@ -54,6 +54,10 @@ export default (state = initialState, action) => {
     case syncTypes.SET_CHAIND_ID:
     case syncTypes.SET_STORE_STATE: {
       return { ...state, ...data };
+    }
+
+    case syncTypes.SET_LOGOUT: {
+      return { ...initialState };
     }
 
     // olas
