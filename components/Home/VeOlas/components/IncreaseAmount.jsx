@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'antd/lib';
 import { notifyError, notifySuccess, parseToWei } from 'common-util/functions';
@@ -16,6 +17,7 @@ export const IncreaseAmount = ({ closeModal }) => {
     hasNoOlasBalance,
     getData,
   } = useFetchBalances();
+  const [isLoading, setIsLoading] = useState(false);
 
   /**
    * can increase amount only if the mapped amount is zero (ie. no lock exists)
@@ -25,6 +27,7 @@ export const IncreaseAmount = ({ closeModal }) => {
 
   const onFinish = async ({ amount }) => {
     try {
+      setIsLoading(true);
       const txHash = await updateIncreaseAmount({
         amount: parseToWei(amount),
         account,
@@ -39,11 +42,13 @@ export const IncreaseAmount = ({ closeModal }) => {
       // fetch the newly updated mapped balances & votes.
       getData();
 
-      // close the modal after successful locking
+      // close the modal after successful locking & loading state
       closeModal();
+      setIsLoading(false);
     } catch (error) {
       window.console.error(error);
       notifyError();
+      setIsLoading(false);
     }
   };
 
@@ -72,6 +77,7 @@ export const IncreaseAmount = ({ closeModal }) => {
             type="primary"
             htmlType="submit"
             disabled={cannotIncreaseAmount}
+            loading={isLoading}
           >
             Add to lock
           </Button>

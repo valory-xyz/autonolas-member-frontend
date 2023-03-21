@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Form } from 'antd/lib';
 import { notifyError, notifySuccess } from 'common-util/functions';
@@ -11,9 +12,11 @@ export const IncreaseUnlockTime = ({ closeModal }) => {
   const {
     account, chainId, mappedEndTime, isMappedAmountZero, getData,
   } = useFetchBalances();
+  const [isLoading, setIsLoading] = useState(false);
 
   const onFinish = async (e) => {
     try {
+      setIsLoading(true);
       const txHash = await updateIncreaseUnlockTime({
         time: parseToSeconds(e.unlockTime),
         account,
@@ -28,11 +31,13 @@ export const IncreaseUnlockTime = ({ closeModal }) => {
       // fetch the newly updated mapped balances & votes.
       getData();
 
-      // close the modal after successful locking
+      // close the modal after successful locking & loading state
       closeModal();
+      setIsLoading(false);
     } catch (error) {
       window.console.error(error);
       notifyError();
+      setIsLoading(false);
     }
   };
 
@@ -55,6 +60,7 @@ export const IncreaseUnlockTime = ({ closeModal }) => {
             type="primary"
             htmlType="submit"
             disabled={!account || isMappedAmountZero}
+            loading={isLoading}
           >
             Add to lock
           </Button>

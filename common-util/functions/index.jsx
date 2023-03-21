@@ -79,7 +79,8 @@ export const getFormattedNumber = (x) => {
 
   return new Intl.NumberFormat('en', {
     notation: 'compact',
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 0,
+    // maximumFractionDigits: 5,
   }).format(x);
 };
 
