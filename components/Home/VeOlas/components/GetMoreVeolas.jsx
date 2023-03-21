@@ -26,6 +26,7 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
   const cannotCreateLock = !isMappedAmountZero;
 
   const [isApproveModalVisible, setIsApproveModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (account && chainId) {
@@ -34,6 +35,7 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
   }, [account, chainId]);
 
   const createLockHelper = async () => {
+    setIsLoading(true);
     const txHash = await createLockRequest({
       amount: parseToWei(form.getFieldValue('amount')),
       unlockTime: parseToSeconds(form.getFieldValue('unlockTime')),
@@ -45,8 +47,9 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
     // fetch the data again to disable button or show message
     getData();
 
-    // close the modal after successful locking
+    // close the modal after successful locking & loading state
     setIsModalVisible(false);
+    setIsLoading(false);
   };
 
   const onFinish = async () => {
@@ -61,13 +64,14 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
       // will approve the maximum token, and no need to do it again.
       // Hence, if user has sufficient tokens, create lock without approval
       if (hasSufficientTokens) {
-        createLockHelper();
+        await createLockHelper();
       } else {
         setIsApproveModalVisible(true);
       }
     } catch (error) {
       window.console.error(error);
       notifyError();
+      setIsLoading(false);
     }
   };
 
@@ -101,6 +105,7 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
                 type="primary"
                 htmlType="submit"
                 disabled={!account || cannotCreateLock}
+                loading={isLoading}
                 className="mr-12"
               >
                 Add To Lock
@@ -140,17 +145,22 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
             type="primary"
             htmlType="submit"
             style={{ right: 'calc(-100% + 100px)', position: 'relative' }}
+            loading={isLoading}
             onClick={async () => {
               try {
+                setIsLoading(true);
                 await approveOlasByOwner({ account, chainId });
                 setIsApproveModalVisible(false);
 
                 // once approved, create lock
                 await createLockHelper();
+                setIsLoading(false);
               } catch (error) {
                 window.console.error(error);
                 setIsApproveModalVisible(false);
                 notifyError();
+              } finally {
+                setIsLoading(false);
               }
             }}
           >
