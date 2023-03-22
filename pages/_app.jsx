@@ -4,11 +4,11 @@ import Head from 'next/head';
 import { createWrapper } from 'next-redux-wrapper';
 import PropTypes from 'prop-types';
 
-import { Web3ReactProvider } from '@web3-react/core';
 import Web3 from 'web3';
+import { Web3ReactProvider } from '@web3-react/core';
 
+import { Web3DataProvider } from '@autonolas/frontend-library';
 import GlobalStyle from 'components/GlobalStyles';
-import { DataProvider } from 'common-util/context';
 import Layout from 'components/Layout';
 import initStore from '../store';
 
@@ -32,16 +32,16 @@ class MyApp extends App {
       <>
         <GlobalStyle />
         <Head>
-          <title>Autonolas Governance & Locking</title>
-          <meta name="title" content="Autonolas Governance & Locking" />
+          <title>Autonolas Investors</title>
+          <meta name="title" content="Manage your veOLAS and buOLAS" />
         </Head>
-        <DataProvider>
+        <Web3DataProvider>
           <Web3ReactProvider getLibrary={getLibrary}>
             <Layout>
               <Component {...pageProps} />
             </Layout>
           </Web3ReactProvider>
-        </DataProvider>
+        </Web3DataProvider>
       </>
     );
   }
