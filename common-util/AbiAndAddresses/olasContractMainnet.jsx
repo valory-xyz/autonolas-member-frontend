@@ -1,6 +1,6 @@
-export const OLAS_ADDRESS = '0x322813Fd9A801c5507c9de605d63CEA4f2CE6c44';
+export const OLAS_ADDRESS_MAINNET = '0x0001A500A6B18995B03f44bb040A5fFc28E45CB0';
 
-export const OLAS_ABI = [
+export const OLAS_ABI_MAINNET = [
   {
     inputs: [],
     stateMutability: 'nonpayable',
