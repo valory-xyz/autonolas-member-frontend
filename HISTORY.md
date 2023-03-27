@@ -1,2 +1,2 @@
-# Release History - `autonolas-dao-frontend`
+# Release History - `autonolas-member-frontend`
 
