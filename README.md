@@ -1,5 +1,5 @@
-# Investor App Frontend
-This repository contains code for the [Investor App](https://investor.autonolas.network/) frontend.
+# Dao member App Frontend
+This repository contains code for the [Dao member App](https://dao-member.autonolas.network/) frontend.
 
 ## Tech Stack
 - web3.js
