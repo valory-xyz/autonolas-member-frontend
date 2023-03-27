@@ -34,7 +34,7 @@ const NavigationBar = ({ children }) => {
         <div className="column-1">
           <Logo data-testid="investor-logo">
             <LogoSvg />
-            <span>Investors</span>
+            <span>Dao Member</span>
           </Logo>
         </div>
 
