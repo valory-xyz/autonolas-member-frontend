@@ -32,9 +32,9 @@ const NavigationBar = ({ children }) => {
     <CustomLayout pathname={router.pathname}>
       <Header>
         <div className="column-1">
-          <Logo data-testid="dao-member-logo">
+          <Logo data-testid="member-logo">
             <LogoSvg />
-            <span>Dao Member</span>
+            <span>Member</span>
           </Logo>
         </div>
 

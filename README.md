@@ -1,5 +1,5 @@
-# Dao member App Frontend
-This repository contains code for the [Dao member App](https://dao-member.autonolas.network/) frontend.
+# Member App Frontend
+This repository contains code for the [Member App](https://member.autonolas.network/) frontend.
 
 ## Tech Stack
 - web3.js
