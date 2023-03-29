@@ -32,7 +32,7 @@ class MyApp extends App {
       <>
         <GlobalStyle />
         <Head>
-          <title>Autonolas Investors</title>
+          <title>Autonolas Member</title>
           <meta name="title" content="Manage your veOLAS and buOLAS" />
         </Head>
         <Web3DataProvider>

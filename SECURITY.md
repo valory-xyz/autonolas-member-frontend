@@ -1,10 +1,10 @@
 # Security Policy
 
-This document outlines security procedures and general policies for the `autonolas-investor-frontend` project.
+This document outlines security procedures and general policies for the `autonolas-member-frontend` project.
 
 ## Supported Versions
 
-The following table shows which versions of `autonolas-investor-frontend` are currently being supported with security updates.
+The following table shows which versions of `autonolas-member-frontend` are currently being supported with security updates.
 
 | Version   | Supported          |
 | --------- | ------------------ |
@@ -12,7 +12,7 @@ The following table shows which versions of `autonolas-investor-frontend` are cu
 
 ## Reporting a Vulnerability
 
-The `autonolas-investor-frontend` team and community take all security bugs in `autonolas-investor-frontend` seriously. Thank you for improving the security of `autonolas-investor-frontend`. We appreciate your efforts and responsible disclosure and will make every effort to acknowledge your contributions.
+The `autonolas-member-frontend` team and community take all security bugs in `autonolas-member-frontend` seriously. Thank you for improving the security of `autonolas-member-frontend`. We appreciate your efforts and responsible disclosure and will make every effort to acknowledge your contributions.
 
 Report security bugs by emailing `info@valory.xyz`.
 
