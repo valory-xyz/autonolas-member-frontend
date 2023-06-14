@@ -4,28 +4,12 @@ import {
   w3mProvider,
 } from '@web3modal/ethereum';
 import { configureChains, createConfig } from 'wagmi';
-import {
-  mainnet,
-  gnosis,
-  polygon,
-  goerli,
-  polygonMumbai,
-  gnosisChiado,
-} from 'wagmi/chains';
+import { mainnet, goerli } from 'wagmi/chains';
 
-export const chains = [
-  mainnet,
-  goerli,
-  gnosis,
-  gnosisChiado,
-  polygon,
-  polygonMumbai,
-];
+export const chains = [mainnet, goerli];
 export const projectId = process.env.NEXT_PUBLIC_WALLET_PROJECT_ID;
 
-const { publicClient } = configureChains(chains, [
-  w3mProvider({ projectId }),
-]);
+const { publicClient } = configureChains(chains, [w3mProvider({ projectId })]);
 
 export const wagmiConfig = createConfig({
   autoConnect: true,
