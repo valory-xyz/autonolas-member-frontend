@@ -70,7 +70,7 @@ export const BuolasManage = () => {
             subText="Vested amount"
           />
           <Button
-            // disabled={isWithdrawLoading || buolasReleasableAmount <= 0}
+            disabled={isWithdrawLoading || buolasReleasableAmount <= 0}
             onClick={onWithdraw}
             loading={isWithdrawLoading}
           >
