@@ -27,7 +27,7 @@ export const BuolasManage = () => {
 
   const [isWithdrawLoading, setIsWithdrawLoading] = useState(false);
 
-  // uncomment this to revoke all vested amount (just for testing)
+  // uncomment this to revoke all vested OLAS (just for testing)
   // useEffect(() => {
   //   if (account && chainId) {
   //     revokeRequest({ account, chainId });
@@ -70,7 +70,7 @@ export const BuolasManage = () => {
             isLoading={isLoading}
             value={getFormattedNumber(buolasReleasableAmount)}
             tooltipValue={getCommaSeparatedNumber(buolasReleasableAmount)}
-            subText="Vested amount"
+            subText="Vested OLAS"
           />
           <Button
             isLoading={isLoading}
@@ -87,7 +87,7 @@ export const BuolasManage = () => {
             isLoading={isLoading}
             value={getFormattedDate(mappedBalances?.startTime)}
             tooltipValue={getFullFormattedDate(mappedBalances?.startTime)}
-            subText="Vesting time"
+            subText="Vesting start time"
           />
         </Col>
 
@@ -96,7 +96,7 @@ export const BuolasManage = () => {
             isLoading={isLoading}
             value={getFormattedDate(mappedBalances?.endTime)}
             tooltipValue={getFullFormattedDate(mappedBalances?.endTime)}
-            subText="Time to vest"
+            subText="Vesting end time"
           />
         </Col>
       </Row>
@@ -109,7 +109,7 @@ export const BuolasManage = () => {
             title="Next vesting"
             value={getFormattedNumber(buolasNextReleasableAmount)}
             tooltipValue={getCommaSeparatedNumber(buolasNextReleasableAmount)}
-            subText="amount"
+            subText="OLAS"
           />
         </Col>
 
@@ -118,7 +118,7 @@ export const BuolasManage = () => {
             isLoading={isLoading}
             value={getFormattedDate(buolasNextReleasableTime)}
             tooltipValue={getFullFormattedDate(buolasNextReleasableTime)}
-            subText="time"
+            subText="Time"
           />
         </Col>
       </Row>

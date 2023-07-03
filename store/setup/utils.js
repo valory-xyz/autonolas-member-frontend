@@ -1,7 +1,7 @@
 import { ethers } from 'ethers';
 import { formatToEth } from 'common-util/functions';
 
-export const getNextReleasableAmount = (lockedBalance, timestamp) => {
+export const getNextReleasableAmountAndTime = (lockedBalance, timestamp) => {
   const STEP_TIME = 365 * 86400;
   let buolasNextReleasableTime = null;
   let buolasNextReleasableAmount = null;

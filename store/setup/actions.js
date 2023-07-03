@@ -2,7 +2,7 @@ import { formatToEth, getBlockTimestamp } from 'common-util/functions';
 import {
   getVeolasContract, getOlasContract, getBuolasContract,
 } from 'common-util/Contracts';
-import { getNextReleasableAmount } from './utils';
+import { getNextReleasableAmountAndTime } from './utils';
 import { syncTypes } from './_types';
 
 export const setUserAccount = (account) => ({
@@ -224,7 +224,7 @@ export const fetchMapLockedBalances = () => async (dispatch, getState) => {
     const blockTimestamp = await getBlockTimestamp();
 
     const tempResponse = { ...response };
-    const nextValues = getNextReleasableAmount(tempResponse, blockTimestamp);
+    const nextValues = getNextReleasableAmountAndTime(tempResponse, blockTimestamp);
 
     dispatch({
       type: syncTypes.SET_BUOLAS_MAPPED_BALANCES,
