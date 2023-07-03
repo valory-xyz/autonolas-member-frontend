@@ -35,11 +35,11 @@ export const useFetchBalances = () => {
 
   const [isLoading, setIsLoading] = useState(!!account);
 
-  const getData = () => {
-    dispatch(fetchOlasBalance());
-    dispatch(fetchVeolasDetails());
-    dispatch(fetchMappedBalances());
-    dispatch(fetchIfCanWithdrawVeolas());
+  const getData = async () => {
+    await dispatch(fetchOlasBalance());
+    await dispatch(fetchVeolasDetails());
+    await dispatch(fetchMappedBalances());
+    await dispatch(fetchIfCanWithdrawVeolas());
   };
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export const useFetchBalances = () => {
       if (account && chainId) {
         setIsLoading(true);
         try {
-          getData();
+          await getData();
         } catch (error) {
           window.console.error(error);
         } finally {

@@ -1,5 +1,5 @@
 # Member App Frontend
-This repository contains code for the [Member App](https://member.autonolas.network/) frontend.
+This repository contains code for the [Member App](https://member.olas.network/) frontend.
 
 ## Tech Stack
 - web3.js
@@ -9,7 +9,7 @@ This repository contains code for the [Member App](https://member.autonolas.netw
 
 ## Installation and Setup Instructions
 
-Clone down this repository. You will need `node` version ">=14" and `yarn` version ">=1" installed globally on your machine.
+Clone down this repository. You will need `node` version ">=16" and `yarn` version ">=1" installed globally on your machine.
 
 Installation:
 

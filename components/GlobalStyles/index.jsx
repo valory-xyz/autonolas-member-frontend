@@ -2,7 +2,6 @@ import styled, { createGlobalStyle } from 'styled-components';
 import { MEDIA_QUERY, COLOR } from 'util/theme';
 
 const ANTD_COLOR = {
-  whiteColor: '#fff',
   borderColor: '#f0f0f0',
 };
 
@@ -13,6 +12,10 @@ const GlobalStyle = createGlobalStyle`
   :before {
     box-sizing: border-box;
   }
+
+  background-size: 100%;
+  background-color: ${COLOR.WHITE};
+
   body {
     padding: 1rem;
   }
@@ -92,12 +95,15 @@ const GlobalStyle = createGlobalStyle`
 
   /* layout */
   .site-layout {
-    padding: 0 24px;
+    padding: 0 2rem;
     margin-top: 56px;
+    + div {
+      padding-left: 32px;
+    }
   }
   .site-layout-background {
     padding: 24px 0;
-    min-height: calc(100vh - 140px);
+    min-height: calc(100vh - 8.5rem);
   }
 
   ${MEDIA_QUERY.mobileL} {
@@ -109,15 +115,6 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 
-  background-size: 100%;
-  background-color: ${COLOR.WHITE};
-
-  .site-layout {
-    padding: 0 2rem;
-  }
-  .site-layout-background {
-    min-height: calc(100vh - 8.5rem);
-  }
   .ant-layout-footer {
     text-align: center;
   }

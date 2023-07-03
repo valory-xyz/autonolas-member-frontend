@@ -40,7 +40,6 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
       amount: parseToWei(form.getFieldValue('amount')),
       unlockTime: parseToSeconds(form.getFieldValue('unlockTime')),
       account,
-      chainId,
     });
     notifySuccess('Lock created successfully!', `Transaction Hash: ${txHash}`);
 
