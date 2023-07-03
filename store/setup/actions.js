@@ -138,10 +138,10 @@ export const fetchTotalSupplyLocked = () => async (dispatch, getState) => {
 };
 
 export const fetchVeolasDetails = () => async (dispatch) => {
-  dispatch(fetchOlasBalance());
-  dispatch(fetchVeolasBalance());
-  dispatch(fetchVotes());
-  dispatch(fetchTotalSupplyLocked());
+  await dispatch(fetchOlasBalance());
+  await dispatch(fetchVeolasBalance());
+  await dispatch(fetchVotes());
+  await dispatch(fetchTotalSupplyLocked());
 };
 
 export const fetchIfCanWithdrawVeolas = () => async (dispatch, getState) => {

@@ -36,6 +36,7 @@ export const useVeolasComponents = () => {
 
   const getVotingPowerComponent = (title) => (
     <InfoCard
+      isLoading={isLoading}
       title={title || 'Voting power'}
       value={getFormattedNumber(formatToEth(votes))}
       tooltipValue={getCommaSeparatedNumber(formatToEth(votes))}
@@ -45,6 +46,7 @@ export const useVeolasComponents = () => {
 
   const getVotingPercentComponent = () => (
     <InfoCard
+      isLoading={isLoading}
       value={
         Number(votes) === 0 || Number(totalSupplyLocked) === 0
           ? '0%'
