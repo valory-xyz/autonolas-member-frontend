@@ -5,13 +5,12 @@ import { useFetchBalances } from '../hooks';
 import { transferOlasToAccountRequest } from '../contractUtils';
 
 export const TransferOlas = () => {
-  const { account, chainId, getData } = useFetchBalances();
+  const { account, getData } = useFetchBalances();
 
   const transferHelper = async (signer) => {
     try {
       await transferOlasToAccountRequest({
         account,
-        chainId,
         signer,
       });
 

@@ -30,7 +30,7 @@ export const BuolasManage = () => {
   // uncomment this to revoke all vested amount (just for testing)
   // useEffect(() => {
   //   if (account && chainId) {
-  //     revokeRequest({ account, chainId });
+  //     revokeRequest({ account });
   //   }
   // }, [account, chainId]);
 
@@ -38,7 +38,7 @@ export const BuolasManage = () => {
     if (account && chainId) {
       setIsWithdrawLoading(true);
       try {
-        await withdrawRequest({ account, chainId });
+        await withdrawRequest({ account });
         notifySuccess('Claimed successfully!');
 
         // fetch all the data again to update

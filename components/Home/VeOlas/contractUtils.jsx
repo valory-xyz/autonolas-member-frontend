@@ -16,8 +16,8 @@ import {
 /**
  * Increase Amount
  */
-export const updateIncreaseAmount = ({ amount, account, chainId }) => new Promise((resolve, reject) => {
-  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+export const updateIncreaseAmount = ({ amount, account }) => new Promise((resolve, reject) => {
+  const contract = getVeolasContract();
 
   const fn = contract.methods.increaseAmount(amount).send({ from: account });
 
@@ -32,8 +32,8 @@ export const updateIncreaseAmount = ({ amount, account, chainId }) => new Promis
 /**
  * Increase Unlock time
  */
-export const updateIncreaseUnlockTime = ({ time, account, chainId }) => new Promise((resolve, reject) => {
-  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+export const updateIncreaseUnlockTime = ({ time, account }) => new Promise((resolve, reject) => {
+  const contract = getVeolasContract();
 
   const fn = contract.methods
     .increaseUnlockTime(time)
@@ -53,7 +53,7 @@ export const updateIncreaseUnlockTime = ({ time, account, chainId }) => new Prom
  * [here](https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#IERC20-allowance-address-address-).
  */
 export const hasSufficientTokensRequest = ({ account, chainId }) => new Promise((resolve, reject) => {
-  const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
+  const contract = getOlasContract();
   const spender = getContractAddress('veOlas', chainId);
 
   contract.methods
@@ -73,7 +73,7 @@ export const hasSufficientTokensRequest = ({ account, chainId }) => new Promise(
  * Approve amount of OLAS to be used
  */
 export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve, reject) => {
-  const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
+  const contract = getOlasContract();
   const spender = getContractAddress('veOlas', chainId);
 
   const fn = contract.methods
@@ -93,10 +93,8 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
 /**
  * Create lock
  */
-export const createLockRequest = ({
-  amount, unlockTime, account, chainId,
-}) => new Promise((resolve, reject) => {
-  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+export const createLockRequest = ({ amount, unlockTime, account }) => new Promise((resolve, reject) => {
+  const contract = getVeolasContract();
 
   const fn = contract.methods
     .createLock(amount, unlockTime)
@@ -115,8 +113,8 @@ export const createLockRequest = ({
 /**
  * Withdraw VeOlas
  */
-export const withdrawVeolasRequest = ({ account, chainId }) => new Promise((resolve, reject) => {
-  const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+export const withdrawVeolasRequest = ({ account }) => new Promise((resolve, reject) => {
+  const contract = getVeolasContract();
 
   const fn = contract.methods.withdraw().send({ from: account });
 
@@ -133,8 +131,8 @@ export const withdrawVeolasRequest = ({ account, chainId }) => new Promise((reso
  * NOTE: this is a internal method for testing and
  * won't be exposed or visible to the user
  */
-export const transferOlasToAccountRequest = ({ account, chainId, signer }) => new Promise((resolve, reject) => {
-  const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
+export const transferOlasToAccountRequest = ({ account, signer }) => new Promise((resolve, reject) => {
+  const contract = getOlasContract();
 
   // transfering OLAS to the signer account with 100 ETH.
   const values = {
