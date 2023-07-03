@@ -62,17 +62,18 @@ export const getContractAddress = (type, chainIdPassed) => {
     }
   }
 };
+
+/**
+ * web3 provider =
+ * - wallect-connect provider or
+ * - currentProvider by metamask or
+ * - fallback to remote mainnet [remote node provider](https://web3js.readthedocs.io/en/v1.7.5/web3.html#example-remote-node-provider)
+ */
 export const getMyProvider = () => window.MODAL_PROVIDER
   || window.web3?.currentProvider
   || process.env.NEXT_PUBLIC_MAINNET_URL;
 
 export const getWeb3Details = () => {
-  /**
-   * web3 provider =
-   * - wallect-connect provider or
-   * - currentProvider by metamask or
-   * - fallback to remote mainnet [remote node provider](https://web3js.readthedocs.io/en/v1.7.5/web3.html#example-remote-node-provider)
-   */
   const web3 = new Web3(getMyProvider());
   const chainId = getChainId() || 1; // default to mainnet
   return { web3, chainId };
