@@ -42,23 +42,26 @@ export const VeolasManage = ({ isModalVisible, setIsModalVisible }) => {
   return (
     <>
       <Row align="top">
-        <Col lg={4} md={24} xs={24}>
+        <Col lg={6} md={24} xs={24}>
           {getBalanceComponent()}
         </Col>
 
-        <Col lg={3} md={12} xs={12}>
+        <Col lg={6} md={12} xs={12}>
           {getVotingPowerComponent()}
         </Col>
 
-        <Col lg={5} md={12} xs={12}>
+        <Col lg={6} md={12} xs={12}>
           {getVotingPercentComponent()}
         </Col>
+      </Row>
 
-        <Col lg={4} xs={12}>
+      <br />
+      <Row align="top">
+        <Col lg={6} xs={12}>
           {getLockedAmountComponent()}
         </Col>
 
-        <Col lg={5} xs={12}>
+        <Col lg={6} xs={12}>
           {getUnlockTimeComponent()}
 
           {/* to avoid glitch, show the component only if `canWithdrawVeolas`
@@ -74,7 +77,7 @@ export const VeolasManage = ({ isModalVisible, setIsModalVisible }) => {
           )}
         </Col>
 
-        <Col lg={3} xs={12}>
+        <Col lg={6} xs={12}>
           {getUnlockedAmountComponent()}
         </Col>
       </Row>
