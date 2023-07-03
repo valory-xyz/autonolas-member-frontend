@@ -10,9 +10,10 @@ export const getNextReleasableAmountAndTime = (lockedBalance, timestamp) => {
   const endTime = Number(lockedBalance.endTime);
 
   if (endTime > 0) {
-    const totalNumSteps = ((endTime - startTime) / STEP_TIME);
-    const releasedSteps = ((timestamp - startTime) / STEP_TIME);
+    const totalNumSteps = Number.parseInt(((endTime - startTime) / STEP_TIME), 10);
+    const releasedSteps = Number.parseInt(((timestamp - startTime) / STEP_TIME), 10);
     const numNextStep = releasedSteps + 1;
+
     buolasNextReleasableTime = (startTime + STEP_TIME * numNextStep);
 
     if (numNextStep >= totalNumSteps) {
