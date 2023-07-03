@@ -66,7 +66,7 @@ export const useVeolasComponents = () => {
       hideTitle={hideTitle}
       value={getFormattedNumber(mappedAmount)}
       tooltipValue={getCommaSeparatedNumber(mappedAmount)}
-      subText="locked OLAS"
+      subText="Locked OLAS"
     />
   );
 
@@ -76,7 +76,7 @@ export const useVeolasComponents = () => {
       hideTitle={hideTitle}
       value={getFormattedDate(mappedEndTime)}
       tooltipValue={getFullFormattedDate(mappedEndTime)}
-      subText="unlock date"
+      subText="Unlock date"
     />
   );
 
