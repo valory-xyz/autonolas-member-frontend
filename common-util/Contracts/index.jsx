@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import { getChainId } from '@autonolas/frontend-library';
 import {
   // Olas
   OLAS_ABI_GOERLI,
@@ -35,7 +36,9 @@ export const LOCAL_ADDRESSES = {
  * Right now, only 3 types are supported: olas, veOlas, buOlas
  * and 3 chains: local, goerli and mainnet.
  */
-export const getContractAddress = (type, chainId) => {
+export const getContractAddress = (type, chainIdPassed) => {
+  const chainId = chainIdPassed || getChainId() || 1; // default to mainnet
+
   switch (type) {
     case 'veOlas': {
       if (chainId === LOCAL_CHAIN_ID) {
@@ -60,29 +63,45 @@ export const getContractAddress = (type, chainId) => {
   }
 };
 
-export const getOlasContract = (p, chainId) => {
-  const web3 = new Web3(p);
+/**
+ * web3 provider =
+ * - wallect-connect provider or
+ * - currentProvider by metamask or
+ * - fallback to remote mainnet [remote node provider](https://web3js.readthedocs.io/en/v1.7.5/web3.html#example-remote-node-provider)
+ */
+export const getMyProvider = () => window.MODAL_PROVIDER
+  || window.web3?.currentProvider
+  || process.env.NEXT_PUBLIC_MAINNET_URL;
+
+export const getWeb3Details = () => {
+  const web3 = new Web3(getMyProvider());
+  const chainId = getChainId() || 1; // default to mainnet
+  return { web3, chainId };
+};
+
+export const getOlasContract = () => {
+  const { web3, chainId } = getWeb3Details();
   const contract = new web3.eth.Contract(
     chainId === 1 ? OLAS_ABI_MAINNET : OLAS_ABI_GOERLI,
-    getContractAddress('olas', chainId),
+    getContractAddress('olas'),
   );
   return contract;
 };
 
-export const getVeolasContract = (p, chainId) => {
-  const web3 = new Web3(p);
+export const getVeolasContract = () => {
+  const { web3, chainId } = getWeb3Details();
   const contract = new web3.eth.Contract(
     chainId === 1 ? VEOLAS_ABI_MAINNET : VEOLAS_ABI_GOERLI,
-    getContractAddress('veOlas', chainId),
+    getContractAddress('veOlas'),
   );
   return contract;
 };
 
-export const getBuolasContract = (p, chainId) => {
-  const web3 = new Web3(p);
+export const getBuolasContract = () => {
+  const { web3, chainId } = getWeb3Details();
   const contract = new web3.eth.Contract(
     chainId === 1 ? BUOLAS_ABI_MAINNET : BUOLAS_ABI_GOERLI,
-    getContractAddress('buOlas', chainId),
+    getContractAddress('buOlas'),
   );
   return contract;
 };

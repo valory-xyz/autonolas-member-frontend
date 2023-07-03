@@ -9,7 +9,7 @@ import { MAX_AMOUNT, parseEther } from 'common-util/functions';
 const SIGNER_ADDRESS = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8';
 
 export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve, reject) => {
-  const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
+  const contract = getOlasContract();
   const spender = getContractAddress('buOlas', chainId);
 
   const fn = contract.methods
@@ -30,8 +30,8 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
  * create lock for buOlas
  * NOTE: this is a internal method and won't be exposed or visible to the user
  */
-export const createBuolasLockRequest = ({ account, chainId }) => new Promise((resolve, reject) => {
-  const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
+export const createBuolasLockRequest = ({ account }) => new Promise((resolve, reject) => {
+  const contract = getBuolasContract();
 
   // creating lock for the signer with 100 ETH & locked for 4 years.
   // address is fetched when BE is connected locally
@@ -56,8 +56,8 @@ export const createBuolasLockRequest = ({ account, chainId }) => new Promise((re
 /**
  * Withdraw buOlas
  */
-export const withdrawRequest = ({ account, chainId }) => new Promise((resolve, reject) => {
-  const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
+export const withdrawRequest = ({ account }) => new Promise((resolve, reject) => {
+  const contract = getBuolasContract();
 
   const fn = contract.methods.withdraw().send({ from: account });
 
@@ -72,8 +72,8 @@ export const withdrawRequest = ({ account, chainId }) => new Promise((resolve, r
 /**
  * Revoke buOlas from owner accout
  */
-export const revokeRequest = ({ account, chainId }) => new Promise((resolve, reject) => {
-  const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
+export const revokeRequest = ({ account }) => new Promise((resolve, reject) => {
+  const contract = getBuolasContract();
 
   const fn = contract.methods
     .revoke([SIGNER_ADDRESS])

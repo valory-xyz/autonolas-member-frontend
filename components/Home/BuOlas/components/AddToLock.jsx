@@ -15,7 +15,6 @@ export const BuolasCreateLock = () => {
 
       const txHash = await createBuolasLockRequest({
         account,
-        chainId,
       });
       notifySuccess(
         'Lock created successfully!',
