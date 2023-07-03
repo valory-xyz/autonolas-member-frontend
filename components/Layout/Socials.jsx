@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { removeSubdomainFrom } from '@autonolas/frontend-library';
 
 const Socials = () => {
-  const [url, setUrl] = useState('https://autonolas.network');
+  const [dynamicUrl, setDynamicUrl] = useState('https://autonolas.network');
 
   useEffect(() => {
     const currentUrl = window.location.origin;
@@ -11,14 +11,14 @@ const Socials = () => {
     // if not localhost or vercel, remove subdomain
     // example: https://member.olas.network -> https://olas.network
     if (!['localhost', 'vercel'].some((e) => currentUrl.includes(e))) {
-      setUrl(removeSubdomainFrom());
+      setDynamicUrl(removeSubdomainFrom());
     }
   }, []);
 
   const SOCIALS = [
     {
       type: 'web',
-      url,
+      url: dynamicUrl,
     },
     {
       type: 'github',
