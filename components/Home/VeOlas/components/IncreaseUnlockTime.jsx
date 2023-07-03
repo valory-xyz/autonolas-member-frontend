@@ -10,7 +10,7 @@ import { FormContainer } from '../styles';
 export const IncreaseUnlockTime = ({ closeModal }) => {
   const [form] = Form.useForm();
   const {
-    account, chainId, mappedEndTime, isMappedAmountZero, getData,
+    account, mappedEndTime, isMappedAmountZero, getData,
   } = useFetchBalances();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,7 +20,6 @@ export const IncreaseUnlockTime = ({ closeModal }) => {
       const txHash = await updateIncreaseUnlockTime({
         time: parseToSeconds(e.unlockTime),
         account,
-        chainId,
       });
       notifySuccess(
         'Unlock time increased successfully!',

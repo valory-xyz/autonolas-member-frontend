@@ -33,10 +33,9 @@ export const setLogout = () => ({
 // olas
 export const fetchOlasBalance = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
-  const chainId = getState()?.setup?.chainId;
 
   try {
-    const contract = getOlasContract(window.MODAL_PROVIDER, chainId);
+    const contract = getOlasContract();
     const response = await contract.methods
       .balanceOf(account)
       .call();
@@ -56,10 +55,9 @@ export const fetchOlasBalance = () => async (dispatch, getState) => {
  */
 export const fetchVeolasBalance = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
-  const chainId = getState()?.setup?.chainId;
 
   try {
-    const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+    const contract = getVeolasContract();
     const response = await contract.methods
       .balanceOf(account)
       .call();
@@ -80,10 +78,9 @@ export const setMappedBalances = (data) => ({
 
 export const fetchMappedBalances = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
-  const chainId = getState()?.setup?.chainId;
 
   try {
-    const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+    const contract = getVeolasContract();
     const response = await contract.methods
       .mapLockedBalances(account)
       .call();
@@ -102,10 +99,9 @@ export const fetchMappedBalances = () => async (dispatch, getState) => {
 
 export const fetchVotes = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
-  const chainId = getState()?.setup?.chainId;
 
   try {
-    const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+    const contract = getVeolasContract();
     const response = await contract.methods
       .getVotes(account)
       .call();
@@ -119,11 +115,9 @@ export const fetchVotes = () => async (dispatch, getState) => {
   }
 };
 
-export const fetchTotalSupplyLocked = () => async (dispatch, getState) => {
-  const chainId = getState()?.setup?.chainId;
-
+export const fetchTotalSupplyLocked = () => async (dispatch) => {
   try {
-    const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+    const contract = getVeolasContract();
     const response = await contract.methods
       .totalSupplyLocked()
       .call();
@@ -146,10 +140,9 @@ export const fetchVeolasDetails = () => async (dispatch) => {
 
 export const fetchIfCanWithdrawVeolas = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
-  const chainId = getState()?.setup?.chainId;
 
   try {
-    const contract = getVeolasContract(window.MODAL_PROVIDER, chainId);
+    const contract = getVeolasContract();
     const balance = await contract.methods
       .balanceOf(account)
       .call();
@@ -174,10 +167,9 @@ export const fetchIfCanWithdrawVeolas = () => async (dispatch, getState) => {
 // buOlas
 export const fetchBuolasBalance = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
-  const chainId = getState()?.setup?.chainId;
 
   try {
-    const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
+    const contract = getBuolasContract();
     const response = await contract.methods
       .balanceOf(account)
       .call();
@@ -193,10 +185,9 @@ export const fetchBuolasBalance = () => async (dispatch, getState) => {
 
 export const fetchReleasableAmount = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
-  const chainId = getState()?.setup?.chainId;
 
   try {
-    const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
+    const contract = getBuolasContract();
     const response = await contract.methods
       .releasableAmount(account)
       .call();
@@ -213,10 +204,9 @@ export const fetchReleasableAmount = () => async (dispatch, getState) => {
 
 export const fetchMapLockedBalances = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
-  const chainId = getState()?.setup?.chainId;
 
   try {
-    const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
+    const contract = getBuolasContract();
     const response = await contract.methods
       .mapLockedBalances(account)
       .call();
@@ -247,10 +237,9 @@ export const fetchMapLockedBalances = () => async (dispatch, getState) => {
 
 export const fetchLockedEnd = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
-  const chainId = getState()?.setup?.chainId;
 
   try {
-    const contract = getBuolasContract(window.MODAL_PROVIDER, chainId);
+    const contract = getBuolasContract();
     const response = await contract.methods
       .lockedEnd(account)
       .call();

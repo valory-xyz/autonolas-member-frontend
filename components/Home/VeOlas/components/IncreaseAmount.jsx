@@ -11,7 +11,6 @@ export const IncreaseAmount = ({ closeModal }) => {
   const [form] = Form.useForm();
   const {
     account,
-    chainId,
     olasBalanceInEth,
     isMappedAmountZero,
     hasNoOlasBalance,
@@ -31,7 +30,6 @@ export const IncreaseAmount = ({ closeModal }) => {
       const txHash = await updateIncreaseAmount({
         amount: parseToWei(amount),
         account,
-        chainId,
       });
       notifySuccess(
         'Amount increased successfully!',

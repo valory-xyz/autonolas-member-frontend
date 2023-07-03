@@ -11,9 +11,7 @@ import { IncreaseAmount } from './IncreaseAmount';
 import { IncreaseUnlockTime } from './IncreaseUnlockTime';
 
 export const VeolasManage = ({ isModalVisible, setIsModalVisible }) => {
-  const {
-    account, chainId, canWithdrawVeolas, getData,
-  } = useFetchBalances();
+  const { account, canWithdrawVeolas, getData } = useFetchBalances();
   const {
     getBalanceComponent,
     getVotingPowerComponent,
@@ -25,7 +23,7 @@ export const VeolasManage = ({ isModalVisible, setIsModalVisible }) => {
 
   const onWithdraw = async () => {
     try {
-      await withdrawVeolasRequest({ account, chainId });
+      await withdrawVeolasRequest({ account });
       notifySuccess('Claimed successfully');
 
       // fetch all the data again to update
