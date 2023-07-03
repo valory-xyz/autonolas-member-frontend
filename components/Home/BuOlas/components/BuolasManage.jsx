@@ -14,6 +14,7 @@ import { useFetchBuolasBalances } from '../hooks';
 
 export const BuolasManage = () => {
   const {
+    isLoading,
     account,
     chainId,
     buolasBalance,
@@ -56,6 +57,7 @@ export const BuolasManage = () => {
       <Row align="top">
         <Col lg={4} md={24} xs={24}>
           <InfoCard
+            isLoading={isLoading}
             title="Your balance"
             value={getFormattedNumber(buolasBalance)}
             tooltipValue={getCommaSeparatedNumber(buolasBalance)}
@@ -65,11 +67,13 @@ export const BuolasManage = () => {
 
         <Col lg={4} md={24} xs={24}>
           <InfoCard
+            isLoading={isLoading}
             value={getFormattedNumber(buolasReleasableAmount)}
             tooltipValue={getCommaSeparatedNumber(buolasReleasableAmount)}
             subText="Vested amount"
           />
           <Button
+            isLoading={isLoading}
             disabled={isWithdrawLoading || buolasReleasableAmount <= 0}
             onClick={onWithdraw}
             loading={isWithdrawLoading}
@@ -80,6 +84,7 @@ export const BuolasManage = () => {
 
         <Col lg={6} md={24} xs={24}>
           <InfoCard
+            isLoading={isLoading}
             value={getFormattedDate(mappedBalances?.startTime)}
             tooltipValue={getFullFormattedDate(mappedBalances?.startTime)}
             subText="Vesting time"
@@ -88,6 +93,7 @@ export const BuolasManage = () => {
 
         <Col lg={6} md={24} xs={24}>
           <InfoCard
+            isLoading={isLoading}
             value={getFormattedDate(mappedBalances?.endTime)}
             tooltipValue={getFullFormattedDate(mappedBalances?.endTime)}
             subText="Time to vest"
@@ -99,6 +105,7 @@ export const BuolasManage = () => {
       <Row align="top" style={{ marginTop: '1rem' }}>
         <Col lg={4} md={24} xs={24}>
           <InfoCard
+            isLoading={isLoading}
             title="Next vesting"
             value={getFormattedNumber(buolasNextReleasableAmount)}
             tooltipValue={getCommaSeparatedNumber(buolasNextReleasableAmount)}
@@ -108,6 +115,7 @@ export const BuolasManage = () => {
 
         <Col lg={6} md={24} xs={24}>
           <InfoCard
+            isLoading={isLoading}
             value={getFormattedDate(buolasNextReleasableTime)}
             tooltipValue={getFullFormattedDate(buolasNextReleasableTime)}
             subText="time"

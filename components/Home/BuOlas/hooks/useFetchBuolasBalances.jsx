@@ -24,8 +24,8 @@ export const useFetchBuolasBalances = () => {
 
   const [isLoading, setIsLoading] = useState(!!account);
 
-  const getData = () => {
-    dispatch(fetchBuolasDetails());
+  const getData = async () => {
+    await dispatch(fetchBuolasDetails());
   };
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export const useFetchBuolasBalances = () => {
       if (account && chainId) {
         setIsLoading(true);
         try {
-          getData();
+          await getData();
         } catch (error) {
           window.console.error(error);
         } finally {

@@ -267,9 +267,9 @@ export const fetchLockedEnd = () => async (dispatch, getState) => {
 };
 
 export const fetchBuolasDetails = () => async (dispatch) => {
-  dispatch(fetchOlasBalance());
-  dispatch(fetchBuolasBalance());
-  dispatch(fetchReleasableAmount());
-  dispatch(fetchMapLockedBalances());
-  dispatch(fetchLockedEnd());
+  await dispatch(fetchOlasBalance());
+  await dispatch(fetchBuolasBalance());
+  await dispatch(fetchReleasableAmount());
+  await dispatch(fetchMapLockedBalances());
+  await dispatch(fetchLockedEnd());
 };

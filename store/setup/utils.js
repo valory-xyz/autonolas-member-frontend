@@ -16,7 +16,7 @@ export const getNextReleasableAmount = (lockedBalance, timestamp) => {
     buolasNextReleasableTime = (startTime + STEP_TIME * numNextStep);
 
     if (numNextStep >= totalNumSteps) {
-      buolasNextReleasableAmount = lockedBalance.totalAmount - lockedBalance.transferredAmount;
+      buolasNextReleasableAmount = ethers.BigNumber.from(`${lockedBalance.totalAmount}`).sub(lockedBalance.transferredAmount);
     } else {
       /**
        * divide the total amount by the number of steps
@@ -26,14 +26,14 @@ export const getNextReleasableAmount = (lockedBalance, timestamp) => {
        * steps = 4
        * nextReleasableAmount = 1000 / 4 = 250
        */
-      buolasNextReleasableAmount = (lockedBalance.totalAmount) / totalNumSteps;
+      buolasNextReleasableAmount = ethers.BigNumber.from(`${lockedBalance.totalAmount}`).div(totalNumSteps);
     }
 
     // convert to display format
     // multiplied by 1000 to convert to milliseconds
     buolasNextReleasableTime *= 1000;
     // format to eth for display
-    buolasNextReleasableAmount = formatToEth(ethers.BigNumber.from(`${buolasNextReleasableAmount}`));
+    buolasNextReleasableAmount = formatToEth(buolasNextReleasableAmount);
   }
 
   return {
