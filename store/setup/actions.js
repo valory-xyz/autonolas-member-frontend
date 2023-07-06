@@ -57,7 +57,7 @@ export const fetchVeolasBalance = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
 
   try {
-    const contract = getVeolasContract();
+    const contract = getVeolasContract(true);
     const response = await contract.methods
       .balanceOf(account)
       .call();
@@ -80,7 +80,7 @@ export const fetchMappedBalances = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
 
   try {
-    const contract = getVeolasContract();
+    const contract = getVeolasContract(true);
     const response = await contract.methods
       .mapLockedBalances(account)
       .call();
@@ -101,7 +101,7 @@ export const fetchVotes = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
 
   try {
-    const contract = getVeolasContract();
+    const contract = getVeolasContract(true);
     const response = await contract.methods
       .getVotes(account)
       .call();
@@ -117,7 +117,7 @@ export const fetchVotes = () => async (dispatch, getState) => {
 
 export const fetchTotalSupplyLocked = () => async (dispatch) => {
   try {
-    const contract = getVeolasContract();
+    const contract = getVeolasContract(true);
     const response = await contract.methods
       .totalSupplyLocked()
       .call();
@@ -142,7 +142,7 @@ export const fetchIfCanWithdrawVeolas = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
 
   try {
-    const contract = getVeolasContract();
+    const contract = getVeolasContract(true);
     const balance = await contract.methods
       .balanceOf(account)
       .call();
