@@ -15,9 +15,12 @@ import {
 
   // veOlas
   VEOLAS_ADDRESS_GOERLI,
-  VEOLAS_ABI_GOERLI,
   VEOLAS_ADDRESS_MAINNET,
-  VEOLAS_ABI_MAINNET,
+  VEOLAS_ABI,
+
+  // wveOlas
+  WVEOLAS_ADDRESS_MAINNET,
+  WVEOLAS_ABI_MAINNET,
 } from 'common-util/AbiAndAddresses';
 import { LOCAL_CHAIN_ID } from 'util/constants';
 
@@ -88,12 +91,37 @@ export const getOlasContract = () => {
   return contract;
 };
 
-export const getVeolasContract = () => {
+/**
+ *
+ */
+export const getVeolasContract = (isViewOnly) => {
   const { web3, chainId } = getWeb3Details();
-  const contract = new web3.eth.Contract(
-    chainId === 1 ? VEOLAS_ABI_MAINNET : VEOLAS_ABI_GOERLI,
-    getContractAddress('veOlas'),
-  );
+
+  const getAddressAndAbi = () => {
+    if (chainId === 1) {
+      // for view methods use wveolas abi and address
+      if (isViewOnly) {
+        return {
+          abi: WVEOLAS_ABI_MAINNET,
+          address: WVEOLAS_ADDRESS_MAINNET,
+        };
+      }
+
+      return {
+        abi: VEOLAS_ABI,
+        address: VEOLAS_ADDRESS_MAINNET,
+      };
+    }
+
+    return {
+      abi: VEOLAS_ABI,
+      address: VEOLAS_ADDRESS_GOERLI,
+    };
+  };
+
+  const { address, abi } = getAddressAndAbi();
+
+  const contract = new web3.eth.Contract(abi, address);
   return contract;
 };
 
