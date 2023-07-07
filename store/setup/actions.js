@@ -80,7 +80,7 @@ export const fetchMappedBalances = () => async (dispatch, getState) => {
   const account = getState()?.setup?.account;
 
   try {
-    const contract = getVeolasContract(true);
+    const contract = getVeolasContract();
     const response = await contract.methods
       .mapLockedBalances(account)
       .call();
