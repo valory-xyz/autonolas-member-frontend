@@ -21,6 +21,14 @@ import {
   // wveOlas
   WVEOLAS_ADDRESS_MAINNET,
   WVEOLAS_ABI_MAINNET,
+
+  // governorTwo
+  GOVERNOR_TWO_ADDRESS_MAINNET,
+  GOVERNOR_TWO_ADDRESS_GOERLI,
+
+  // timelock
+  TIMELOCK_ADDRESS_MAINNET,
+  TIMELOCK_ADDRESS_GOERLI,
 } from 'common-util/AbiAndAddresses';
 import { LOCAL_CHAIN_ID } from 'util/constants';
 
@@ -43,6 +51,14 @@ export const getContractAddress = (type, chainIdPassed) => {
   const chainId = chainIdPassed || getChainId() || 1; // default to mainnet
 
   switch (type) {
+    case 'timelock': {
+      if (chainId === 5) return TIMELOCK_ADDRESS_GOERLI;
+      return TIMELOCK_ADDRESS_MAINNET;
+    }
+    case 'governorTwo': {
+      if (chainId === 5) return GOVERNOR_TWO_ADDRESS_GOERLI;
+      return GOVERNOR_TWO_ADDRESS_MAINNET;
+    }
     case 'veOlas': {
       if (chainId === LOCAL_CHAIN_ID) {
         return LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL;

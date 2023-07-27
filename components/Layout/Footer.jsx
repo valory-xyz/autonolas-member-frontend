@@ -33,12 +33,20 @@ const ContractInfo = () => {
   if (!addressChainId) return <ContractsInfoContainer />;
 
   const getCurrentPageAddresses = () => {
+    const commonAddresses = {
+      textThree: 'Governor',
+      textFour: 'Timelock',
+      addressThree: getContractAddress('governorTwo', addressChainId),
+      addressFour: getContractAddress('timelock', addressChainId),
+    };
+
     if (pathname === '/' || (pathname || '').includes('veolas')) {
       return {
         textOne: 'OLAS',
         textTwo: 'veOLAS',
         addressOne: getContractAddress('olas', addressChainId),
         addressTwo: getContractAddress('veOlas', addressChainId),
+        ...commonAddresses,
       };
     }
 
@@ -48,14 +56,19 @@ const ContractInfo = () => {
         textTwo: 'buOLAS',
         addressOne: getContractAddress('olas', addressChainId),
         addressTwo: getContractAddress('buOlas', addressChainId),
+        ...commonAddresses,
       };
     }
 
     return {
       textOne: null,
       textTwo: null,
+      textThree: null,
+      textFour: null,
       addressOne: null,
       addressTwo: null,
+      addressThree: null,
+      addressFour: null,
     };
   };
 
@@ -79,7 +92,14 @@ const ContractInfo = () => {
   );
 
   const {
-    textOne, addressOne, textTwo, addressTwo,
+    textOne,
+    addressOne,
+    textTwo,
+    addressTwo,
+    textThree,
+    addressThree,
+    textFour,
+    addressFour,
   } = getCurrentPageAddresses();
 
   return (
@@ -95,6 +115,10 @@ const ContractInfo = () => {
       {getContractInfo(textOne, addressOne)}
       &nbsp;•&nbsp;
       {getContractInfo(textTwo, addressTwo)}
+      &nbsp;•&nbsp;
+      {getContractInfo(textThree, addressThree)}
+      &nbsp;•&nbsp;
+      {getContractInfo(textFour, addressFour)}
     </ContractsInfoContainer>
   );
 };
