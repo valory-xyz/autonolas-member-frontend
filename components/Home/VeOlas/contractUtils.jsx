@@ -63,11 +63,6 @@ export const hasSufficientTokensRequest = ({ account, chainId, amount }) => new 
       const responseInBg = ethers.BigNumber.from(response);
       const amountInBg = ethers.utils.parseUnits(`${amount}`);
 
-      console.log({
-        response,
-        MAX_AMOUNT,
-        isEq: responseInBg.gt(amountInBg),
-      });
       // check if the allowance is greater than the amount input
       resolve(responseInBg.gt(amountInBg));
     })
