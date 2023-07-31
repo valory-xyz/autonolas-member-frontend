@@ -51,12 +51,13 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
     setIsLoading(false);
   };
 
-  const onFinish = async () => {
+  const onFinish = async ({ amount }) => {
     try {
       await form.validateFields();
       const hasSufficientTokens = await hasSufficientTokensRequest({
         account,
         chainId,
+        amount,
       });
 
       // Approve can be clicked only once. Meaning, the user
@@ -135,36 +136,37 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
           onCancel={() => setIsApproveModalVisible(false)}
         >
           <Alert
-            message="Before creating lock an approval for veOLAS is required, please approve to proceed"
+            message="Before creating a veOLAS lock, an approval for OLAS is required. Please approve to proceed."
             type="warning"
           />
 
           <br />
-          <Button
-            type="primary"
-            htmlType="submit"
-            style={{ right: 'calc(-100% + 100px)', position: 'relative' }}
-            loading={isLoading}
-            onClick={async () => {
-              try {
-                setIsLoading(true);
-                await approveOlasByOwner({ account, chainId });
-                setIsApproveModalVisible(false);
+          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              loading={isLoading}
+              onClick={async () => {
+                try {
+                  setIsLoading(true);
+                  await approveOlasByOwner({ account, chainId });
+                  setIsApproveModalVisible(false);
 
-                // once approved, create lock
-                await createLockHelper();
-                setIsLoading(false);
-              } catch (error) {
-                window.console.error(error);
-                setIsApproveModalVisible(false);
-                notifyError();
-              } finally {
-                setIsLoading(false);
-              }
-            }}
-          >
-            Approve
-          </Button>
+                  // once approved, create lock
+                  await createLockHelper();
+                  setIsLoading(false);
+                } catch (error) {
+                  window.console.error(error);
+                  setIsApproveModalVisible(false);
+                  notifyError();
+                } finally {
+                  setIsLoading(false);
+                }
+              }}
+            >
+              Approve
+            </Button>
+          </div>
         </Modal>
       )}
     </CreateLockContainer>

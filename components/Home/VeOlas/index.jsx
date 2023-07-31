@@ -49,7 +49,7 @@ export const VeOlas = () => {
               }
             }}
           >
-            Get more veOLAS
+            Lock OLAS for veOLAS
           </Button>
 
           {canWithdrawVeolas && (
