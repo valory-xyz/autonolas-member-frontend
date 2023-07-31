@@ -51,12 +51,13 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
     setIsLoading(false);
   };
 
-  const onFinish = async () => {
+  const onFinish = async ({ amount }) => {
     try {
       await form.validateFields();
       const hasSufficientTokens = await hasSufficientTokensRequest({
         account,
         chainId,
+        amount,
       });
 
       // Approve can be clicked only once. Meaning, the user
