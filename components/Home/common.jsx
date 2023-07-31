@@ -53,7 +53,7 @@ export const FormItemInputNumber = ({ text = 'Lock OLAS' }) => {
         () => ({
           validator(_, value) {
             if (value === '' || isNil(value)) return Promise.resolve();
-            if (value <= 1) {
+            if (value <= 0) {
               return Promise.reject(new Error('Please input a valid amount'));
             }
             if (olasBalanceInEth && value > olasBalanceInEth) {

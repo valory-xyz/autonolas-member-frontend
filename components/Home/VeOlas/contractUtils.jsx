@@ -60,6 +60,11 @@ export const hasSufficientTokensRequest = ({ account, chainId }) => new Promise(
     .allowance(account, spender)
     .call()
     .then((response) => {
+      console.log({
+        response,
+        MAX_AMOUNT,
+        isEq: ethers.BigNumber.from(response).eq(MAX_AMOUNT),
+      });
       // check if the allowance is equal to MAX_AMOUNT
       resolve(ethers.BigNumber.from(response).eq(MAX_AMOUNT));
     })
