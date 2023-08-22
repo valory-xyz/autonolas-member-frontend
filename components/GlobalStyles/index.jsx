@@ -153,6 +153,12 @@ const GlobalStyle = createGlobalStyle`
       margin-top: 0;
     }
   }
+
+  ${MEDIA_QUERY.mobileL} {
+    .ant-layout-header {
+      width: 100%;
+    }
+  }
 `;
 
 export default GlobalStyle;
