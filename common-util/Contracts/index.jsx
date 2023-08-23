@@ -8,7 +8,7 @@ import {
   OLAS_ADDRESS_MAINNET,
 
   // buOlas
-  BUOLAS
+  BUOLAS,
 
   // veOlas
   VEOLAS_ADDRESS_GOERLI,
@@ -17,17 +17,16 @@ import {
 
   // wveOlas
   WVEOLAS_ADDRESS_MAINNET,
+  WVEOLAS_ADDRESS_GOERLI,
   WVEOLAS_ABI,
 
   // governorTwo
   GOVERNOR_TWO_ADDRESS_MAINNET,
   GOVERNOR_TWO_ADDRESS_GOERLI,
-  GOVERNOR_TWO_ABI,
 
   // timelock
   TIMELOCK_ADDRESS_MAINNET,
   TIMELOCK_ADDRESS_GOERLI,
-  TIMELOCK_ABI,
 } from 'common-util/AbiAndAddresses';
 import { LOCAL_CHAIN_ID } from 'util/constants';
 
@@ -121,7 +120,7 @@ export const getVeolasContract = (isViewOnly) => {
       // for view methods use wveolas abi and address
       if (isViewOnly) {
         return {
-          abi: WVEOLAS_ABI_MAINNET,
+          abi: WVEOLAS_ABI,
           address: WVEOLAS_ADDRESS_MAINNET,
         };
       }
@@ -145,7 +144,7 @@ export const getVeolasContract = (isViewOnly) => {
 };
 
 export const getBuolasContract = () => {
-  const { web3, chainId } = getWeb3Details();
+  const { web3 } = getWeb3Details();
   const contract = new web3.eth.Contract(
     BUOLAS.abi,
     getContractAddress('buOlas'),
