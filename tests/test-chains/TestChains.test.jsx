@@ -1,10 +1,10 @@
 /* eslint-disable jest/no-conditional-expect */
-import { BUOLAS } from 'common-util/AbiAndAddresses';
+import { BUOLAS, GOVERNOR, OLAS, TIMELOCK, VEOLAS, WVEOLAS} from 'common-util/AbiAndAddresses';
 
 describe('test-chains/TestChains.jsx', () => {
   it('check contract addresses and ABIs', async () => {
     //expect.hasAssertions();
-    const localArtifacts = [BUOLAS];
+    const localArtifacts = [BUOLAS, GOVERNOR, OLAS, TIMELOCK, VEOLAS, WVEOLAS];
 
     const fetch = require('node-fetch');
 
