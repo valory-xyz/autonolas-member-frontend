@@ -139,7 +139,7 @@ const Footer = () => (
           target="_blank"
           rel="noopener noreferrer"
         >
-          DAO constitution
+          DAO Constitution
         </a>
       </>
     )}
