@@ -1,5 +1,5 @@
 export const WVEOLAS = {
-  contractName: 'veOLAS',
+  contractName: 'wveOLAS',
   addresses: {
     1: '0x4039B809E0C0Ad04F6Fc880193366b251dDf4B40',
     5: '0xa2AA89938805836077aB0724f335142da7A27085',
