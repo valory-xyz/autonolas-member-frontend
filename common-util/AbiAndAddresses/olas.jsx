@@ -1,6 +1,10 @@
-export const OLAS_ADDRESS_MAINNET = '0x0001A500A6B18995B03f44bb040A5fFc28E45CB0';
-
-export const OLAS_ABI_MAINNET = [
+export const OLAS = {
+  contractName: 'OLAS',
+  addresses: {
+    1: '0x0001A500A6B18995B03f44bb040A5fFc28E45CB0',
+    5: '0xEdfc28215B1Eb6eb0be426f1f529cf691A5C2400',
+  },
+abi: [
   {
     inputs: [],
     stateMutability: 'nonpayable',
@@ -565,4 +569,5 @@ export const OLAS_ABI_MAINNET = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
-];
+]
+}

@@ -1,9 +1,9 @@
-export const BUOLAS_ADDRESS_GOERLI = '0x397125902ED2cA2d42104F621f448A2cE1bC8Fb7';
-
 export const BUOLAS = {
   contractName: 'buOLAS',
-  1: '0xb09CcF0Dbf0C178806Aaee28956c74bd66d21f73',
-  5: '0x397125902ED2cA2d42104F621f448A2cE1bC8Fb7',
+  addresses: {
+    1: '0xb09CcF0Dbf0C178806Aaee28956c74bd66d21f73',
+    5: '0x397125902ED2cA2d42104F621f448A2cE1bC8Fb7',
+  },
   abi: [
     {
       inputs: [

@@ -1,8 +1,10 @@
-export const VEOLAS_ADDRESS_MAINNET = '0x7e01A500805f8A52Fad229b3015AD130A332B7b3';
-
-export const VEOLAS_ADDRESS_GOERLI = '0xf8B20e160557c747E8640CdcE77E1dd44bCaAfbB';
-
-export const VEOLAS_ABI = [
+export const VEOLAS = {
+  contractName: 'veOLAS',
+  addresses: {
+    1: '0x7e01A500805f8A52Fad229b3015AD130A332B7b3',
+    5: '0xf8B20e160557c747E8640CdcE77E1dd44bCaAfbB',
+  },
+abi: [
   {
     inputs: [
       { internalType: 'address', name: '_token', type: 'address' },
@@ -634,4 +636,5 @@ export const VEOLAS_ABI = [
     stateMutability: 'nonpayable',
     type: 'function',
   },
-];
+]
+};

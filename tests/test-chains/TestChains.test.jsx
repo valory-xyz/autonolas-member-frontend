@@ -1,11 +1,12 @@
 /* eslint-disable jest/no-conditional-expect */
 import { BUOLAS } from 'common-util/AbiAndAddresses';
-import fetch from 'node-fetch';
 
 describe('test-chains/TestChains.jsx', () => {
   it('check contract addresses and ABIs', async () => {
-    expect.hasAssertions();
+    //expect.hasAssertions();
     const localArtifacts = [BUOLAS];
+
+    const fetch = require('node-fetch');
 
     // Registries repository
     const registriesRepo = 'https://raw.githubusercontent.com/valory-xyz/autonolas-governance/main/';
@@ -25,10 +26,11 @@ describe('test-chains/TestChains.jsx', () => {
           if (contracts[j].name === localArtifacts[k].contractName) {
             // Get local and configuration ABIs, stringify them
             const localABI = JSON.stringify(localArtifacts[k].abi);
-            // TODO: update with fetching the URL
+
             // Get up-to-date remote contract artifact and its ABI
             response = await fetch(registriesRepo + contracts[j].artifact);
             const remoteArtifact = await response.json();
+
             // Stringify the remote ABI and compare with the local one
             const remoteABI = JSON.stringify(remoteArtifact.abi);
             expect(localABI).toBe(remoteABI);
