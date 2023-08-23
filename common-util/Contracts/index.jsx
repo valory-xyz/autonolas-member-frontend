@@ -2,45 +2,23 @@ import Web3 from 'web3';
 import { getChainId } from '@autonolas/frontend-library';
 import {
   // Olas
-  OLAS_ABI_GOERLI,
-  OLAS_ADDRESS_GOERLI,
-  OLAS_ABI_MAINNET,
-  OLAS_ADDRESS_MAINNET,
+  OLAS,
 
   // buOlas
-  BUOLAS_ADDRESS_GOERLI,
-  BUOLAS_ABI_GOERLI,
-  BUOLAS_ADDRESS_MAINNET,
-  BUOLAS_ABI_MAINNET,
+  BUOLAS,
 
   // veOlas
-  VEOLAS_ADDRESS_GOERLI,
-  VEOLAS_ADDRESS_MAINNET,
-  VEOLAS_ABI,
+  VEOLAS,
 
   // wveOlas
-  WVEOLAS_ADDRESS_MAINNET,
-  WVEOLAS_ABI_MAINNET,
+  WVEOLAS,
 
-  // governorTwo
-  GOVERNOR_TWO_ADDRESS_MAINNET,
-  GOVERNOR_TWO_ADDRESS_GOERLI,
+  // governor
+  GOVERNOR,
 
   // timelock
-  TIMELOCK_ADDRESS_MAINNET,
-  TIMELOCK_ADDRESS_GOERLI,
+  TIMELOCK,
 } from 'common-util/AbiAndAddresses';
-import { LOCAL_CHAIN_ID } from 'util/constants';
-
-/**
- * Addresses fetched when backend connected locally
- * to hardhat from initDeploy.json
- */
-export const LOCAL_ADDRESSES = {
-  OLAS_ADDRESS_LOCAL: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
-  VEOLAS_ADDRESS_LOCAL: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
-  BUOLAS_ADDRESS_LOCAL: '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
-};
 
 /**
  * Returns contract address based on type and chainId.
@@ -52,32 +30,29 @@ export const getContractAddress = (type, chainIdPassed) => {
 
   switch (type) {
     case 'timelock': {
-      if (chainId === 5) return TIMELOCK_ADDRESS_GOERLI;
-      return TIMELOCK_ADDRESS_MAINNET;
+      if (chainId === 5) return TIMELOCK.addresses[5];
+      return TIMELOCK.addresses[1];
     }
     case 'governorTwo': {
-      if (chainId === 5) return GOVERNOR_TWO_ADDRESS_GOERLI;
-      return GOVERNOR_TWO_ADDRESS_MAINNET;
+      if (chainId === 5) return GOVERNOR.addresses[5];
+      return GOVERNOR.addresses[1];
     }
     case 'veOlas': {
-      if (chainId === LOCAL_CHAIN_ID) {
-        return LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL;
-      }
-      if (chainId === 5) return VEOLAS_ADDRESS_GOERLI;
-      return VEOLAS_ADDRESS_MAINNET;
+      if (chainId === 5) return VEOLAS.addresses[5];
+      return VEOLAS.addresses[1];
+    }
+    case 'wveOlas': {
+      if (chainId === 5) return WVEOLAS.addresses[5];
+      return WVEOLAS.addresses[1];
     }
     case 'buOlas': {
-      if (chainId === LOCAL_CHAIN_ID) {
-        return LOCAL_ADDRESSES.BUOLAS_ADDRESS_LOCAL;
-      }
-      if (chainId === 5) return BUOLAS_ADDRESS_GOERLI;
-      return BUOLAS_ADDRESS_MAINNET;
+      if (chainId === 5) return BUOLAS.addresses[5];
+      return BUOLAS.addresses[1];
     }
     case 'olas':
     default: {
-      if (chainId === LOCAL_CHAIN_ID) return LOCAL_ADDRESSES.OLAS_ADDRESS_LOCAL;
-      if (chainId === 5) return OLAS_ADDRESS_GOERLI;
-      return OLAS_ADDRESS_MAINNET;
+      if (chainId === 5) return OLAS.addresses[5];
+      return OLAS.addresses[1];
     }
   }
 };
@@ -99,9 +74,9 @@ export const getWeb3Details = () => {
 };
 
 export const getOlasContract = () => {
-  const { web3, chainId } = getWeb3Details();
+  const { web3 } = getWeb3Details();
   const contract = new web3.eth.Contract(
-    chainId === 1 ? OLAS_ABI_MAINNET : OLAS_ABI_GOERLI,
+    OLAS.abi,
     getContractAddress('olas'),
   );
   return contract;
@@ -118,20 +93,20 @@ export const getVeolasContract = (isViewOnly) => {
       // for view methods use wveolas abi and address
       if (isViewOnly) {
         return {
-          abi: WVEOLAS_ABI_MAINNET,
-          address: WVEOLAS_ADDRESS_MAINNET,
+          abi: WVEOLAS.abi,
+          address: WVEOLAS.addresses[1],
         };
       }
 
       return {
-        abi: VEOLAS_ABI,
-        address: VEOLAS_ADDRESS_MAINNET,
+        abi: VEOLAS.abi,
+        address: VEOLAS.addresses[1],
       };
     }
 
     return {
-      abi: VEOLAS_ABI,
-      address: VEOLAS_ADDRESS_GOERLI,
+      abi: VEOLAS.abi,
+      address: VEOLAS.addresses[5],
     };
   };
 
@@ -142,9 +117,9 @@ export const getVeolasContract = (isViewOnly) => {
 };
 
 export const getBuolasContract = () => {
-  const { web3, chainId } = getWeb3Details();
+  const { web3 } = getWeb3Details();
   const contract = new web3.eth.Contract(
-    chainId === 1 ? BUOLAS_ABI_MAINNET : BUOLAS_ABI_GOERLI,
+    BUOLAS.abi,
     getContractAddress('buOlas'),
   );
   return contract;
