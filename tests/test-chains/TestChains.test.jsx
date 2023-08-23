@@ -1,12 +1,20 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable jest/no-conditional-expect */
-import { BUOLAS, GOVERNOR, OLAS, TIMELOCK, VEOLAS, WVEOLAS} from 'common-util/AbiAndAddresses';
+import {
+  BUOLAS,
+  GOVERNOR,
+  OLAS,
+  TIMELOCK,
+  VEOLAS,
+  WVEOLAS,
+} from 'common-util/AbiAndAddresses';
+
+const fetch = require('node-fetch'); // eslint-disable-line import/no-extraneous-dependencies
 
 describe('test-chains/TestChains.jsx', () => {
   it('check contract addresses and ABIs', async () => {
-    //expect.hasAssertions();
+    expect.hasAssertions();
     const localArtifacts = [BUOLAS, GOVERNOR, OLAS, TIMELOCK, VEOLAS, WVEOLAS];
-
-    const fetch = require('node-fetch');
 
     // Registries repository
     const registriesRepo = 'https://raw.githubusercontent.com/valory-xyz/autonolas-governance/main/';
@@ -42,5 +50,5 @@ describe('test-chains/TestChains.jsx', () => {
         }
       }
     }
-  });
+  }, 2 * 60 * 1000);
 });

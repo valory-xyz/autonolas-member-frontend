@@ -9,11 +9,6 @@ import {
 } from 'common-util/Contracts';
 
 /**
- * TERMINOLOGY:
- * spender = LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL
- */
-
-/**
  * Increase Amount
  */
 export const updateIncreaseAmount = ({ amount, account }) => new Promise((resolve, reject) => {

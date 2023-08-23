@@ -2,7 +2,7 @@ import Web3 from 'web3';
 import { getChainId } from '@autonolas/frontend-library';
 import {
   // Olas
-  OLAS
+  OLAS,
 
   // buOlas
   BUOLAS,
@@ -17,19 +17,8 @@ import {
   GOVERNOR,
 
   // timelock
-  TIMELOCK
+  TIMELOCK,
 } from 'common-util/AbiAndAddresses';
-import { LOCAL_CHAIN_ID } from 'util/constants';
-
-/**
- * Addresses fetched when backend connected locally
- * to hardhat from initDeploy.json
- */
-export const LOCAL_ADDRESSES = {
-  OLAS_ADDRESS_LOCAL: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
-  VEOLAS_ADDRESS_LOCAL: '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512',
-  BUOLAS_ADDRESS_LOCAL: '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
-};
 
 /**
  * Returns contract address based on type and chainId.
@@ -49,9 +38,6 @@ export const getContractAddress = (type, chainIdPassed) => {
       return GOVERNOR.addresses[1];
     }
     case 'veOlas': {
-      if (chainId === LOCAL_CHAIN_ID) {
-        return LOCAL_ADDRESSES.VEOLAS_ADDRESS_LOCAL;
-      }
       if (chainId === 5) return VEOLAS.addresses[5];
       return VEOLAS.addresses[1];
     }
@@ -60,15 +46,11 @@ export const getContractAddress = (type, chainIdPassed) => {
       return WVEOLAS.addresses[1];
     }
     case 'buOlas': {
-      if (chainId === LOCAL_CHAIN_ID) {
-        return LOCAL_ADDRESSES.BUOLAS_ADDRESS_LOCAL;
-      }
       if (chainId === 5) return BUOLAS.addresses[5];
       return BUOLAS.addresses[1];
     }
     case 'olas':
     default: {
-      if (chainId === LOCAL_CHAIN_ID) return LOCAL_ADDRESSES.OLAS_ADDRESS_LOCAL;
       if (chainId === 5) return OLAS.addresses[5];
       return OLAS.addresses[1];
     }
@@ -92,7 +74,7 @@ export const getWeb3Details = () => {
 };
 
 export const getOlasContract = () => {
-  const { web3, chainId } = getWeb3Details();
+  const { web3 } = getWeb3Details();
   const contract = new web3.eth.Contract(
     OLAS.abi,
     getContractAddress('olas'),
