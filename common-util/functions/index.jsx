@@ -1,9 +1,11 @@
 import { ethers } from 'ethers';
 import dayjs from 'dayjs';
 import { notification } from 'antd/lib';
-import { isNil, isString } from 'lodash';
+import { isNil, isString, toLower } from 'lodash';
+
 import { COLOR } from 'util/theme';
 import { NA } from 'common-util/constants';
+import prohibitedAddresses from '../../data/prohibited-addresses.json';
 
 /**
  * https://docs.ethers.org/v5/api/utils/constants/#constants-MaxUint256
@@ -136,4 +138,9 @@ export const getFullFormattedDate = (ms) => {
 export const getString = (x) => {
   if (isNil(x)) return NA;
   return isString(x) ? x : `${x}`;
+};
+
+export const isAddressProhibited = (address) => {
+  const addresses = prohibitedAddresses.map((e) => toLower(e));
+  return addresses.includes(toLower(address));
 };
