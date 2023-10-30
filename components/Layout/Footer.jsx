@@ -11,6 +11,8 @@ import { getContractAddress } from 'common-util/Contracts';
 import Socials from './Socials';
 import { ContractsInfoContainer } from './styles';
 
+const PATHS_NOT_TO_SHOW = ['/disclaimer', '/not-legal'];
+
 const ContractInfo = () => {
   const chainId = useSelector((state) => state?.setup?.chainId);
 
@@ -104,21 +106,25 @@ const ContractInfo = () => {
 
   return (
     <ContractsInfoContainer>
-      <img
-        alt="Etherscan link"
-        width={18}
-        height={18}
-        src="/images/etherscan-logo.svg"
-      />
-      <span>Contracts</span>
-      &nbsp;•&nbsp;
-      {getContractInfo(textOne, addressOne)}
-      &nbsp;•&nbsp;
-      {getContractInfo(textTwo, addressTwo)}
-      &nbsp;•&nbsp;
-      {getContractInfo(textThree, addressThree)}
-      &nbsp;•&nbsp;
-      {getContractInfo(textFour, addressFour)}
+      {!PATHS_NOT_TO_SHOW.includes(pathname) && (
+        <>
+          <img
+            alt="Etherscan link"
+            width={18}
+            height={18}
+            src="/images/etherscan-logo.svg"
+          />
+          <span>Contracts</span>
+          &nbsp;•&nbsp;
+          {getContractInfo(textOne, addressOne)}
+          &nbsp;•&nbsp;
+          {getContractInfo(textTwo, addressTwo)}
+          &nbsp;•&nbsp;
+          {getContractInfo(textThree, addressThree)}
+          &nbsp;•&nbsp;
+          {getContractInfo(textFour, addressFour)}
+        </>
+      )}
     </ContractsInfoContainer>
   );
 };
