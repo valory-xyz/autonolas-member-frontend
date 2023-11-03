@@ -1,14 +1,22 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Alert, Button, Form, Modal,
+  Alert, Button, Form, Modal, Typography,
 } from 'antd/lib';
-import { notifyError, notifySuccess, parseToWei } from 'common-util/functions';
+
+import { NA } from 'common-util/constants';
+import {
+  getCommaSeparatedNumber,
+  notifyError,
+  notifySuccess,
+  parseToWei,
+} from 'common-util/functions';
 import {
   parseToSeconds,
   FormItemDate,
   FormItemInputNumber,
   MaxButton,
+  dateInSeconds,
 } from '../../common';
 import {
   hasSufficientTokensRequest,
@@ -17,6 +25,10 @@ import {
 } from '../contractUtils';
 import { useFetchBalances } from '../hooks';
 import { CreateLockContainer } from '../styles';
+
+const { Text } = Typography;
+
+const SECONDS_IN_YEAR = 31536000;
 
 export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
   const [form] = Form.useForm();
@@ -27,6 +39,11 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
 
   const [isApproveModalVisible, setIsApproveModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const amountInEth = Form.useWatch('amount', form);
+  const unlockTimeInSeconds = dateInSeconds(Form.useWatch('unlockTime', form));
+
+  // console.log({ amountInEth, unlockTimeInSeconds });
 
   useEffect(() => {
     if (account && chainId) {
@@ -75,6 +92,27 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
     }
   };
 
+  /**
+   * @returns projected veOLAS amount as per the formula.
+   * formula = veOLAS = OLAS * lock_time / max_lock_time
+   */
+  const getProjectedVeolas = (amount, timeInSeconds) => {
+    const maxLockTime = SECONDS_IN_YEAR * 4;
+    const todayDateInSeconds = new Date().getTime() / 1000;
+    const futureMaxLockTime = todayDateInSeconds + maxLockTime; // today's date + 4 years
+
+    const projectedVeolas = (amount * timeInSeconds) / futureMaxLockTime;
+    // console.log({
+    //   maxLockTime,
+    //   todayDateInSeconds,
+    //   futureMaxLockTime,
+    //   amount,
+    //   timeInSeconds,
+    //   projectedVeolas,
+    // });
+    return projectedVeolas.toFixed(2);
+  };
+
   return (
     <CreateLockContainer>
       {isModalVisible && (
@@ -100,7 +138,16 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
             />
 
             <FormItemDate />
-            <Form.Item>
+
+            <Text type="secondary">
+              {`Projected veOLAS amount: ${
+                getCommaSeparatedNumber(
+                  getProjectedVeolas(amountInEth, unlockTimeInSeconds),
+                ) || NA
+              }`}
+            </Text>
+
+            <Form.Item className="mt-12">
               <Button
                 type="primary"
                 htmlType="submit"

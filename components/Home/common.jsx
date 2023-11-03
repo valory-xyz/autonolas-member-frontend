@@ -24,12 +24,23 @@ export const getToken = ({ tokenName, token, isLoading = false }) => (
 );
 
 /**
+ * @returns parses date passed in seconds
+ * @example Moment object => 1620268800
+ */
+export const dateInSeconds = (time) => {
+  if (!time) return 0;
+  return Math.round(new Date(time).getTime() / 1000);
+};
+
+/**
  * Parses to seconds by doing the following operation in order
  * 1. convert to milliseconds
  * 2. divide by 100 to convert to seconds
  * 3. remove decimals
  */
 export const parseToSeconds = (unlockTime) => {
+  if (!unlockTime) return 0;
+
   const futureDateInTimeStamp = Math.round(
     new Date(unlockTime).getTime() / 1000,
   );
@@ -45,7 +56,7 @@ export const FormItemInputNumber = ({ text = 'Lock OLAS' }) => {
 
   return (
     <Form.Item
-      className="custom-form-item-lock"
+      className="add-lock-form-item"
       name="amount"
       label={text}
       rules={[
@@ -126,6 +137,7 @@ export const FormItemDate = ({ startDate }) => {
       label="Unlock Time"
       rules={[{ required: true, message: 'Unlock Time is required' }]}
       tooltip="The date should be minimum 1 week and maximum 4 years"
+      className="add-lock-form-item"
     >
       <DatePicker
         disabledDate={disableDateForUnlockTime}
