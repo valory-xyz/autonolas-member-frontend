@@ -126,7 +126,7 @@ const GlobalStyle = createGlobalStyle`
   .ant-form-item-label > label {
     font-weight: bold;
   }
-  .custom-form-item-lock {
+  .add-lock-form-item {
     margin-bottom: 4px;
   }
 
