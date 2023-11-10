@@ -26,9 +26,9 @@ import {
 import { useFetchBalances } from '../hooks';
 import { CreateLockContainer } from '../styles';
 
-const { Text } = Typography;
+const { Title } = Typography;
 
-const SECONDS_IN_YEAR = 31536000;
+const SECONDS_IN_A_YEAR = 31536000;
 
 export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
   const [form] = Form.useForm();
@@ -42,8 +42,6 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
 
   const amountInEth = Form.useWatch('amount', form);
   const unlockTimeInSeconds = dateInSeconds(Form.useWatch('unlockTime', form));
-
-  // console.log({ amountInEth, unlockTimeInSeconds });
 
   useEffect(() => {
     if (account && chainId) {
@@ -96,20 +94,12 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
    * @returns projected veOLAS amount as per the formula.
    * formula = veOLAS = OLAS * lock_time / max_lock_time
    */
-  const getProjectedVeolas = (amount, timeInSeconds) => {
-    const maxLockTime = SECONDS_IN_YEAR * 4;
+  const getProjectedVeolas = () => {
+    const maxLockTime = SECONDS_IN_A_YEAR * 4;
     const todayDateInSeconds = new Date().getTime() / 1000;
     const futureMaxLockTime = todayDateInSeconds + maxLockTime; // today's date + 4 years
 
-    const projectedVeolas = (amount * timeInSeconds) / futureMaxLockTime;
-    // console.log({
-    //   maxLockTime,
-    //   todayDateInSeconds,
-    //   futureMaxLockTime,
-    //   amount,
-    //   timeInSeconds,
-    //   projectedVeolas,
-    // });
+    const projectedVeolas = (amountInEth * unlockTimeInSeconds) / futureMaxLockTime;
     return projectedVeolas.toFixed(2);
   };
 
@@ -118,7 +108,7 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
       {isModalVisible && (
         <Modal
           title="Add To Lock"
-          visible={isModalVisible}
+          open={isModalVisible}
           footer={null}
           onCancel={() => setIsModalVisible(false)}
         >
@@ -139,13 +129,11 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
 
             <FormItemDate />
 
-            <Text type="secondary">
+            <Title level={5} className="mt-12 mb-12">
               {`Projected veOLAS amount: ${
-                getCommaSeparatedNumber(
-                  getProjectedVeolas(amountInEth, unlockTimeInSeconds),
-                ) || NA
+                getCommaSeparatedNumber(getProjectedVeolas()) || NA
               }`}
-            </Text>
+            </Title>
 
             <Form.Item className="mt-12">
               <Button
