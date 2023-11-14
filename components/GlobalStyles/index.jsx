@@ -34,7 +34,7 @@ const GlobalStyle = createGlobalStyle`
     margin-top: 12px;
   }
   .mb-12 {
-    margin-top: 12px;
+    margin-bottom: 12px;
   }
   .walletconnect-modal__base {
     .walletconnect-modal__mobile__toggle a {
