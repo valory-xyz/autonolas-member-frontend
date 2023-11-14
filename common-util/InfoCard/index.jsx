@@ -61,7 +61,7 @@ export const InfoCard = ({
         )}
       </ValueText>
 
-      <Paragraph>{subText || ' '}</Paragraph>
+      <Paragraph type="secondary">{subText || ' '}</Paragraph>
     </InfoCardContainer>
   );
 };

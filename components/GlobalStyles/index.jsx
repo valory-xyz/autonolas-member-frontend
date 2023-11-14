@@ -24,6 +24,9 @@ const GlobalStyle = createGlobalStyle`
   .mb-8 {
     margin-bottom: 0.5rem;
   }
+  .mb-12 {
+    margin-bottom: 12px !important;
+  }
   .mr-12 {
     margin-right: 12px;
   }
@@ -92,11 +95,9 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 
-  .ant-tabs-top > .ant-tabs-nav::before,
-  .ant-tabs-bottom > .ant-tabs-nav::before,
-  .ant-tabs-top > div > .ant-tabs-nav::before,
-  .ant-tabs-bottom > div > .ant-tabs-nav::before {
-    border-bottom: none;
+  /* modal */
+  .ant-modal-body {
+    padding: 12px 24px;
   }
 
   /* layout */
