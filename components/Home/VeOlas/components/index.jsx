@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import {
   Button, Row, Col, Modal,
+  Tabs,
 } from 'antd/lib';
 import { isNil } from 'lodash';
 import { notifySuccess, notifyError } from 'common-util/functions';
@@ -9,6 +10,8 @@ import { useFetchBalances, useVeolasComponents } from '../hooks';
 
 import { IncreaseAmount } from './IncreaseAmount';
 import { IncreaseUnlockTime } from './IncreaseUnlockTime';
+
+const { TabPane } = Tabs;
 
 export const VeolasManage = ({ isModalVisible, setIsModalVisible }) => {
   const { account, canWithdrawVeolas, getData } = useFetchBalances();
@@ -90,20 +93,14 @@ export const VeolasManage = ({ isModalVisible, setIsModalVisible }) => {
           onCancel={() => setIsModalVisible(false)}
           style={{ top: 60 }}
         >
-          <Row align="top">
-            <Col lg={10} xs={12}>
-              {getLockedAmountComponent({ hideTitle: true })}
-            </Col>
-
-            <Col lg={14} xs={12}>
-              {getUnlockTimeComponent({ hideTitle: true })}
-            </Col>
-          </Row>
-
-          <div className="forms-container">
-            <IncreaseAmount closeModal={closeModalOnSuccess} />
-            <IncreaseUnlockTime closeModal={closeModalOnSuccess} />
-          </div>
+          <Tabs defaultActiveKey="1">
+            <TabPane tab="By OLAS Amount" key="1">
+              <IncreaseAmount closeModal={closeModalOnSuccess} />
+            </TabPane>
+            <TabPane tab="By Lock Duration" key="2">
+              <IncreaseUnlockTime closeModal={closeModalOnSuccess} />
+            </TabPane>
+          </Tabs>
         </Modal>
       )}
     </>

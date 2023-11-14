@@ -1,18 +1,22 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form } from 'antd/lib';
+import { Button, Divider, Form } from 'antd/lib';
 import { notifyError, notifySuccess } from 'common-util/functions';
-import { parseToSeconds, FormItemDate } from '../../common';
+import { parseToSeconds, FormItemDate, dateInSeconds } from '../../common';
 import { updateIncreaseUnlockTime } from '../contractUtils';
-import { useFetchBalances } from '../hooks';
+import { useFetchBalances, useVeolasComponents } from '../hooks';
 import { FormContainer } from '../styles';
+import ProjectedVeolas from './ProjectedVeolas';
 
 export const IncreaseUnlockTime = ({ closeModal }) => {
   const [form] = Form.useForm();
   const {
-    account, mappedEndTime, isMappedAmountZero, getData,
+    account, mappedEndTime, isMappedAmountZero, getData, mappedAmount,
   } = useFetchBalances();
   const [isLoading, setIsLoading] = useState(false);
+
+  const { getUnlockTimeComponent } = useVeolasComponents();
+  const unlockTimeInSeconds = dateInSeconds(Form.useWatch('unlockTime', form));
 
   const onFinish = async (e) => {
     try {
@@ -47,12 +51,18 @@ export const IncreaseUnlockTime = ({ closeModal }) => {
         layout="vertical"
         autoComplete="off"
         name="increase-unlock-time-form"
-        className="custom-vertical-form"
         onFinish={onFinish}
       >
+        {getUnlockTimeComponent({ hideTitle: true })}
+        <Divider />
         <div className="full-width">
           <FormItemDate startDate={mappedEndTime} />
         </div>
+
+        <ProjectedVeolas
+          olasLockInEthUnits={mappedAmount}
+          unlockTimeInSeconds={unlockTimeInSeconds}
+        />
 
         <Form.Item>
           <Button
@@ -61,7 +71,7 @@ export const IncreaseUnlockTime = ({ closeModal }) => {
             disabled={!account || isMappedAmountZero}
             loading={isLoading}
           >
-            Add to lock
+            Increase lock
           </Button>
         </Form.Item>
       </Form>

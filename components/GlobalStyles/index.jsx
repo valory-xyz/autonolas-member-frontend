@@ -24,8 +24,17 @@ const GlobalStyle = createGlobalStyle`
   .mb-8 {
     margin-bottom: 0.5rem;
   }
+  .mb-12 {
+    margin-bottom: 12px !important;
+  }
   .mr-12 {
     margin-right: 12px;
+  }
+  .mt-12 {
+    margin-top: 12px;
+  }
+  .mb-12 {
+    margin-bottom: 12px;
   }
   .walletconnect-modal__base {
     .walletconnect-modal__mobile__toggle a {
@@ -86,11 +95,9 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 
-  .ant-tabs-top > .ant-tabs-nav::before,
-  .ant-tabs-bottom > .ant-tabs-nav::before,
-  .ant-tabs-top > div > .ant-tabs-nav::before,
-  .ant-tabs-bottom > div > .ant-tabs-nav::before {
-    border-bottom: none;
+  /* modal */
+  .ant-modal-body {
+    padding: 12px 24px;
   }
 
   /* layout */
@@ -126,7 +133,7 @@ const GlobalStyle = createGlobalStyle`
   .ant-form-item-label > label {
     font-weight: bold;
   }
-  .custom-form-item-lock {
+  .add-lock-form-item {
     margin-bottom: 4px;
   }
 
