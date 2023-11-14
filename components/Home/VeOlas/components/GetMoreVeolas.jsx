@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Alert, Button, Form, Modal, Typography,
+  Alert, Button, Form, Modal,
 } from 'antd/lib';
 
-import { NA } from 'common-util/constants';
 import {
-  getCommaSeparatedNumber,
   notifyError,
   notifySuccess,
   parseToWei,
@@ -25,10 +23,7 @@ import {
 } from '../contractUtils';
 import { useFetchBalances } from '../hooks';
 import { CreateLockContainer } from '../styles';
-
-const { Title } = Typography;
-
-const SECONDS_IN_A_YEAR = 31536000;
+import ProjectedVeolas from './ProjectedVeolas';
 
 export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
   const [form] = Form.useForm();
@@ -90,24 +85,11 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
     }
   };
 
-  /**
-   * @returns projected veOLAS amount as per the formula.
-   * formula = veOLAS = OLAS * lock_time / max_lock_time
-   */
-  const getProjectedVeolas = () => {
-    const maxLockTime = SECONDS_IN_A_YEAR * 4;
-    const todayDateInSeconds = new Date().getTime() / 1000;
-    const futureMaxLockTime = todayDateInSeconds + maxLockTime; // today's date + 4 years
-
-    const projectedVeolas = (amountInEth * unlockTimeInSeconds) / futureMaxLockTime;
-    return projectedVeolas.toFixed(2);
-  };
-
   return (
     <CreateLockContainer>
       {isModalVisible && (
         <Modal
-          title="Add To Lock"
+          title="Lock OLAS for veOLAS"
           open={isModalVisible}
           footer={null}
           onCancel={() => setIsModalVisible(false)}
@@ -119,23 +101,24 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
             name="create-lock-form"
             onFinish={onFinish}
           >
-            <FormItemInputNumber />
-            <MaxButton
-              onMaxClick={() => {
-                form.setFieldsValue({ amount: olasBalanceInEth });
-                form.validateFields(['amount']);
-              }}
-            />
+            <div className="mb-12">
+              <FormItemInputNumber />
+              <MaxButton
+                onMaxClick={() => {
+                  form.setFieldsValue({ amount: olasBalanceInEth });
+                  form.validateFields(['amount']);
+                }}
+              />
+            </div>
 
             <FormItemDate />
 
-            <Title level={5} className="mt-12 mb-12">
-              {`Projected veOLAS amount: ${
-                getCommaSeparatedNumber(getProjectedVeolas()) || NA
-              }`}
-            </Title>
+            <ProjectedVeolas
+              olasLockInEthUnits={amountInEth}
+              unlockTimeInSeconds={unlockTimeInSeconds}
+            />
 
-            <Form.Item className="mt-12">
+            <Form.Item>
               <Button
                 type="primary"
                 htmlType="submit"
@@ -143,7 +126,7 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
                 loading={isLoading}
                 className="mr-12"
               >
-                Add To Lock
+                Lock
               </Button>
 
               <Button onClick={() => setIsModalVisible(false)}>Cancel</Button>

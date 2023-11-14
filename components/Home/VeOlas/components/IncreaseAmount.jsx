@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form } from 'antd/lib';
+import { Button, Divider, Form } from 'antd/lib';
 import { notifyError, notifySuccess, parseToWei } from 'common-util/functions';
-import { FormItemInputNumber, MaxButton } from '../../common';
+import { FormItemInputNumber, MaxButton, dateInSeconds } from '../../common';
 import { updateIncreaseAmount } from '../contractUtils';
-import { useFetchBalances } from '../hooks';
+import { useFetchBalances, useVeolasComponents } from '../hooks';
 import { FormContainer } from '../styles';
+import ProjectedVeolas from './ProjectedVeolas';
 
 export const IncreaseAmount = ({ closeModal }) => {
   const [form] = Form.useForm();
@@ -14,9 +15,14 @@ export const IncreaseAmount = ({ closeModal }) => {
     olasBalanceInEth,
     isMappedAmountZero,
     hasNoOlasBalance,
+    mappedEndTime,
     getData,
   } = useFetchBalances();
+  const { getLockedAmountComponent } = useVeolasComponents();
   const [isLoading, setIsLoading] = useState(false);
+
+  const mappedEndTimeInSeconds = dateInSeconds(mappedEndTime);
+  const amountInEth = Form.useWatch('amount', form);
 
   /**
    * can increase amount only if the mapped amount is zero (ie. no lock exists)
@@ -57,10 +63,13 @@ export const IncreaseAmount = ({ closeModal }) => {
         layout="vertical"
         autoComplete="off"
         name="increase-amount-form"
-        className="custom-vertical-form"
         onFinish={onFinish}
       >
-        <div className="full-width">
+        {getLockedAmountComponent({ hideTitle: true })}
+
+        <Divider />
+
+        <div className="mb-12">
           <FormItemInputNumber text="Lock more OLAS" />
           <MaxButton
             onMaxClick={() => {
@@ -70,6 +79,11 @@ export const IncreaseAmount = ({ closeModal }) => {
           />
         </div>
 
+        <ProjectedVeolas
+          olasLockInEthUnits={amountInEth}
+          unlockTimeInSeconds={mappedEndTimeInSeconds}
+        />
+
         <Form.Item>
           <Button
             type="primary"
@@ -77,7 +91,7 @@ export const IncreaseAmount = ({ closeModal }) => {
             disabled={cannotIncreaseAmount}
             loading={isLoading}
           >
-            Add to lock
+            Increase lock
           </Button>
         </Form.Item>
       </Form>
