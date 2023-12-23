@@ -88,11 +88,13 @@ export const IncreaseAmount = ({ closeModal }) => {
           <Button
             type="primary"
             htmlType="submit"
-            disabled={cannotIncreaseAmount}
+            // disabled={cannotIncreaseAmount}
+            disabled
             loading={isLoading}
           >
             Increase lock
           </Button>
+          <p>Temporarily disabled</p>
         </Form.Item>
       </Form>
     </FormContainer>
