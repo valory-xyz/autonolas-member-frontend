@@ -13,8 +13,8 @@ export const IncreaseAmount = ({ closeModal }) => {
   const {
     account,
     olasBalanceInEth,
-    isMappedAmountZero,
-    hasNoOlasBalance,
+    // isMappedAmountZero,
+    // hasNoOlasBalance,
     mappedEndTime,
     getData,
   } = useFetchBalances();
@@ -28,7 +28,7 @@ export const IncreaseAmount = ({ closeModal }) => {
    * can increase amount only if the mapped amount is zero (ie. no lock exists)
    * or if the user has some olas tokens.
    */
-  const cannotIncreaseAmount = isMappedAmountZero || hasNoOlasBalance || !account;
+  // const cannotIncreaseAmount = isMappedAmountZero || hasNoOlasBalance || !account;
 
   const onFinish = async ({ amount }) => {
     try {
@@ -88,11 +88,13 @@ export const IncreaseAmount = ({ closeModal }) => {
           <Button
             type="primary"
             htmlType="submit"
-            disabled={cannotIncreaseAmount}
+            // disabled={cannotIncreaseAmount}
+            disabled
             loading={isLoading}
           >
             Increase lock
           </Button>
+          <p>Temporarily disabled</p>
         </Form.Item>
       </Form>
     </FormContainer>
