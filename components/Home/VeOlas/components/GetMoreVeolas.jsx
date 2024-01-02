@@ -122,14 +122,12 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
               <Button
                 type="primary"
                 htmlType="submit"
-                disabled
+                disabled={!account || cannotCreateLock}
                 loading={isLoading}
                 className="mr-12"
               >
                 Lock
               </Button>
-              <p>Temporarily disabled</p>
-
               <Button onClick={() => setIsModalVisible(false)}>Cancel</Button>
             </Form.Item>
           </Form>
