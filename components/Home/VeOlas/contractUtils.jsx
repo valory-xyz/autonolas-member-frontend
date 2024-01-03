@@ -8,21 +8,32 @@ import {
   getContractAddress,
 } from 'common-util/Contracts';
 
-/**
- * Increase Amount
- */
-export const updateIncreaseAmount = ({ amount, account }) => new Promise((resolve, reject) => {
-  const contract = getVeolasContract();
+export const updateIncreaseAmount = async ({ amount, account }) => {
+  try {
+    const contract = getVeolasContract();
 
-  const fn = contract.methods.increaseAmount(amount).send({ from: account });
+    // Estimate the gas
+    const estimatedGas = await contract.methods
+      .increaseAmount(amount)
+      .estimateGas({ from: account });
 
-  sendTransaction(fn, account)
-    .then((response) => resolve(response?.transactionHash))
-    .catch((e) => {
-      window.console.log('Error occured on increasing amount');
-      reject(e);
-    });
-});
+    // Add a buffer to the estimated gas (20% buffer)
+    const gasLimitWithBuffer = Math.floor(estimatedGas * 1.2);
+
+    // Now, send the transaction with the estimated gas limit
+    const fn = contract.methods
+      .increaseAmount(amount)
+      .send({ from: account, gasLimit: gasLimitWithBuffer });
+
+    const response = await sendTransaction(fn, account);
+    return response?.transactionHash;
+  } catch (e) {
+    window.console.log(
+      'Error occurred on increasing amount with estimated gas',
+    );
+    throw e;
+  }
+};
 
 /**
  * Increase Unlock time
@@ -91,23 +102,29 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
 /**
  * Create lock
  */
-export const createLockRequest = ({ amount, unlockTime, account }) => new Promise((resolve, reject) => {
+export const createLockRequest = async ({ amount, unlockTime, account }) => {
   const contract = getVeolasContract();
 
-  const fn = contract.methods
-    .createLock(amount, unlockTime)
-    .send({ from: account });
+  try {
+    // Estimate the gas
+    const estimatedGas = await contract.methods
+      .createLock(amount, unlockTime)
+      .estimateGas({ from: account });
 
-  sendTransaction(fn, account)
-    .then((response) => {
-      resolve(response?.transactionHash);
-    })
-    .catch((e) => {
-      window.console.log('Error occured on creating lock for veOlas');
-      reject(e);
-    });
-});
+    // Add a buffer to the estimated gas (20% buffer)
+    const gasLimitWithBuffer = Math.floor(estimatedGas * 1.2);
 
+    const fn = contract.methods
+      .createLock(amount, unlockTime)
+      .send({ from: account, gasLimit: gasLimitWithBuffer });
+
+    const response = await sendTransaction(fn, account);
+    return response?.transactionHash;
+  } catch (error) {
+    window.console.log('Error occured on creating lock for veOlas');
+    throw error;
+  }
+};
 /**
  * Withdraw VeOlas
  */
