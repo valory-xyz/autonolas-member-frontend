@@ -5,7 +5,7 @@
     "start": "next start",
     "lint": "eslint ./",
     "test": "jest",
-    "test:watch": "jest --watch",
+    "testw": "jest --watch",
     "testc": "jest --coverage --verbose"
   },
   "dependencies": {
@@ -56,10 +56,5 @@
     "jest": "^29.6.4",
     "jest-environment-jsdom": "^29.6.4",
     "redux-mock-store": "^1.5.4"
-  },
-  "jest": {
-    "projects": [
-      "../jest.config.js"
-    ]
   }
 }
