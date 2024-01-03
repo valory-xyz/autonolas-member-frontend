@@ -1,4 +1,4 @@
-import { Divider, Statistic } from 'antd/lib';
+import { Divider, Statistic } from 'antd';
 import { NA } from 'common-util/constants';
 import { getCommaSeparatedNumber } from 'common-util/functions';
 import PropTypes from 'prop-types';

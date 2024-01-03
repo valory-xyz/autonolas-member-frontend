@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Divider, Form } from 'antd/lib';
+import { Button, Divider, Form } from 'antd';
 import { notifyError, notifySuccess, parseToWei } from 'common-util/functions';
 import { FormItemInputNumber, MaxButton, dateInSeconds } from '../../common';
 import { updateIncreaseAmount } from '../contractUtils';

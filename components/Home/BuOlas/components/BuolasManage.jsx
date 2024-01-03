@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Row, Col } from 'antd/lib';
+import { Button, Row, Col } from 'antd';
 import {
   getFormattedNumber,
   getFormattedDate,

@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 import {
-  Button, Row, Col, Modal,
-  Tabs,
-} from 'antd/lib';
+  Button, Row, Col, Modal, Tabs,
+} from 'antd';
 import { isNil } from 'lodash';
 import { notifySuccess, notifyError } from 'common-util/functions';
 import { withdrawVeolasRequest } from '../contractUtils';

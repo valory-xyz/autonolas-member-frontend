@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
-import { Layout, Menu } from 'antd/lib';
+import { Layout, Menu } from 'antd';
 import PropTypes from 'prop-types';
 import Login from '../Login';
 import Footer from './Footer';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'antd/lib';
+import { Button } from 'antd';
 import { notifySuccess, notifyError } from 'common-util/functions';
 import { useFetchBalances } from '../hooks';
 import { transferOlasToAccountRequest } from '../contractUtils';

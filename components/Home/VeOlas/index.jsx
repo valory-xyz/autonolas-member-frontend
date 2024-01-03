@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   Typography, Space, Button, Alert,
-} from 'antd/lib';
+} from 'antd';
 import { GetMoreVeolas } from './components/GetMoreVeolas';
 // import { TransferOlas } from './components/TransferOlas';
 import { VeolasManage } from './components';

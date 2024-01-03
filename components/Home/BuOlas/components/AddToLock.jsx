@@ -1,4 +1,4 @@
-import { Button, Typography } from 'antd/lib';
+import { Button, Typography } from 'antd';
 import { notifyError, notifySuccess } from 'common-util/functions';
 import { createBuolasLockRequest, approveOlasByOwner } from '../contractUtils';
 import { useFetchBuolasBalances } from '../hooks';

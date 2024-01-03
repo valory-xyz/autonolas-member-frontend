@@ -1,9 +1,9 @@
 import { ethers } from 'ethers';
 import dayjs from 'dayjs';
-import { notification } from 'antd/lib';
+import { notification } from 'antd';
 import { isNil, isString, toLower } from 'lodash';
 
-import { COLOR } from 'util/theme';
+import { COLOR } from '@autonolas/frontend-library';
 import { NA } from 'common-util/constants';
 import prohibitedAddresses from '../../data/prohibited-addresses.json';
 
