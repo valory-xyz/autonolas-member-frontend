@@ -105,7 +105,7 @@ export const createLockRequest = async ({ amount, unlockTime, account }) => {
 
     const fn = contract.methods
       .createLock(amount, unlockTime)
-      .send({ from: account, value: amount });
+      .send({ from: account });
 
     const response = await sendTransaction(fn, account);
     return response?.transactionHash;
