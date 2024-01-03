@@ -55,11 +55,11 @@ export const hasSufficientTokensRequest = ({ account, chainId, amount }) => new 
     .allowance(account, spender)
     .call()
     .then((response) => {
-      const responseInBg = ethers.BigNumber.from(response);
-      const amountInBg = ethers.utils.parseUnits(`${amount}`);
+      const responseInBg = ethers.toBigInt(response);
+      const amountInBg = ethers.parseUnits(`${amount}`);
 
       // check if the allowance is greater than the amount input
-      resolve(responseInBg.gt(amountInBg));
+      resolve(responseInBg > amountInBg);
     })
     .catch((e) => {
       window.console.log('Error occured on calling `allowance` method');

@@ -10,13 +10,13 @@ import prohibitedAddresses from '../../data/prohibited-addresses.json';
 /**
  * https://docs.ethers.org/v5/api/utils/constants/#constants-MaxUint256
  */
-export const MAX_AMOUNT = ethers.constants.MaxUint256;
+export const MAX_AMOUNT = ethers.MaxUint256;
 
 export const getBalance = (account, p) => new Promise((resolve, reject) => {
   p.eth
     .getBalance(account)
     .then((balance) => {
-      const balanceInEth = ethers.utils.formatEther(balance);
+      const balanceInEth = ethers.formatEther(balance);
       resolve(balanceInEth);
     })
     .catch((e) => {
@@ -32,25 +32,25 @@ export const getBalance = (account, p) => new Promise((resolve, reject) => {
  */
 export const formatToEth = (value, dv = 0) => {
   if (isNil(value)) return dv || 0;
-  return (+ethers.utils.formatEther(value)).toFixed(2);
+  return (+ethers.formatEther(value)).toFixed(2);
 };
 
 /**
  * Same as `formatToEth` but doesn't fixes the decimal to 8
  * @returns {String} eg: 1000000000000000000 => 1
  */
-export const parseToEth = (amount) => (amount ? ethers.utils.formatEther(`${amount}`) : 0);
+export const parseToEth = (amount) => (amount ? ethers.formatEther(`${amount}`) : 0);
 
 /**
  * multiplies the amount by 10^18
  */
-export const parseToWei = (amount) => ethers.utils.parseUnits(`${amount}`, 18).toString();
+export const parseToWei = (amount) => ethers.parseUnits(`${amount}`, 18).toString();
 
 /**
  * parse eth to wei
  * example 1 => 1000000000000000000
  */
-export const parseEther = (n) => ethers.utils.parseEther(`${n}`);
+export const parseEther = (n) => ethers.parseEther(`${n}`);
 
 export const getBlockTimestamp = async (block = 'latest') => {
   const temp = await window?.WEB3_PROVIDER.eth.getBlock(block);

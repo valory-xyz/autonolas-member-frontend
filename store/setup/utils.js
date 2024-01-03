@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+
 import { ethers } from 'ethers';
 import { formatToEth } from 'common-util/functions';
 
@@ -17,7 +19,9 @@ export const getNextReleasableAmountAndTime = (lockedBalance, timestamp) => {
     buolasNextReleasableTime = (startTime + STEP_TIME * numNextStep);
 
     if (numNextStep >= totalNumSteps) {
-      buolasNextReleasableAmount = ethers.BigNumber.from(`${lockedBalance.totalAmount}`).sub(lockedBalance.transferredAmount);
+      buolasNextReleasableAmount = Number(
+        ethers.toBigInt(lockedBalance.totalAmount) - ethers.toBigInt(lockedBalance.transferredAmount),
+      );
     } else {
       /**
        * divide the total amount by the number of steps
@@ -27,7 +31,9 @@ export const getNextReleasableAmountAndTime = (lockedBalance, timestamp) => {
        * steps = 4
        * nextReleasableAmount = 1000 / 4 = 250
        */
-      buolasNextReleasableAmount = ethers.BigNumber.from(`${lockedBalance.totalAmount}`).div(totalNumSteps);
+      buolasNextReleasableAmount = Number(
+        ethers.toBigInt(`${lockedBalance.totalAmount}`) / ethers.toBigInt(`${totalNumSteps}`),
+      );
     }
 
     // convert to display format
