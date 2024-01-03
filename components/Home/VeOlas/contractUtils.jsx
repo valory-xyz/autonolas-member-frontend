@@ -9,21 +9,29 @@ import {
 } from 'common-util/Contracts';
 
 export const updateIncreaseAmount = async ({ amount, account }) => {
-  try {
-    const contract = getVeolasContract();
+  const contract = getVeolasContract();
 
-    // Estimate the gas
+  // default gas limit
+  let finalEstimatedGas = 500_000;
+
+  try {
     const estimatedGas = await contract.methods
       .increaseAmount(amount)
       .estimateGas({ from: account });
 
-    // Add a buffer to the estimated gas (20% buffer)
-    const gasLimitWithBuffer = Math.floor(estimatedGas * 1.2);
+    // add a buffer to the estimated gas (20% buffer)
+    finalEstimatedGas = Math.floor(estimatedGas * 1.2);
+  } catch (error) {
+    window.console.warn(
+      `Error occured on estimating gas for increasing lock, defaulting to ${finalEstimatedGas}`,
+    );
+  }
 
-    // Now, send the transaction with the estimated gas limit
+  try {
+    // send the transaction with the estimated gas limit
     const fn = contract.methods
       .increaseAmount(amount)
-      .send({ from: account, gasLimit: gasLimitWithBuffer });
+      .send({ from: account, gasLimit: finalEstimatedGas });
 
     const response = await sendTransaction(fn, account);
     return response?.transactionHash;
@@ -105,18 +113,26 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
 export const createLockRequest = async ({ amount, unlockTime, account }) => {
   const contract = getVeolasContract();
 
+  // default gas limit
+  let finalEstimatedGas = 500_000;
+
   try {
-    // Estimate the gas
     const estimatedGas = await contract.methods
       .createLock(amount, unlockTime)
       .estimateGas({ from: account });
 
-    // Add a buffer to the estimated gas (20% buffer)
-    const gasLimitWithBuffer = Math.floor(estimatedGas * 1.2);
+    // add a buffer to the estimated gas (20% buffer)
+    finalEstimatedGas = Math.floor(estimatedGas * 1.2);
+  } catch (error) {
+    window.console.warn(
+      `Error occured on estimating gas for creating lock, defaulting to ${finalEstimatedGas}`,
+    );
+  }
 
+  try {
     const fn = contract.methods
       .createLock(amount, unlockTime)
-      .send({ from: account, gasLimit: gasLimitWithBuffer });
+      .send({ from: account, gasLimit: finalEstimatedGas });
 
     const response = await sendTransaction(fn, account);
     return response?.transactionHash;
