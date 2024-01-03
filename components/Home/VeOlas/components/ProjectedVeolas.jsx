@@ -37,8 +37,13 @@ const ProjectedVeolas = ({ olasLockInEthUnits, unlockTimeInSeconds }) => {
 };
 
 ProjectedVeolas.propTypes = {
-  olasLockInEthUnits: PropTypes.number.isRequired,
-  unlockTimeInSeconds: PropTypes.number.isRequired,
+  olasLockInEthUnits: PropTypes.number,
+  unlockTimeInSeconds: PropTypes.number,
+};
+
+ProjectedVeolas.defaultProps = {
+  olasLockInEthUnits: 0,
+  unlockTimeInSeconds: 0,
 };
 
 export default ProjectedVeolas;

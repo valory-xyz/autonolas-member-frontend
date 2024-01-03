@@ -13,7 +13,6 @@ import {
 
 import { RPC_URLS } from 'common-util/Contracts';
 import { SUPPORTED_CHAINS } from 'common-util/Login';
-import { SUPPORTED_CHAINS_MORE_INFO } from 'common-util/Login/config';
 import prohibitedAddresses from '../../data/prohibited-addresses.json';
 
 export const getModalProvider = () => window?.MODAL_PROVIDER;
@@ -27,13 +26,6 @@ export const getChainId = (chainId = null) => {
   const chainIdfromSessionStorage = typeof sessionStorage === 'undefined'
     ? 1
     : Number(sessionStorage.getItem('chainId'));
-
-  // if chainId is not supported, throw error
-  if (
-    !SUPPORTED_CHAINS_MORE_INFO.find((e) => e.id === chainIdfromSessionStorage)
-  ) {
-    return new Error('Invalid chain id');
-  }
 
   return chainIdfromSessionStorage || 1;
 };

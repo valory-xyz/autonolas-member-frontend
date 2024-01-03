@@ -69,43 +69,51 @@ export const hasSufficientTokensRequest = ({ account, chainId, amount }) => new 
 /**
  * Approve amount of OLAS to be used
  */
-export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve, reject) => {
+export const approveOlasByOwner = async ({ account, chainId }) => {
   const contract = getOlasContract();
   const spender = getContractAddress('veOlas', chainId);
+
+  console.log({
+    account,
+    spender,
+    MAX_AMOUNT,
+    contract,
+    chainId,
+  });
 
   const fn = contract.methods
     .approve(spender, MAX_AMOUNT)
     .send({ from: account });
 
-  sendTransaction(fn, account)
-    .then((response) => {
-      resolve(response);
-    })
-    .catch((e) => {
-      window.console.log('Error occured on approving OLAS by owner');
-      reject(e);
-    });
-});
+  const response = await sendTransaction(fn, account);
+  return response;
+};
 
 /**
  * Create lock
  */
-export const createLockRequest = ({ amount, unlockTime, account }) => new Promise((resolve, reject) => {
-  const contract = getVeolasContract();
+export const createLockRequest = async ({ amount, unlockTime, account }) => {
+  try {
+    const contract = getVeolasContract();
 
-  const fn = contract.methods
-    .createLock(amount, unlockTime)
-    .send({ from: account });
-
-  sendTransaction(fn, account)
-    .then((response) => {
-      resolve(response?.transactionHash);
-    })
-    .catch((e) => {
-      window.console.log('Error occured on creating lock for veOlas');
-      reject(e);
+    console.log({
+      amount,
+      unlockTime,
+      account,
+      contract,
     });
-});
+
+    const fn = contract.methods
+      .createLock(amount, unlockTime)
+      .send({ from: account, value: amount });
+
+    const response = await sendTransaction(fn, account);
+    return response?.transactionHash;
+  } catch (error) {
+    window.console.log('Error occured on creating lock');
+    throw error;
+  }
+};
 
 /**
  * Withdraw VeOlas

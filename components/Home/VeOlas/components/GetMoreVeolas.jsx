@@ -46,6 +46,7 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
 
   const createLockHelper = async () => {
     setIsLoading(true);
+
     const txHash = await createLockRequest({
       amount: parseToWei(form.getFieldValue('amount')),
       unlockTime: parseToSeconds(form.getFieldValue('unlockTime')),
@@ -68,7 +69,8 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
         account,
         chainId,
         amount,
-      }) || true;
+      });
+      // const hasSufficientTokens = true;
 
       // Approve can be clicked only once. Meaning, the user
       // will approve the maximum token, and no need to do it again.
@@ -149,7 +151,7 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
       {isApproveModalVisible && (
         <Modal
           title="Approve veOlas"
-          visible={isApproveModalVisible}
+          open={isApproveModalVisible}
           footer={null}
           onCancel={() => setIsApproveModalVisible(false)}
         >

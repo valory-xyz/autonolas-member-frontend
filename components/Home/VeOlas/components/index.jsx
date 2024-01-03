@@ -88,7 +88,7 @@ export const VeolasManage = ({ isModalVisible, setIsModalVisible }) => {
       {isModalVisible && (
         <Modal
           title="Increase Lock"
-          visible={isModalVisible}
+          open={isModalVisible}
           footer={null}
           onCancel={() => setIsModalVisible(false)}
           style={{ top: 60 }}

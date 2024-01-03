@@ -19,7 +19,7 @@ export const VeOlas = () => {
 
   return (
     <div>
-      <Title>veOLAS</Title>
+      <Title style={{ marginTop: 0 }}>veOLAS</Title>
       <Paragraph style={{ maxWidth: 550 }}>
         veOLAS gives you voting power in Autonolas governance. Lock OLAS for
         longer periods to get more veOLAS.&nbsp;
@@ -37,7 +37,7 @@ export const VeOlas = () => {
       <GetMoreOlasRow>
         <Space size="middle">
           <Button
-            type="danger"
+            type="primary"
             disabled={canWithdrawVeolas}
             onClick={() => {
               // if the user has veolas, then show the modal to increase the amount

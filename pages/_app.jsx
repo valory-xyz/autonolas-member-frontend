@@ -5,7 +5,7 @@ import { ConfigProvider } from 'antd';
 import PropTypes from 'prop-types';
 
 // web3modal and wagmi provider
-import { Web3Modal, wagmiConfig } from 'common-util/Login/config';
+import { wagmiConfig } from 'common-util/Login/config';
 import { WagmiConfig as WagmiConfigProvider } from 'wagmi';
 
 import GlobalStyle from 'components/GlobalStyles';
@@ -26,16 +26,31 @@ const MyApp = ({ Component, pageProps }) => {
         <meta name="title" content="Manage your veOLAS and buOLAS" />
       </Head>
 
-      <ConfigProvider theme={THEME_CONFIG}>
+      <ConfigProvider
+        theme={{
+          ...THEME_CONFIG,
+          components: {
+            ...THEME_CONFIG.components,
+            // Divider: {
+            //   ...THEME_CONFIG.components.Divider,
+            //   verticalMarginInline: '16px',
+            //   margin: '8px',
+            // },
+            DatePicker: {
+              ...THEME_CONFIG.components.Calendar,
+              // cellHeight: '16px',
+              // cellWidth: '16px',
+            },
+          },
+        }}
+      >
         {isNotLegal ? (
           <Component {...pageProps} />
         ) : (
           <WagmiConfigProvider config={wagmiConfig}>
-            <Web3Modal>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </Web3Modal>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
           </WagmiConfigProvider>
         )}
       </ConfigProvider>

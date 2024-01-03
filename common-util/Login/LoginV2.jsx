@@ -3,14 +3,16 @@ import { useDispatch } from 'react-redux';
 import Web3 from 'web3';
 import PropTypes from 'prop-types';
 import { Grid } from 'antd';
+import { Web3Modal, Web3Button, Web3NetworkSwitch } from '@web3modal/react';
 import {
   useAccount, useNetwork, useBalance, useDisconnect,
 } from 'wagmi';
 import styled from 'styled-components';
-import { MEDIA_QUERY, notifyError } from '@autonolas/frontend-library';
+import { COLOR, MEDIA_QUERY } from '@autonolas/frontend-library';
 
 import { setUserBalance } from 'store/setup/actions';
-import { isAddressProhibited } from 'common-util/functions';
+import { isAddressProhibited, notifyError } from 'common-util/functions';
+import { projectId, ethereumClient } from './config';
 
 const LoginContainer = styled.div`
   display: flex;
@@ -27,6 +29,7 @@ const { useBreakpoint } = Grid;
 export const LoginV2 = ({
   onConnect: onConnectCb,
   onDisconnect: onDisconnectCb,
+  theme = 'light',
 }) => {
   const dispatch = useDispatch();
   const { disconnect } = useDisconnect();
@@ -56,7 +59,7 @@ export const LoginV2 = ({
     if (balance?.formatted) {
       dispatch(setUserBalance(balance.formatted));
     }
-  }, [balance?.formatted]);
+  }, [balance?.formatted, dispatch]);
 
   useEffect(() => {
     const getData = async () => {
@@ -108,7 +111,7 @@ export const LoginV2 = ({
     if (connector && !isAddressProhibited(address)) {
       getData();
     }
-  }, [connector]);
+  }, [connector, address]);
 
   // Disconnect if the address is prohibited
   useEffect(() => {
@@ -137,7 +140,23 @@ export const LoginV2 = ({
 
   return (
     <LoginContainer>
-      <w3m-button />
+      <Web3NetworkSwitch />
+      &nbsp;&nbsp;
+      <Web3Button
+        avatar="hide"
+        balance={screens.xs ? 'hide' : 'show'}
+        icon={screens.xs ? 'hide' : 'show'}
+      />
+      <Web3Modal
+        projectId={projectId}
+        ethereumClient={ethereumClient}
+        themeMode={theme}
+        themeVariables={{
+          '--w3m-button-border-radius': '5px',
+          '--w3m-accent-color': COLOR.PRIMARY,
+          '--w3m-background-color': COLOR.PRIMARY,
+        }}
+      />
     </LoginContainer>
   );
 };
@@ -145,9 +164,11 @@ export const LoginV2 = ({
 LoginV2.propTypes = {
   onConnect: PropTypes.func,
   onDisconnect: PropTypes.func,
+  theme: PropTypes.string,
 };
 
 LoginV2.defaultProps = {
   onConnect: undefined,
   onDisconnect: undefined,
+  theme: 'light',
 };
