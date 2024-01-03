@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from 'antd';
-import { notifySuccess, notifyError } from 'common-util/functions';
+import { notifySuccess, notifyError } from '@autonolas/frontend-library';
 import { useFetchBalances } from '../hooks';
 import { transferOlasToAccountRequest } from '../contractUtils';
 

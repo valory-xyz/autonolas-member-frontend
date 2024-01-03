@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Divider, Form } from 'antd';
-import { notifyError, notifySuccess } from 'common-util/functions';
+import { notifySuccess, notifyError } from '@autonolas/frontend-library';
+
 import { parseToSeconds, FormItemDate, dateInSeconds } from '../../common';
 import { updateIncreaseUnlockTime } from '../contractUtils';
 import { useFetchBalances, useVeolasComponents } from '../hooks';

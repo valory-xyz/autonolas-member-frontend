@@ -3,7 +3,8 @@ import {
   Button, Row, Col, Modal, Tabs,
 } from 'antd';
 import { isNil } from 'lodash';
-import { notifySuccess, notifyError } from 'common-util/functions';
+import { notifySuccess, notifyError } from '@autonolas/frontend-library';
+
 import { withdrawVeolasRequest } from '../contractUtils';
 import { useFetchBalances, useVeolasComponents } from '../hooks';
 

@@ -1,7 +1,8 @@
 import { Divider, Statistic } from 'antd';
-import { NA } from 'common-util/constants';
-import { getCommaSeparatedNumber } from 'common-util/functions';
+import { NA } from '@autonolas/frontend-library';
 import PropTypes from 'prop-types';
+
+import { getCommaSeparatedNumber } from 'common-util/functions';
 
 const SECONDS_IN_A_YEAR = 31536000;
 
