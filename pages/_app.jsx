@@ -1,17 +1,18 @@
 /* eslint-disable jest/require-hook */
 import Head from 'next/head';
 import { createWrapper } from 'next-redux-wrapper';
+import { ConfigProvider } from 'antd';
 import PropTypes from 'prop-types';
 
+// web3modal and wagmi provider
+import { Web3Modal, wagmiConfig } from 'common-util/Login/config';
 import { WagmiConfig as WagmiConfigProvider } from 'wagmi';
 
 import GlobalStyle from 'components/GlobalStyles';
 import Layout from 'components/Layout';
-import { wagmiConfig } from 'common-util/Login/config';
+import { THEME_CONFIG } from '@autonolas/frontend-library';
 import { useRouter } from 'next/router';
 import initStore from '../store';
-
-require('../styles/antd.less');
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
@@ -24,15 +25,20 @@ const MyApp = ({ Component, pageProps }) => {
         <title>Autonolas Member</title>
         <meta name="title" content="Manage your veOLAS and buOLAS" />
       </Head>
-      {isNotLegal ? (
-        <Component {...pageProps} />
-      ) : (
-        <WagmiConfigProvider config={wagmiConfig}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </WagmiConfigProvider>
-      )}
+
+      <ConfigProvider theme={THEME_CONFIG}>
+        {isNotLegal ? (
+          <Component {...pageProps} />
+        ) : (
+          <WagmiConfigProvider config={wagmiConfig}>
+            <Web3Modal>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </Web3Modal>
+          </WagmiConfigProvider>
+        )}
+      </ConfigProvider>
     </>
   );
 };

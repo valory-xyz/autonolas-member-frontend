@@ -2,13 +2,10 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   Alert, Button, Form, Modal,
-} from 'antd/lib';
+} from 'antd';
+import { notifySuccess, notifyError } from '@autonolas/frontend-library';
 
-import {
-  notifyError,
-  notifySuccess,
-  parseToWei,
-} from 'common-util/functions';
+import { parseToWei } from 'common-util/functions';
 import {
   parseToSeconds,
   FormItemDate,
@@ -24,6 +21,7 @@ import {
 import { useFetchBalances } from '../hooks';
 import { CreateLockContainer } from '../styles';
 import ProjectedVeolas from './ProjectedVeolas';
+// import { useCreateLock } from './useCreateLock';
 
 export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
   const [form] = Form.useForm();
@@ -37,6 +35,8 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
 
   const amountInEth = Form.useWatch('amount', form);
   const unlockTimeInSeconds = dateInSeconds(Form.useWatch('unlockTime', form));
+
+  // const { write } = useCreateLock();
 
   useEffect(() => {
     if (account && chainId) {
@@ -68,13 +68,14 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
         account,
         chainId,
         amount,
-      });
+      }) || true;
 
       // Approve can be clicked only once. Meaning, the user
       // will approve the maximum token, and no need to do it again.
       // Hence, if user has sufficient tokens, create lock without approval
       if (hasSufficientTokens) {
         await createLockHelper();
+        // await write();
       } else {
         setIsApproveModalVisible(true);
       }

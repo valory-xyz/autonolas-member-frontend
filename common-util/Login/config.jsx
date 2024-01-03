@@ -1,47 +1,47 @@
-import {
-  EthereumClient,
-  w3mConnectors,
-  w3mProvider,
-} from '@web3modal/ethereum';
-import { configureChains, createConfig } from 'wagmi';
-import { mainnet, goerli } from 'wagmi/chains';
-import { SafeConnector } from 'wagmi/connectors/safe';
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
-import { rpc } from 'common-util/Contracts';
+/* eslint-disable react/prop-types */
+
+import { useEffect } from 'react';
+import { COLOR } from '@autonolas/frontend-library';
+import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi';
+import { WagmiConfig } from 'wagmi';
+import { mainnet } from 'viem/chains';
+
+import { RPC_URLS } from 'common-util/Contracts';
 
 export const projectId = process.env.NEXT_PUBLIC_WALLET_PROJECT_ID;
 
-const { publicClient, webSocketPublicClient, chains } = configureChains(
-  [mainnet, goerli],
-  [
-    jsonRpcProvider({
-      rpc: (chain) => ({
-        http: rpc[chain.id],
-      }),
-    }),
-    w3mProvider({ projectId }),
-  ],
-);
+const mainnetChain = {
+  ...mainnet,
+  explorerUrl: RPC_URLS[1],
+};
 
-export const wagmiConfig = createConfig({
-  autoConnect: true,
-  logger: { warn: null },
-  connectors: [
-    ...w3mConnectors({
+// set chains
+const chains = [mainnetChain];
+
+// metadata
+const metadata = {
+  name: 'My Website',
+  description: 'My Website description',
+  url: 'https://mywebsite.com',
+  icons: ['https://avatars.mywebsite.com/'],
+};
+
+const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata });
+
+export function Web3Modal({ children }) {
+  useEffect(() => {
+    createWeb3Modal({
+      wagmiConfig,
+      chains,
       projectId,
-      version: 2, // v2 of wallet connect
-      chains,
-    }),
-    new SafeConnector({
-      chains,
-      options: {
-        allowedDomains: [/gnosis-safe.io$/, /app.safe.global$/],
-        debug: false,
+      themeMode: 'light',
+      themeVariables: {
+        '--w3m-button-border-radius': '5px',
+        '--w3m-accent-color': COLOR.PRIMARY,
+        '--w3m-background-color': COLOR.PRIMARY,
       },
-    }),
-  ],
-  publicClient,
-  webSocketPublicClient,
-});
+    });
+  }, []);
 
-export const ethereumClient = new EthereumClient(wagmiConfig, chains);
+  return <WagmiConfig config={wagmiConfig}>{children}</WagmiConfig>;
+}
