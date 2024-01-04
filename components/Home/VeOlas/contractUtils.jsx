@@ -11,30 +11,39 @@ import {
 const ESTIMATED_GAS_LIMIT = 500_000;
 const GAS_ESTIMATION_BUFFER = 1;
 
-export const updateIncreaseAmount = async ({ amount, account }) => {
-  const contract = getVeolasContract();
-
-  // default gas limit
+const getEstimatedGasLimit = async (contract, method, params, account) => {
   let finalEstimatedGas = ESTIMATED_GAS_LIMIT;
 
   try {
-    const estimatedGas = await contract.methods
-      .increaseAmount(amount)
-      .estimateGas({ from: account });
+    const estimatedGas = await contract.methods[method](...params).estimateGas({
+      from: account,
+    });
 
     // add a buffer to the estimated gas
     finalEstimatedGas = Math.floor(estimatedGas * GAS_ESTIMATION_BUFFER);
   } catch (error) {
     window.console.warn(
-      `Error occured on estimating gas for increasing lock, defaulting to ${finalEstimatedGas}`,
+      `Error occured on estimating gas for ${method}, defaulting to ${finalEstimatedGas}`,
     );
   }
 
+  return finalEstimatedGas;
+};
+
+export const updateIncreaseAmount = async ({ amount, account }) => {
+  const contract = getVeolasContract();
+
   try {
+    const estimatedGas = await getEstimatedGasLimit(
+      contract,
+      'increaseAmount',
+      [amount],
+    );
+
     // send the transaction with the estimated gas limit
     const fn = contract.methods
       .increaseAmount(amount)
-      .send({ from: account, gasLimit: finalEstimatedGas });
+      .send({ from: account, gasLimit: estimatedGas });
 
     const response = await sendTransaction(fn, account);
     return response?.transactionHash;
@@ -52,25 +61,17 @@ export const updateIncreaseAmount = async ({ amount, account }) => {
 export const updateIncreaseUnlockTime = async ({ time, account }) => {
   const contract = getVeolasContract();
 
-  let finalEstimatedGas = ESTIMATED_GAS_LIMIT;
-
   try {
-    const estimatedGas = await contract.methods
-      .increaseUnlockTime(time)
-      .estimateGas({ from: account });
-
-    // add a buffer to the estimated gas
-    finalEstimatedGas = Math.floor(estimatedGas * GAS_ESTIMATION_BUFFER);
-  } catch (error) {
-    window.console.warn(
-      `Error occured on estimating gas for increasing unlock time, defaulting to ${finalEstimatedGas}`,
+    const estimatedGas = await getEstimatedGasLimit(
+      contract,
+      'increaseUnlockTime',
+      [time],
+      account,
     );
-  }
 
-  try {
     const fn = contract.methods
       .increaseUnlockTime(time)
-      .send({ from: account, gasLimit: finalEstimatedGas });
+      .send({ from: account, gasLimit: estimatedGas });
     const response = await sendTransaction(fn, account);
     return response?.transactionHash;
   } catch (error) {
@@ -131,25 +132,17 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
 export const createLockRequest = async ({ amount, unlockTime, account }) => {
   const contract = getVeolasContract();
 
-  // estimate the gas limit
-  let finalEstimatedGas = ESTIMATED_GAS_LIMIT;
   try {
-    const estimatedGas = await contract.methods
-      .createLock(amount, unlockTime)
-      .estimateGas({ from: account });
-
-    // add a buffer to the estimated gas
-    finalEstimatedGas = Math.floor(estimatedGas * GAS_ESTIMATION_BUFFER);
-  } catch (error) {
-    window.console.warn(
-      `Error occured on estimating gas for creating lock, defaulting to ${finalEstimatedGas}`,
+    const estimatedGas = await getEstimatedGasLimit(
+      contract,
+      'createLock',
+      [amount, unlockTime],
+      account,
     );
-  }
 
-  try {
     const fn = contract.methods
       .createLock(amount, unlockTime)
-      .send({ from: account, gasLimit: finalEstimatedGas });
+      .send({ from: account, gasLimit: estimatedGas });
 
     const response = await sendTransaction(fn, account);
     return response?.transactionHash;
@@ -165,23 +158,17 @@ export const createLockRequest = async ({ amount, unlockTime, account }) => {
 export const withdrawVeolasRequest = async ({ account }) => {
   const contract = getVeolasContract();
 
-  // estimate the gas limit
-  let finalEstimatedGas = ESTIMATED_GAS_LIMIT;
   try {
-    const estimatedGas = await contract.methods
-      .withdraw()
-      .estimateGas({ from: account });
-
-    // add a buffer to the estimated gas
-    finalEstimatedGas = Math.floor(estimatedGas * GAS_ESTIMATION_BUFFER);
-  } catch (error) {
-    window.console.warn(
-      `Error occured on estimating gas for withdraw, defaulting to ${finalEstimatedGas}`,
+    const estimatedGas = await getEstimatedGasLimit(
+      contract,
+      'withdraw',
+      [],
+      account,
     );
-  }
 
-  try {
-    const fn = contract.methods.withdraw().send({ from: account });
+    const fn = contract.methods
+      .withdraw()
+      .send({ from: account, gasLimit: estimatedGas });
     const response = sendTransaction(fn, account);
     return response?.transactionHash;
   } catch (error) {
