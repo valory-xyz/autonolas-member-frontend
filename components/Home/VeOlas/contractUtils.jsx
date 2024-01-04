@@ -9,7 +9,7 @@ import {
 } from 'common-util/Contracts';
 
 const ESTIMATED_GAS_LIMIT = 500_000;
-const GAS_ESTIMATION_BUFFER = 0.6;
+const GAS_ESTIMATION_BUFFER = 1;
 
 export const updateIncreaseAmount = async ({ amount, account }) => {
   const contract = getVeolasContract();
@@ -49,20 +49,35 @@ export const updateIncreaseAmount = async ({ amount, account }) => {
 /**
  * Increase Unlock time
  */
-export const updateIncreaseUnlockTime = ({ time, account }) => new Promise((resolve, reject) => {
+export const updateIncreaseUnlockTime = async ({ time, account }) => {
   const contract = getVeolasContract();
 
-  const fn = contract.methods
-    .increaseUnlockTime(time)
-    .send({ from: account });
+  let finalEstimatedGas = ESTIMATED_GAS_LIMIT;
 
-  sendTransaction(fn, account)
-    .then((response) => resolve(response?.transactionHash))
-    .catch((e) => {
-      window.console.log('Error occured on increasing unlock time');
-      reject(e);
-    });
-});
+  try {
+    const estimatedGas = await contract.methods
+      .increaseUnlockTime(time)
+      .estimateGas({ from: account });
+
+    // add a buffer to the estimated gas
+    finalEstimatedGas = Math.floor(estimatedGas * GAS_ESTIMATION_BUFFER);
+  } catch (error) {
+    window.console.warn(
+      `Error occured on estimating gas for increasing unlock time, defaulting to ${finalEstimatedGas}`,
+    );
+  }
+
+  try {
+    const fn = contract.methods
+      .increaseUnlockTime(time)
+      .send({ from: account, gasLimit: finalEstimatedGas });
+    const response = await sendTransaction(fn, account);
+    return response?.transactionHash;
+  } catch (error) {
+    window.console.log('Error occured on increasing unlock time');
+    throw error;
+  }
+};
 
 /**
  * Check if `Approve` button can be clicked; `allowance` returns 0 or
@@ -116,9 +131,8 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
 export const createLockRequest = async ({ amount, unlockTime, account }) => {
   const contract = getVeolasContract();
 
-  // default gas limit
+  // estimate the gas limit
   let finalEstimatedGas = ESTIMATED_GAS_LIMIT;
-
   try {
     const estimatedGas = await contract.methods
       .createLock(amount, unlockTime)
@@ -144,21 +158,37 @@ export const createLockRequest = async ({ amount, unlockTime, account }) => {
     throw error;
   }
 };
+
 /**
  * Withdraw VeOlas
  */
-export const withdrawVeolasRequest = ({ account }) => new Promise((resolve, reject) => {
+export const withdrawVeolasRequest = async ({ account }) => {
   const contract = getVeolasContract();
 
-  const fn = contract.methods.withdraw().send({ from: account });
+  // estimate the gas limit
+  let finalEstimatedGas = ESTIMATED_GAS_LIMIT;
+  try {
+    const estimatedGas = await contract.methods
+      .withdraw()
+      .estimateGas({ from: account });
 
-  sendTransaction(fn, account)
-    .then((response) => resolve(response?.transactionHash))
-    .catch((e) => {
-      window.console.log('Error occured on withdrawing veOlas');
-      reject(e);
-    });
-});
+    // add a buffer to the estimated gas
+    finalEstimatedGas = Math.floor(estimatedGas * GAS_ESTIMATION_BUFFER);
+  } catch (error) {
+    window.console.warn(
+      `Error occured on estimating gas for withdraw, defaulting to ${finalEstimatedGas}`,
+    );
+  }
+
+  try {
+    const fn = contract.methods.withdraw().send({ from: account });
+    const response = sendTransaction(fn, account);
+    return response?.transactionHash;
+  } catch (error) {
+    window.console.log('Error occured on withdrawing veOlas');
+    throw error;
+  }
+};
 
 /**
  * transfer OLAS to account
