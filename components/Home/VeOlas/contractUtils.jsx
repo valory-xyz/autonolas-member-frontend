@@ -8,19 +8,22 @@ import {
   getContractAddress,
 } from 'common-util/Contracts';
 
+const ESTIMATED_GAS_LIMIT = 500_000;
+const GAS_ESTIMATION_BUFFER = 0.6;
+
 export const updateIncreaseAmount = async ({ amount, account }) => {
   const contract = getVeolasContract();
 
   // default gas limit
-  let finalEstimatedGas = 500_000;
+  let finalEstimatedGas = ESTIMATED_GAS_LIMIT;
 
   try {
     const estimatedGas = await contract.methods
       .increaseAmount(amount)
       .estimateGas({ from: account });
 
-    // add a buffer to the estimated gas (20% buffer)
-    finalEstimatedGas = Math.floor(estimatedGas * 1.2);
+    // add a buffer to the estimated gas
+    finalEstimatedGas = Math.floor(estimatedGas * GAS_ESTIMATION_BUFFER);
   } catch (error) {
     window.console.warn(
       `Error occured on estimating gas for increasing lock, defaulting to ${finalEstimatedGas}`,
@@ -114,15 +117,15 @@ export const createLockRequest = async ({ amount, unlockTime, account }) => {
   const contract = getVeolasContract();
 
   // default gas limit
-  let finalEstimatedGas = 500_000;
+  let finalEstimatedGas = ESTIMATED_GAS_LIMIT;
 
   try {
     const estimatedGas = await contract.methods
       .createLock(amount, unlockTime)
       .estimateGas({ from: account });
 
-    // add a buffer to the estimated gas (20% buffer)
-    finalEstimatedGas = Math.floor(estimatedGas * 1.2);
+    // add a buffer to the estimated gas
+    finalEstimatedGas = Math.floor(estimatedGas * GAS_ESTIMATION_BUFFER);
   } catch (error) {
     window.console.warn(
       `Error occured on estimating gas for creating lock, defaulting to ${finalEstimatedGas}`,
