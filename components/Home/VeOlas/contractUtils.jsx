@@ -7,39 +7,67 @@ import {
 } from 'common-util/Contracts';
 import { MAX_AMOUNT, parseEther, sendTransaction } from 'common-util/functions';
 
-/**
- * Increase Amount
- */
-export const updateIncreaseAmount = ({ amount, account }) => new Promise((resolve, reject) => {
+const ESTIMATED_GAS_LIMIT = 500_000;
+
+const getEstimatedGasLimit = async (fn, account) => {
+  if (!account) {
+    throw new Error('Invalid account passed to estimate gas limit');
+  }
+
+  try {
+    const estimatedGas = await fn.estimateGas({ from: account });
+    return Math.floor(estimatedGas);
+  } catch (error) {
+    window.console.warn(
+      `Error occured on estimating gas, defaulting to ${ESTIMATED_GAS_LIMIT}`,
+    );
+  }
+
+  return ESTIMATED_GAS_LIMIT;
+};
+
+export const updateIncreaseAmount = async ({ amount, account }) => {
   const contract = getVeolasContract();
 
-  const fn = contract.methods.increaseAmount(amount).send({ from: account });
+  try {
+    const increaseAmountFn = contract.methods.increaseAmount(amount);
+    const estimatedGas = await getEstimatedGasLimit(increaseAmountFn, account);
+    const fn = increaseAmountFn.send({ from: account, gasLimit: estimatedGas });
 
-  sendTransaction(fn, account)
-    .then((response) => resolve(response?.transactionHash))
-    .catch((e) => {
-      window.console.log('Error occured on increasing amount');
-      reject(e);
-    });
-});
+    const response = await sendTransaction(fn, account);
+    return response?.transactionHash;
+  } catch (e) {
+    window.console.log(
+      'Error occurred on increasing amount with estimated gas',
+    );
+    throw e;
+  }
+};
 
 /**
  * Increase Unlock time
  */
-export const updateIncreaseUnlockTime = ({ time, account }) => new Promise((resolve, reject) => {
+export const updateIncreaseUnlockTime = async ({ time, account }) => {
   const contract = getVeolasContract();
 
-  const fn = contract.methods
-    .increaseUnlockTime(time)
-    .send({ from: account });
+  try {
+    const increaseUnlockTimeFn = contract.methods.increaseUnlockTime(time);
+    const estimatedGas = await getEstimatedGasLimit(
+      increaseUnlockTimeFn,
+      account,
+    );
 
-  sendTransaction(fn, account)
-    .then((response) => resolve(response?.transactionHash))
-    .catch((e) => {
-      window.console.log('Error occured on increasing unlock time');
-      reject(e);
+    const fn = increaseUnlockTimeFn.send({
+      from: account,
+      gasLimit: estimatedGas,
     });
-});
+    const response = await sendTransaction(fn, account);
+    return response?.transactionHash;
+  } catch (error) {
+    window.console.log('Error occured on increasing unlock time');
+    throw error;
+  }
+};
 
 /**
  * Check if `Approve` button can be clicked; `allowance` returns 0 or
@@ -93,24 +121,17 @@ export const approveOlasByOwner = async ({ account, chainId }) => {
  * Create lock
  */
 export const createLockRequest = async ({ amount, unlockTime, account }) => {
+  const contract = getVeolasContract();
+
   try {
-    const contract = getVeolasContract();
-
-    console.log({
-      amount,
-      unlockTime,
-      account,
-      contract,
-    });
-
-    const fn = contract.methods
-      .createLock(amount, unlockTime)
-      .send({ from: account });
+    const createLockFn = contract.methods.createLock(amount, unlockTime);
+    const estimatedGas = await getEstimatedGasLimit(createLockFn, account);
+    const fn = createLockFn.send({ from: account, gasLimit: estimatedGas });
 
     const response = await sendTransaction(fn, account);
     return response?.transactionHash;
   } catch (error) {
-    window.console.log('Error occured on creating lock');
+    window.console.log('Error occured on creating lock for veOlas');
     throw error;
   }
 };
@@ -118,18 +139,21 @@ export const createLockRequest = async ({ amount, unlockTime, account }) => {
 /**
  * Withdraw VeOlas
  */
-export const withdrawVeolasRequest = ({ account }) => new Promise((resolve, reject) => {
+export const withdrawVeolasRequest = async ({ account }) => {
   const contract = getVeolasContract();
 
-  const fn = contract.methods.withdraw().send({ from: account });
+  try {
+    const withdrawFn = contract.methods.withdraw();
+    const estimatedGas = await getEstimatedGasLimit(withdrawFn, account);
+    const fn = withdrawFn.send({ from: account, gasLimit: estimatedGas });
 
-  sendTransaction(fn, account)
-    .then((response) => resolve(response?.transactionHash))
-    .catch((e) => {
-      window.console.log('Error occured on withdrawing veOlas');
-      reject(e);
-    });
-});
+    const response = sendTransaction(fn, account);
+    return response?.transactionHash;
+  } catch (error) {
+    window.console.log('Error occured on withdrawing veOlas');
+    throw error;
+  }
+};
 
 /**
  * transfer OLAS to account
