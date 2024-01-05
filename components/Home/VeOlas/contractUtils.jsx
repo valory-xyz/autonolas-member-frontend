@@ -101,14 +101,6 @@ export const approveOlasByOwner = async ({ account, chainId }) => {
   const contract = getOlasContract();
   const spender = getContractAddress('veOlas', chainId);
 
-  console.log({
-    account,
-    spender,
-    MAX_AMOUNT,
-    contract,
-    chainId,
-  });
-
   const fn = contract.methods
     .approve(spender, MAX_AMOUNT)
     .send({ from: account });

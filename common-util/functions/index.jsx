@@ -1,13 +1,8 @@
 import { ethers } from 'ethers';
 import dayjs from 'dayjs';
 import { isNil, toLower } from 'lodash';
-
-import { NA } from 'common-util/constants';
-
 import {
-  isValidAddress,
-  getChainIdOrDefaultToMainnet as getChainIdOrDefaultToMainnetFn,
-  getIsValidChainId as getIsValidChainIdFn,
+  NA,
   sendTransaction as sendTransactionFn,
 } from '@autonolas/frontend-library';
 
@@ -79,31 +74,10 @@ export const getEthersProvider = () => {
   return new ethers.BrowserProvider(provider, 'any');
 };
 
-export const getIsValidChainId = (chainId) => getIsValidChainIdFn(SUPPORTED_CHAINS, chainId);
-
-export const getChainIdOrDefaultToMainnet = (chainId) => {
-  const x = getChainIdOrDefaultToMainnetFn(SUPPORTED_CHAINS, chainId);
-  return x;
-};
-
 export const sendTransaction = (fn, account) => sendTransactionFn(fn, account, {
   supportedChains: SUPPORTED_CHAINS,
   rpcUrls: RPC_URLS,
 });
-
-export const addressValidator = () => ({
-  validator(_, value) {
-    return isValidAddress(value)
-      ? Promise.resolve()
-      : Promise.reject(new Error('Please enter valid addresses.'));
-  },
-});
-
-// check if the provider is gnosis safe
-export const checkIfGnosisSafe = async (account, provider) => {
-  const code = await provider.getCode(account);
-  return code !== '0x';
-};
 
 /**
  * https://docs.ethers.org/v5/api/utils/constants/#constants-MaxUint256

@@ -26,24 +26,7 @@ const MyApp = ({ Component, pageProps }) => {
         <meta name="title" content="Manage your veOLAS and buOLAS" />
       </Head>
 
-      <ConfigProvider
-        theme={{
-          ...THEME_CONFIG,
-          components: {
-            ...THEME_CONFIG.components,
-            // Divider: {
-            //   ...THEME_CONFIG.components.Divider,
-            //   verticalMarginInline: '16px',
-            //   margin: '8px',
-            // },
-            DatePicker: {
-              ...THEME_CONFIG.components.Calendar,
-              // cellHeight: '16px',
-              // cellWidth: '16px',
-            },
-          },
-        }}
-      >
+      <ConfigProvider theme={THEME_CONFIG}>
         {isNotLegal ? (
           <Component {...pageProps} />
         ) : (

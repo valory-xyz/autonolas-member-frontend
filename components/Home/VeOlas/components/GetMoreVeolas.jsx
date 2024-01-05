@@ -21,7 +21,6 @@ import {
 import { useFetchBalances } from '../hooks';
 import { CreateLockContainer } from '../styles';
 import ProjectedVeolas from './ProjectedVeolas';
-// import { useCreateLock } from './useCreateLock';
 
 export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
   const [form] = Form.useForm();
@@ -35,8 +34,6 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
 
   const amountInEth = Form.useWatch('amount', form);
   const unlockTimeInSeconds = dateInSeconds(Form.useWatch('unlockTime', form));
-
-  // const { write } = useCreateLock();
 
   useEffect(() => {
     if (account && chainId) {
@@ -70,14 +67,12 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
         chainId,
         amount,
       });
-      // const hasSufficientTokens = true;
 
       // Approve can be clicked only once. Meaning, the user
       // will approve the maximum token, and no need to do it again.
       // Hence, if user has sufficient tokens, create lock without approval
       if (hasSufficientTokens) {
         await createLockHelper();
-        // await write();
       } else {
         setIsApproveModalVisible(true);
       }
