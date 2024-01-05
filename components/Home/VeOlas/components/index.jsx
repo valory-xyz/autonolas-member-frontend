@@ -7,11 +7,8 @@ import { notifySuccess, notifyError } from '@autonolas/frontend-library';
 
 import { withdrawVeolasRequest } from '../contractUtils';
 import { useFetchBalances, useVeolasComponents } from '../hooks';
-
 import { IncreaseAmount } from './IncreaseAmount';
 import { IncreaseUnlockTime } from './IncreaseUnlockTime';
-
-const { TabPane } = Tabs;
 
 export const VeolasManage = ({ isModalVisible, setIsModalVisible }) => {
   const { account, canWithdrawVeolas, getData } = useFetchBalances();
@@ -93,14 +90,25 @@ export const VeolasManage = ({ isModalVisible, setIsModalVisible }) => {
           onCancel={() => setIsModalVisible(false)}
           style={{ top: 60 }}
         >
-          <Tabs defaultActiveKey="1">
-            <TabPane tab="By OLAS Amount" key="1">
-              <IncreaseAmount closeModal={closeModalOnSuccess} />
-            </TabPane>
-            <TabPane tab="By Lock Duration" key="2">
-              <IncreaseUnlockTime closeModal={closeModalOnSuccess} />
-            </TabPane>
-          </Tabs>
+          <Tabs
+            defaultActiveKey="by_olas_amount"
+            items={[
+              {
+                key: 'by_olas_amount',
+                tabKey: 'by_olas_amount',
+                label: 'By OLAS Amount',
+                children: <IncreaseAmount closeModal={closeModalOnSuccess} />,
+              },
+              {
+                key: 'by_lock_duration',
+                tabKey: 'by_lock_duration',
+                label: 'By Lock Duration',
+                children: (
+                  <IncreaseUnlockTime closeModal={closeModalOnSuccess} />
+                ),
+              },
+            ]}
+          />
         </Modal>
       )}
     </>

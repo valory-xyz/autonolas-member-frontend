@@ -82,11 +82,11 @@ export const hasSufficientTokensRequest = ({ account, chainId, amount }) => new 
     .allowance(account, spender)
     .call()
     .then((response) => {
-      const responseInBg = ethers.toBigInt(response);
-      const amountInBg = ethers.parseUnits(`${amount}`);
+      const responseInBg = ethers.BigNumber.from(response);
+      const amountInBg = ethers.utils.parseUnits(`${amount}`);
 
       // check if the allowance is greater than the amount input
-      resolve(responseInBg > amountInBg);
+      resolve(responseInBg.gt(amountInBg));
     })
     .catch((e) => {
       window.console.log('Error occured on calling `allowance` method');
@@ -97,7 +97,7 @@ export const hasSufficientTokensRequest = ({ account, chainId, amount }) => new 
 /**
  * Approve amount of OLAS to be used
  */
-export const approveOlasByOwner = async ({ account, chainId }) => {
+export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve, reject) => {
   const contract = getOlasContract();
   const spender = getContractAddress('veOlas', chainId);
 
@@ -105,9 +105,15 @@ export const approveOlasByOwner = async ({ account, chainId }) => {
     .approve(spender, MAX_AMOUNT)
     .send({ from: account });
 
-  const response = await sendTransaction(fn, account);
-  return response;
-};
+  sendTransaction(fn, account)
+    .then((response) => {
+      resolve(response);
+    })
+    .catch((e) => {
+      window.console.log('Error occured on approving OLAS by owner');
+      reject(e);
+    });
+});
 
 /**
  * Create lock
