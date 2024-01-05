@@ -11,7 +11,7 @@ import { GetMoreOlasRow } from './styles';
 const { Title, Paragraph, Text } = Typography;
 
 export const VeOlas = () => {
-  const { canWithdrawVeolas, isMappedAmountZero } = useFetchBalances();
+  const { canWithdrawVeolas, isMappedAmountZero, isLoading } = useFetchBalances();
   const canIncreaseAmountOrUnlock = !isMappedAmountZero;
 
   const [isCreateLockModalVisible, setIsCreateLockModalVisible] = useState(false);
@@ -38,7 +38,7 @@ export const VeOlas = () => {
         <Space size="middle">
           <Button
             type="primary"
-            disabled={canWithdrawVeolas}
+            disabled={isLoading || canWithdrawVeolas}
             onClick={() => {
               // if the user has veolas, then show the modal to increase the amount
               // else show the modal to create a lock
