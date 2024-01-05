@@ -75,25 +75,21 @@ export const updateIncreaseUnlockTime = async ({ time, account }) => {
  * MAX_AMOUNT if already approved. Can read more
  * [here](https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#IERC20-allowance-address-address-).
  */
-export const hasSufficientTokensRequest = ({ account, chainId, amount }) => new Promise((resolve, reject) => {
+export const hasSufficientTokensRequest = async ({
+  account,
+  chainId,
+  amount,
+}) => {
   const contract = getOlasContract();
   const spender = getContractAddress('veOlas', chainId);
 
-  contract.methods
-    .allowance(account, spender)
-    .call()
-    .then((response) => {
-      const responseInBg = ethers.BigNumber.from(response);
-      const amountInBg = ethers.utils.parseUnits(`${amount}`);
+  const response = await contract.methods.allowance(account, spender).call();
+  const responseInBg = ethers.BigNumber.from(response);
+  const amountInBg = ethers.utils.parseUnits(`${amount}`);
 
-      // check if the allowance is greater than the amount input
-      resolve(responseInBg.gt(amountInBg));
-    })
-    .catch((e) => {
-      window.console.log('Error occured on calling `allowance` method');
-      reject(e);
-    });
-});
+  // check if the allowance is greater than the amount input
+  return responseInBg.gt(amountInBg);
+};
 
 /**
  * Approve amount of OLAS to be used

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Alert, Button, Form, Modal,
 } from 'antd/lib';
+// import { useContractRead } from 'wagmi';
 
 import {
   notifyError,
@@ -37,6 +38,13 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
 
   const amountInEth = Form.useWatch('amount', form);
   const unlockTimeInSeconds = dateInSeconds(Form.useWatch('unlockTime', form));
+
+  // const { data: agentHashes, isLoading: isSufficientTokensRequestLoading } = useContractRead({
+  //   abi: AGENT_REGISTRY_ABI,
+  //   address: AGENT_REGISTRY_ADDRESS_GNOSIS,
+  //   functionName: 'getHashes',
+  //   args: [],
+  // });
 
   useEffect(() => {
     if (account && chainId) {
