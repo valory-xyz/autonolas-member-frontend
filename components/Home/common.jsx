@@ -2,7 +2,7 @@
 import dayjs from 'dayjs';
 import {
   Form, InputNumber, DatePicker, Button, Typography,
-} from 'antd/lib';
+} from 'antd';
 import { range, isNil } from 'lodash';
 import { Shimmer } from 'common-util/Shimmer';
 import { getCommaSeparatedNumber } from 'common-util/functions';
@@ -17,7 +17,7 @@ export const getToken = ({ tokenName, token, isLoading = false }) => (
     <div className="info">
       <span className="token-name">{tokenName}</span>
       <span className="balance">
-        <>{isLoading ? <Shimmer /> : <>{token || '--'}</>}</>
+        {isLoading ? <Shimmer /> : <>{token || '--'}</>}
       </span>
     </div>
   </div>

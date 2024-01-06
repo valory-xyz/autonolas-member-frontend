@@ -1,28 +1,88 @@
 import { ethers } from 'ethers';
 import dayjs from 'dayjs';
-import { notification } from 'antd/lib';
-import { isNil, isString, toLower } from 'lodash';
+import { isNil, toLower } from 'lodash';
+import {
+  NA,
+  sendTransaction as sendTransactionFn,
+} from '@autonolas/frontend-library';
 
-import { COLOR } from 'util/theme';
-import { NA } from 'common-util/constants';
+import { RPC_URLS } from 'common-util/Contracts';
+import { SUPPORTED_CHAINS } from 'common-util/Login';
 import prohibitedAddresses from '../../data/prohibited-addresses.json';
+
+export const getModalProvider = () => window?.MODAL_PROVIDER;
+
+export const getWindowEthereum = () => window?.ethereum;
+
+export const getChainId = (chainId = null) => {
+  if (chainId) return chainId;
+
+  // chainId fetched from sessionStorage
+  const chainIdfromSessionStorage = typeof sessionStorage === 'undefined'
+    ? 1
+    : Number(sessionStorage.getItem('chainId'));
+
+  return chainIdfromSessionStorage || 1;
+};
+
+export const getProvider = () => {
+  const defaultChainId = getChainId();
+  const rpcUrl = RPC_URLS[defaultChainId];
+
+  if (!rpcUrl) {
+    throw new Error(`No RPC URL found for chainId: ${defaultChainId}`);
+  }
+
+  if (typeof window === 'undefined') {
+    console.warn(
+      'No provider found, fetching RPC URL from first supported chain',
+    );
+    return rpcUrl;
+  }
+
+  // connected via wallet-connect
+  const walletProvider = getModalProvider();
+  if (walletProvider) {
+    const walletConnectChainId = Number(walletProvider.chainId);
+
+    // if logged in via wallet-connect but chainId is not supported,
+    // default to mainnet (ie. Use JSON-RPC provider)
+    return walletConnectChainId === defaultChainId ? walletProvider : rpcUrl;
+  }
+
+  // NOT logged in but has wallet installed (eg. Metamask).
+  // If chainId is not supported, default to mainnet (ie. Use JSON-RPC provider)
+  const windowEthereum = getWindowEthereum();
+  if (windowEthereum?.chainId) {
+    const walletChainId = Number(windowEthereum.chainId);
+
+    return walletChainId === defaultChainId ? windowEthereum : rpcUrl;
+  }
+
+  // fallback to mainnet JSON RPC provider
+  return rpcUrl;
+};
+
+export const getEthersProvider = () => {
+  const provider = getProvider();
+
+  // if provider is a string, it is a JSON-RPC provider
+  if (typeof provider === 'string') {
+    return new ethers.providers.JsonRpcProvider(provider);
+  }
+
+  return new ethers.providers.Web3Provider(provider, 'any');
+};
+
+export const sendTransaction = (fn, account) => sendTransactionFn(fn, account, {
+  supportedChains: SUPPORTED_CHAINS,
+  rpcUrls: RPC_URLS,
+});
 
 /**
  * https://docs.ethers.org/v5/api/utils/constants/#constants-MaxUint256
  */
 export const MAX_AMOUNT = ethers.constants.MaxUint256;
-
-export const getBalance = (account, p) => new Promise((resolve, reject) => {
-  p.eth
-    .getBalance(account)
-    .then((balance) => {
-      const balanceInEth = ethers.utils.formatEther(balance);
-      resolve(balanceInEth);
-    })
-    .catch((e) => {
-      reject(e);
-    });
-});
 
 /**
  *
@@ -56,17 +116,6 @@ export const getBlockTimestamp = async (block = 'latest') => {
   const temp = await window?.WEB3_PROVIDER.eth.getBlock(block);
   return temp.timestamp * 1;
 };
-
-export const notifyError = (message = 'Some error occured') => notification.error({
-  message,
-  style: { border: `1px solid ${COLOR.PRIMARY}` },
-});
-
-export const notifySuccess = (message = 'Successfull', description = null) => notification.success({
-  message,
-  description,
-  style: { border: `1px solid ${COLOR.PRIMARY}` },
-});
 
 /**
  * Converts a number to a compact format
@@ -133,11 +182,6 @@ export const getFormattedDate = (ms) => {
 export const getFullFormattedDate = (ms) => {
   if (!ms) return NA;
   return dayjs(ms).format("MMM DD 'YYYY, HH:mm");
-};
-
-export const getString = (x) => {
-  if (isNil(x)) return NA;
-  return isString(x) ? x : `${x}`;
 };
 
 export const isAddressProhibited = (address) => {

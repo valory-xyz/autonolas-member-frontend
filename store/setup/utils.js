@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+
 import { ethers } from 'ethers';
 import { formatToEth } from 'common-util/functions';
 

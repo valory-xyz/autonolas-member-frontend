@@ -1,12 +1,11 @@
 /* eslint-disable max-len */
 import { ethers } from 'ethers';
-import { sendTransaction } from '@autonolas/frontend-library';
-import { MAX_AMOUNT, parseEther } from 'common-util/functions';
 import {
   getVeolasContract,
   getOlasContract,
   getContractAddress,
 } from 'common-util/Contracts';
+import { MAX_AMOUNT, parseEther, sendTransaction } from 'common-util/functions';
 
 const ESTIMATED_GAS_LIMIT = 500_000;
 

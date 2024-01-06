@@ -1,5 +1,5 @@
 import styled, { createGlobalStyle } from 'styled-components';
-import { MEDIA_QUERY, COLOR } from 'util/theme';
+import { MEDIA_QUERY, COLOR } from '@autonolas/frontend-library';
 
 const ANTD_COLOR = {
   borderColor: '#f0f0f0',

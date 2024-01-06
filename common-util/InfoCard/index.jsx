@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Typography, Tooltip } from 'antd/lib';
+import { Typography, Tooltip } from 'antd';
 import { COLOR } from '@autonolas/frontend-library';
 import { Shimmer } from '../Shimmer';
 
@@ -39,13 +39,12 @@ export const InfoCard = ({
   avoidLogin = false,
   ...rest
 }) => {
-  const isLoggedIn = avoidLogin
-    ? true
-    : !!useSelector((state) => state?.setup?.account);
+  const account = useSelector((state) => state?.setup?.account);
+  const isLoggedIn = avoidLogin ? true : !!account;
 
   return (
     <InfoCardContainer {...rest}>
-      {!hideTitle && <Title level={5}>{title || ''}</Title>}
+      {!hideTitle && <Title level={5} style={{ marginTop: 16 }}>{title || ''}</Title>}
 
       <ValueText>
         {isLoading ? (

@@ -1,10 +1,9 @@
-import { sendTransaction } from '@autonolas/frontend-library';
 import {
   getContractAddress,
   getBuolasContract,
   getOlasContract,
 } from 'common-util/Contracts';
-import { MAX_AMOUNT, parseEther } from 'common-util/functions';
+import { MAX_AMOUNT, parseEther, sendTransaction } from 'common-util/functions';
 
 const SIGNER_ADDRESS = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8';
 

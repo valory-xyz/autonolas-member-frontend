@@ -1,4 +1,4 @@
-import { Typography } from 'antd/lib';
+import { Typography } from 'antd';
 // import { BuolasCreateLock } from './components/AddToLock';
 import { BuolasManage } from './components/BuolasManage';
 

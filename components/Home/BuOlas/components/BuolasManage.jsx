@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import { Button, Row, Col } from 'antd/lib';
+import { Button, Row, Col } from 'antd';
+import { notifySuccess, notifyError } from '@autonolas/frontend-library';
+
 import {
   getFormattedNumber,
   getFormattedDate,
   getCommaSeparatedNumber,
   getFullFormattedDate,
-  notifySuccess,
-  notifyError,
 } from 'common-util/functions';
 import { InfoCard } from 'common-util/InfoCard';
 import { withdrawRequest } from '../contractUtils';

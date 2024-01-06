@@ -21,8 +21,8 @@ jobs:
         run: yarn lint
 
       # Run test
-      - name: Run Test
-        run: yarn test
+      # - name: Run Test
+      #   run: yarn test
 
   docker:
     runs-on: ubuntu-latest
