@@ -83,6 +83,7 @@ export const hasSufficientTokensRequest = ({ account, chainId, amount }) => new 
     .call()
     .then((response) => {
       const responseInBg = ethers.BigNumber.from(response);
+
       // Resolve false if the response amount is zero
       if (responseInBg.isZero()) {
         resolve(false);

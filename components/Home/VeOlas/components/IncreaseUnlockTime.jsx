@@ -1,28 +1,56 @@
 import { useState } from 'react';
+import { ethers } from 'ethers';
 import PropTypes from 'prop-types';
 import {
   Alert, Button, Divider, Form, Modal,
 } from 'antd/lib';
-import { ethers } from 'ethers';
 
-import { notifyError, notifySuccess } from 'common-util/functions';
+import { notifyError, notifySuccess } from '@autonolas/frontend-library';
 import { parseToSeconds, FormItemDate, dateInSeconds } from '../../common';
-import { approveOlasByOwner, hasSufficientTokensRequest, updateIncreaseUnlockTime } from '../contractUtils';
+import {
+  approveOlasByOwner,
+  hasSufficientTokensRequest,
+  updateIncreaseUnlockTime,
+} from '../contractUtils';
+import ProjectedVeolas from './ProjectedVeolas';
 import { useFetchBalances, useVeolasComponents } from '../hooks';
 import { FormContainer } from '../styles';
-import ProjectedVeolas from './ProjectedVeolas';
 
 export const IncreaseUnlockTime = ({ closeModal }) => {
   const [form] = Form.useForm();
   const {
-    account, chainId, mappedEndTime, isMappedAmountZero, getData, mappedAmount,
+    account,
+    chainId,
+    mappedEndTime,
+    mappedAmount,
+    isMappedAmountZero,
+    getData,
   } = useFetchBalances();
+  const { getUnlockTimeComponent } = useVeolasComponents();
+
   const [isLoading, setIsLoading] = useState(false);
   const [isApproving, setIsApproving] = useState(false);
   const [isApproveModalVisible, setIsApproveModalVisible] = useState(false);
 
-  const { getUnlockTimeComponent } = useVeolasComponents();
   const unlockTimeInSeconds = dateInSeconds(Form.useWatch('unlockTime', form));
+
+  const onApprove = async () => {
+    try {
+      setIsApproving(true);
+      const amountBN = ethers.utils.parseUnits(mappedAmount, 'ether');
+      await approveOlasByOwner({
+        account,
+        chainId,
+        amount: amountBN,
+      });
+    } catch (error) {
+      console.error(error);
+      notifyError();
+    } finally {
+      setIsApproving(false);
+      setIsApproveModalVisible(false);
+    }
+  };
 
   const onFinish = async (e) => {
     try {
@@ -55,10 +83,10 @@ export const IncreaseUnlockTime = ({ closeModal }) => {
 
       // close the modal after successful locking & loading state
       closeModal();
-      setIsLoading(false);
     } catch (error) {
       window.console.error(error);
       notifyError();
+    } finally {
       setIsLoading(false);
     }
   };
@@ -95,12 +123,12 @@ export const IncreaseUnlockTime = ({ closeModal }) => {
             </Button>
           </Form.Item>
         </Form>
-
       </FormContainer>
+
       {isApproveModalVisible && (
         <Modal
           title="Approve OLAS"
-          visible={isApproveModalVisible}
+          open={isApproveModalVisible}
           footer={null}
           onCancel={() => setIsApproveModalVisible(false)}
         >
@@ -115,22 +143,7 @@ export const IncreaseUnlockTime = ({ closeModal }) => {
               type="primary"
               htmlType="submit"
               loading={isApproving}
-              onClick={async () => {
-                try {
-                  setIsApproving(true);
-                  const amountBN = ethers.utils.parseUnits(mappedAmount, 'ether');
-                  await approveOlasByOwner({ account, chainId, amount: amountBN });
-                  setIsApproveModalVisible(false);
-
-                  setIsApproving(false);
-                } catch (error) {
-                  window.console.error(error);
-                  setIsApproveModalVisible(false);
-                  notifyError();
-                } finally {
-                  setIsApproving(false);
-                }
-              }}
+              onClick={onApprove}
             >
               Approve
             </Button>
