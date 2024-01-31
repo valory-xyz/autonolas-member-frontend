@@ -1,5 +1,6 @@
-import { Button, Typography } from 'antd/lib';
-import { notifyError, notifySuccess } from 'common-util/functions';
+import { Button, Typography } from 'antd';
+import { notifySuccess, notifyError } from '@autonolas/frontend-library';
+
 import { createBuolasLockRequest, approveOlasByOwner } from '../contractUtils';
 import { useFetchBuolasBalances } from '../hooks';
 import { CreateLockContainer } from '../styles';

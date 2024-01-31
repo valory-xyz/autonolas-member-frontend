@@ -2,11 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import {
-  Footer as CommonFooter,
-  getChainId,
-  isGoerli,
-} from '@autonolas/frontend-library';
+import { getChainId } from 'common-util/functions';
+import { Footer as CommonFooter, isGoerli } from '@autonolas/frontend-library';
 import { getContractAddress } from 'common-util/Contracts';
 import Socials from './Socials';
 import { ContractsInfoContainer } from './styles';
@@ -30,7 +27,7 @@ const ContractInfo = () => {
     if (!addressChainId) {
       setAddressChainId(getChainId());
     }
-  }, []);
+  }, [addressChainId]);
 
   if (!addressChainId) return <ContractsInfoContainer />;
 

@@ -1,7 +1,8 @@
-import { Divider, Statistic } from 'antd/lib';
-import { NA } from 'common-util/constants';
-import { getCommaSeparatedNumber } from 'common-util/functions';
+import { Divider, Statistic } from 'antd';
+import { NA } from '@autonolas/frontend-library';
 import PropTypes from 'prop-types';
+
+import { getCommaSeparatedNumber } from 'common-util/functions';
 
 const SECONDS_IN_A_YEAR = 31536000;
 
@@ -36,8 +37,13 @@ const ProjectedVeolas = ({ olasLockInEthUnits, unlockTimeInSeconds }) => {
 };
 
 ProjectedVeolas.propTypes = {
-  olasLockInEthUnits: PropTypes.number.isRequired,
-  unlockTimeInSeconds: PropTypes.number.isRequired,
+  olasLockInEthUnits: PropTypes.number,
+  unlockTimeInSeconds: PropTypes.number,
+};
+
+ProjectedVeolas.defaultProps = {
+  olasLockInEthUnits: 0,
+  unlockTimeInSeconds: 0,
 };
 
 export default ProjectedVeolas;

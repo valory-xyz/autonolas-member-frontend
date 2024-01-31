@@ -8,10 +8,10 @@ import {
   useAccount, useNetwork, useBalance, useDisconnect,
 } from 'wagmi';
 import styled from 'styled-components';
-import { COLOR, MEDIA_QUERY } from '@autonolas/frontend-library';
+import { COLOR, MEDIA_QUERY, notifyError } from '@autonolas/frontend-library';
 
 import { setUserBalance } from 'store/setup/actions';
-import { isAddressProhibited, notifyError } from 'common-util/functions';
+import { isAddressProhibited } from 'common-util/functions';
 import { projectId, ethereumClient } from './config';
 
 const LoginContainer = styled.div`
@@ -59,7 +59,7 @@ export const LoginV2 = ({
     if (balance?.formatted) {
       dispatch(setUserBalance(balance.formatted));
     }
-  }, [balance?.formatted]);
+  }, [balance?.formatted, dispatch]);
 
   useEffect(() => {
     const getData = async () => {
@@ -111,7 +111,7 @@ export const LoginV2 = ({
     if (connector && !isAddressProhibited(address)) {
       getData();
     }
-  }, [connector]);
+  }, [connector, address]);
 
   // Disconnect if the address is prohibited
   useEffect(() => {

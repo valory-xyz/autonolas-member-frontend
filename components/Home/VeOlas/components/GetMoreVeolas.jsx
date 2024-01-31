@@ -2,13 +2,10 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   Alert, Button, Form, Modal,
-} from 'antd/lib';
+} from 'antd';
+import { notifySuccess, notifyError } from '@autonolas/frontend-library';
 
-import {
-  notifyError,
-  notifySuccess,
-  parseToWei,
-} from 'common-util/functions';
+import { parseToWei } from 'common-util/functions';
 import {
   parseToSeconds,
   FormItemDate,
@@ -46,6 +43,7 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
 
   const createLockHelper = async () => {
     setIsLoading(true);
+
     const txHash = await createLockRequest({
       amount: parseToWei(form.getFieldValue('amount')),
       unlockTime: parseToSeconds(form.getFieldValue('unlockTime')),
@@ -148,7 +146,7 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
       {isApproveModalVisible && (
         <Modal
           title="Approve veOlas"
-          visible={isApproveModalVisible}
+          open={isApproveModalVisible}
           footer={null}
           onCancel={() => setIsApproveModalVisible(false)}
         >
