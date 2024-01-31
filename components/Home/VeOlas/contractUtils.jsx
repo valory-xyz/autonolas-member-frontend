@@ -84,10 +84,16 @@ export const hasSufficientTokensRequest = ({ account, chainId, amount }) => new 
     .call()
     .then((response) => {
       const responseInBg = ethers.BigNumber.from(response);
+      // Resolve false if the response amount is zero
+      if (responseInBg.isZero()) {
+        resolve(false);
+        return;
+      }
+
       const amountInBg = ethers.utils.parseUnits(`${amount}`);
 
-      // check if the allowance is greater than the amount input
-      resolve(responseInBg.gt(amountInBg));
+      // check if the allowance is greater than or equal to the amount input
+      resolve(responseInBg.gte(amountInBg));
     })
     .catch((e) => {
       window.console.log('Error occured on calling `allowance` method');
@@ -98,12 +104,12 @@ export const hasSufficientTokensRequest = ({ account, chainId, amount }) => new 
 /**
  * Approve amount of OLAS to be used
  */
-export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve, reject) => {
+export const approveOlasByOwner = ({ account, chainId, amount = MAX_AMOUNT }) => new Promise((resolve, reject) => {
   const contract = getOlasContract();
   const spender = getContractAddress('veOlas', chainId);
 
   const fn = contract.methods
-    .approve(spender, MAX_AMOUNT)
+    .approve(spender, amount)
     .send({ from: account });
 
   sendTransaction(fn, account)
