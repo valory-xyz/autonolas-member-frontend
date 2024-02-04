@@ -8,12 +8,11 @@ export const BuOlas = () => (
   <div>
     <Title>buOLAS</Title>
     <Paragraph style={{ maxWidth: 550 }}>
-      buOLAS is a vesting contract that allows locking and linear release of
-      OLAS tokens.&nbsp;
+      buOLAS is a locking contract that allows locking and step-wise release of locked OLAS.
+      {' '}
+      buOLAS is subject to governance risk: locked OLAS can be burned by governance.&nbsp;
     </Paragraph>
 
-    {/* BuOlas create won't be visible to the user & used interally */}
-    {/* <BuolasCreateLock /> */}
     <BuolasManage />
   </div>
 );
