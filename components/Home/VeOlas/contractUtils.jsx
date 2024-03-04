@@ -7,6 +7,7 @@ import {
 } from 'common-util/Contracts';
 import { MAX_AMOUNT, parseEther, sendTransaction } from 'common-util/functions';
 
+const { BigNumber } = ethers;
 const ESTIMATED_GAS_LIMIT = 500_000;
 
 const getEstimatedGasLimit = async (fn, account) => {
@@ -82,7 +83,7 @@ export const hasSufficientTokensRequest = ({ account, chainId, amount }) => new 
     .allowance(account, spender)
     .call()
     .then((response) => {
-      const responseInBg = ethers.BigNumber.from(response);
+      const responseInBg = BigNumber.from(response);
 
       // Resolve false if the response amount is zero
       if (responseInBg.isZero()) {
