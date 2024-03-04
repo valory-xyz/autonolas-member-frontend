@@ -7,7 +7,6 @@ import {
 } from 'common-util/Contracts';
 import { MAX_AMOUNT, parseEther, sendTransaction } from 'common-util/functions';
 
-const { BigNumber } = ethers;
 const ESTIMATED_GAS_LIMIT = 500_000;
 
 const getEstimatedGasLimit = async (fn, account) => {
@@ -83,18 +82,18 @@ export const hasSufficientTokensRequest = ({ account, chainId, amount }) => new 
     .allowance(account, spender)
     .call()
     .then((response) => {
-      const responseInBg = BigNumber.from(response);
+      const responseInBg = ethers.toBigInt(response);
 
       // Resolve false if the response amount is zero
-      if (responseInBg.isZero()) {
+      if (responseInBg === 0n) {
         resolve(false);
         return;
       }
 
-      const amountInBg = ethers.utils.parseUnits(`${amount}`);
+      const amountInBg = ethers.parseUnits(`${amount}`);
 
       // check if the allowance is greater than or equal to the amount input
-      resolve(responseInBg.gte(amountInBg));
+      resolve(responseInBg >= amountInBg);
     })
     .catch((e) => {
       window.console.log('Error occured on calling `allowance` method');

@@ -37,7 +37,7 @@ export const IncreaseUnlockTime = ({ closeModal }) => {
   const onApprove = async () => {
     try {
       setIsApproving(true);
-      const amountBN = ethers.utils.parseUnits(mappedAmount, 'ether');
+      const amountBN = ethers.parseUnits(mappedAmount, 'ether');
       await approveOlasByOwner({
         account,
         chainId,
