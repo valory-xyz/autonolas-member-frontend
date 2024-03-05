@@ -2,13 +2,10 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Web3 from 'web3';
 import PropTypes from 'prop-types';
-import { Button, Grid } from 'antd';
-import {
-  useAccount, useNetwork, useBalance, useDisconnect,
-} from 'wagmi';
+import { Grid } from 'antd';
+import { useAccount, useBalance, useDisconnect } from 'wagmi';
 import styled from 'styled-components';
-import { COLOR, MEDIA_QUERY, notifyError } from '@autonolas/frontend-library';
-import { useWeb3Modal } from '@web3modal/wagmi/react';
+import { MEDIA_QUERY, notifyError } from '@autonolas/frontend-library';
 
 import { setUserBalance } from 'store/setup/actions';
 import { isAddressProhibited } from 'common-util/functions';
@@ -28,7 +25,6 @@ const { useBreakpoint } = Grid;
 export const LoginV2 = ({
   onConnect: onConnectCb,
   onDisconnect: onDisconnectCb,
-  theme = 'light',
 }) => {
   const dispatch = useDispatch();
   const { disconnect } = useDisconnect();
@@ -135,16 +131,10 @@ export const LoginV2 = ({
 
   const screens = useBreakpoint();
 
-  const { open } = useWeb3Modal();
-
-  console.log('address:', address);
-
   return (
     <LoginContainer>
-      {/* <Button onClick={() => open()}>Open Connect Modal</Button> */}
-      {/* <Button onClick={() => open({ view: 'Networks' })}>Open Network Modal</Button> */}
       {/* <w3m-network-button /> */}
-      <w3m-button />
+      <w3m-button balance={screens.xs ? 'hide' : 'show'} />
     </LoginContainer>
   );
 };
@@ -152,11 +142,9 @@ export const LoginV2 = ({
 LoginV2.propTypes = {
   onConnect: PropTypes.func,
   onDisconnect: PropTypes.func,
-  theme: PropTypes.string,
 };
 
 LoginV2.defaultProps = {
   onConnect: undefined,
   onDisconnect: undefined,
-  theme: 'light',
 };

@@ -1,45 +1,42 @@
-/* eslint-disable react/prop-types */
+/* eslint-disable jest/require-hook */
 
 'use client';
 
-import React, { useEffect } from 'react';
-import { createWeb3Modal } from '@web3modal/wagmi/react';
+import PropTypes from 'prop-types';
+import { createWeb3Modal } from '@web3modal/wagmi/react'; /* eslint-disable-line import/no-unresolved */
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WagmiProvider } from 'wagmi';
 import { COLOR } from '@autonolas/frontend-library';
+
 import { wagmiConfig, projectId } from './config';
 
-// Setup queryClient
 const queryClient = new QueryClient();
 
 if (!projectId) throw new Error('Project ID is not defined');
 
-// Create modal
-
 createWeb3Modal({
   wagmiConfig,
   projectId,
-  // enableAnalytics: true, // Optional - defaults to your Cloud configuration
+  themeMode: 'light',
   themeVariables: {
     '--w3m-border-radius-master': '0.7125px',
     '--w3m-font-size-master': '11px',
     '--w3m-accent': COLOR.PRIMARY,
   },
-  themeMode: 'light',
 });
 
-export function ContextProvider({ children, initialState }) {
-  // useEffect(() => {
-  //   createWeb3Modal({
-  //     wagmiConfig,
-  //     projectId,
-  //     enableAnalytics: true, // Optional - defaults to your Cloud configuration
-  //   });
-  // }, []);
+export const ContextProvider = ({ children, initialState }) => (
+  <WagmiProvider config={wagmiConfig} initialState={initialState}>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  </WagmiProvider>
+);
 
-  return (
-    <WagmiProvider config={wagmiConfig} initialState={initialState}>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </WagmiProvider>
-  );
-}
+ContextProvider.propTypes = {
+  children: PropTypes.node,
+  initialState: PropTypes.shape({}),
+};
+
+ContextProvider.defaultProps = {
+  children: null,
+  initialState: null,
+};
