@@ -7,7 +7,7 @@ import {
 } from '@autonolas/frontend-library';
 
 import { RPC_URLS } from 'common-util/Contracts';
-import { SUPPORTED_CHAINS } from 'common-util/Login';
+import { SUPPORTED_CHAINS } from 'common-util/Login/config';
 import prohibitedAddresses from '../../data/prohibited-addresses.json';
 
 export const getModalProvider = () => window?.MODAL_PROVIDER;

@@ -2,17 +2,16 @@ import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Web3 from 'web3';
 import PropTypes from 'prop-types';
-import { Grid } from 'antd';
-import { Web3Modal, Web3Button, Web3NetworkSwitch } from '@web3modal/react';
+import { Button, Grid } from 'antd';
 import {
   useAccount, useNetwork, useBalance, useDisconnect,
 } from 'wagmi';
 import styled from 'styled-components';
 import { COLOR, MEDIA_QUERY, notifyError } from '@autonolas/frontend-library';
+import { useWeb3Modal } from '@web3modal/wagmi/react';
 
 import { setUserBalance } from 'store/setup/actions';
 import { isAddressProhibited } from 'common-util/functions';
-import { projectId, ethereumClient } from './config';
 
 const LoginContainer = styled.div`
   display: flex;
@@ -33,10 +32,8 @@ export const LoginV2 = ({
 }) => {
   const dispatch = useDispatch();
   const { disconnect } = useDisconnect();
-  const { chain } = useNetwork();
 
-  const chainId = chain?.id;
-  const { address, connector } = useAccount({
+  const { address, connector, chainId } = useAccount({
     onConnect: ({ address: currentAddress }) => {
       if (isAddressProhibited(currentAddress)) {
         disconnect();
@@ -138,25 +135,12 @@ export const LoginV2 = ({
 
   const screens = useBreakpoint();
 
+  const { open } = useWeb3Modal();
+
   return (
     <LoginContainer>
-      <Web3NetworkSwitch />
-      &nbsp;&nbsp;
-      <Web3Button
-        avatar="hide"
-        balance={screens.xs ? 'hide' : 'show'}
-        icon={screens.xs ? 'hide' : 'show'}
-      />
-      <Web3Modal
-        projectId={projectId}
-        ethereumClient={ethereumClient}
-        themeMode={theme}
-        themeVariables={{
-          '--w3m-button-border-radius': '5px',
-          '--w3m-accent-color': COLOR.PRIMARY,
-          '--w3m-background-color': COLOR.PRIMARY,
-        }}
-      />
+      <Button onClick={() => open()}>Open Connect Modal</Button>
+      <Button onClick={() => open({ view: 'Networks' })}>Open Network Modal</Button>
     </LoginContainer>
   );
 };

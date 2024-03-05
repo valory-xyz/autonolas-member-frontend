@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { useAccount, useNetwork, useBalance } from 'wagmi';
+import { useAccount, useBalance } from 'wagmi';
 import {
   setUserAccount as setUserAccountFn,
   setUserBalance as setUserBalanceFn,
@@ -9,7 +9,7 @@ import {
   setErrorMessage as setErrorMessageFn,
   setLogout as setLogoutFn,
 } from 'store/setup/actions';
-import { LoginV2 as LoginComponent } from 'common-util/Login';
+import { LoginV2 as LoginComponent } from 'common-util/Login/LoginV2';
 
 const Login = ({
   setUserAccount,
@@ -18,10 +18,8 @@ const Login = ({
   setErrorMessage,
   setLogout,
 }) => {
-  const { address } = useAccount();
-  const { chain } = useNetwork();
-  const chainId = chain?.id;
-  const { data } = useBalance({ address, chainId: chain?.id });
+  const { address, chainId } = useAccount();
+  const { data } = useBalance({ address, chainId });
 
   useEffect(() => {
     if (address) {

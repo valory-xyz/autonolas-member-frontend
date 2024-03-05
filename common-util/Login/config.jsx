@@ -1,49 +1,32 @@
-import {
-  EthereumClient,
-  w3mConnectors,
-  w3mProvider,
-} from '@web3modal/ethereum';
-import { configureChains, createConfig } from 'wagmi';
+import { cookieStorage, createStorage } from 'wagmi';
 import { mainnet, goerli } from 'wagmi/chains';
-import { SafeConnector } from 'wagmi/connectors/safe';
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
-import { RPC_URLS } from 'common-util/Contracts';
+import { defaultWagmiConfig } from '@web3modal/wagmi';
 
 export const projectId = process.env.NEXT_PUBLIC_WALLET_PROJECT_ID;
 
 export const SUPPORTED_CHAINS = [mainnet, goerli];
 
-const { publicClient, webSocketPublicClient, chains } = configureChains(
-  SUPPORTED_CHAINS,
-  [
-    jsonRpcProvider({
-      rpc: (chain) => ({
-        http: RPC_URLS[chain.id],
-      }),
-    }),
-    w3mProvider({ projectId }),
-  ],
-);
+if (!projectId) throw new Error('Project ID is not defined');
 
-export const wagmiConfig = createConfig({
-  autoConnect: true,
-  logger: { warn: null },
-  connectors: [
-    ...w3mConnectors({
-      projectId,
-      version: 2, // v2 of wallet connect
-      chains,
-    }),
-    new SafeConnector({
-      chains,
-      options: {
-        allowedDomains: [/gnosis-safe.io$/, /app.safe.global$/],
-        debug: false,
-      },
-    }),
-  ],
-  publicClient,
-  webSocketPublicClient,
+const metadata = {
+  name: 'Web3Modal',
+  description: 'Web3Modal Example',
+  url: 'https://web3modal.com', // origin must match your domain & subdomain
+  icons: ['https://avatars.githubusercontent.com/u/37784886'],
+};
+
+// Create wagmiConfig
+export const wagmiConfig = defaultWagmiConfig({
+  chains: [mainnet, goerli], // required
+  projectId, // required
+  metadata, // required
+  ssr: true,
+  storage: createStorage({
+    storage: cookieStorage,
+  }),
+  enableWalletConnect: true, // Optional - true by default
+  enableInjected: true, // Optional - true by default
+  enableEIP6963: true, // Optional - true by default
+  enableCoinbase: true, // Optional - true by default
+  // ...wagmiOptions, // Optional - Override createConfig parameters
 });
-
-export const ethereumClient = new EthereumClient(wagmiConfig, chains);
