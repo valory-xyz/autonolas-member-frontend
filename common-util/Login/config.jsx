@@ -13,26 +13,21 @@ export const SUPPORTED_CHAINS = [mainnet, goerli];
 if (!projectId) throw new Error('Project ID is not defined');
 
 const metadata = {
-  name: 'Web3Modal',
-  description: 'Web3Modal Example',
-  url: 'https://web3modal.com', // origin must match your domain & subdomain
+  name: 'Autonolas Member',
+  description: 'Manage your veOLAS and buOLAS',
+  url: 'https://member.autonolas.network/',
   icons: ['https://avatars.githubusercontent.com/u/37784886'],
 };
 
-// Create wagmiConfig
+/**
+ * @type {import('@web3modal/wagmi').WagmiOptions}
+ */
 export const wagmiConfig = defaultWagmiConfig({
   chains: [mainnet, goerli], // required
-  projectId, // required
-  metadata, // required
+  projectId,
+  metadata,
   ssr: true,
-  storage: createStorage({
-    storage: cookieStorage,
-  }),
-  enableWalletConnect: true, // Optional - true by default
-  enableInjected: true, // Optional - true by default
-  enableEIP6963: true, // Optional - true by default
-  enableCoinbase: true, // Optional - true by default
-  // ...wagmiOptions, // Optional - Override createConfig parameters
+  storage: createStorage({ storage: cookieStorage }),
 });
 
 if (!projectId) throw new Error('Project ID is not defined');
