@@ -7,15 +7,17 @@ import { ConfigProvider } from 'antd';
 import PropTypes from 'prop-types';
 
 // web3modal and wagmi provider
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { WagmiProvider, cookieToInitialState } from 'wagmi';
 import { wagmiConfig } from 'common-util/Login/config';
-import { cookieToInitialState } from 'wagmi';
 
 import GlobalStyle from 'components/GlobalStyles';
 import Layout from 'components/Layout';
 import { THEME_CONFIG } from '@autonolas/frontend-library';
 import { useRouter } from 'next/router';
-import { ContextProvider } from 'common-util/Login';
 import initStore from '../store';
+
+const queryClient = new QueryClient();
 
 const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
@@ -34,11 +36,13 @@ const MyApp = ({ Component, pageProps }) => {
         {isNotLegal ? (
           <Component {...pageProps} />
         ) : (
-          <ContextProvider initialState={initialState}>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </ContextProvider>
+          <WagmiProvider config={wagmiConfig} initialState={initialState}>
+            <QueryClientProvider client={queryClient}>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </QueryClientProvider>
+          </WagmiProvider>
         )}
       </ConfigProvider>
     </>

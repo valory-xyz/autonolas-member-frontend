@@ -8,7 +8,7 @@ import {
   setErrorMessage,
   setLogout,
 } from 'store/setup/actions';
-import { LoginV2 as LoginComponent } from 'common-util/Login/LoginV2';
+import { LoginV2 as LoginComponent } from 'common-util/Login';
 
 const Login = () => {
   const { address, chainId } = useAccount();

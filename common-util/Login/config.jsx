@@ -1,6 +1,10 @@
+/* eslint-disable jest/require-hook */
 import { cookieStorage, createStorage } from 'wagmi';
 import { mainnet, goerli } from 'wagmi/chains';
 import { defaultWagmiConfig } from '@web3modal/wagmi';
+
+import { createWeb3Modal } from '@web3modal/wagmi/react'; /* eslint-disable-line import/no-unresolved */
+import { COLOR } from '@autonolas/frontend-library';
 
 export const projectId = process.env.NEXT_PUBLIC_WALLET_PROJECT_ID;
 
@@ -29,4 +33,17 @@ export const wagmiConfig = defaultWagmiConfig({
   enableEIP6963: true, // Optional - true by default
   enableCoinbase: true, // Optional - true by default
   // ...wagmiOptions, // Optional - Override createConfig parameters
+});
+
+if (!projectId) throw new Error('Project ID is not defined');
+
+createWeb3Modal({
+  wagmiConfig,
+  projectId,
+  themeMode: 'light',
+  themeVariables: {
+    '--w3m-border-radius-master': '0.7125px',
+    '--w3m-font-size-master': '11px',
+    '--w3m-accent': COLOR.PRIMARY,
+  },
 });
