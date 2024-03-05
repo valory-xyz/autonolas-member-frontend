@@ -137,10 +137,14 @@ export const LoginV2 = ({
 
   const { open } = useWeb3Modal();
 
+  console.log('address:', address);
+
   return (
     <LoginContainer>
-      <Button onClick={() => open()}>Open Connect Modal</Button>
-      <Button onClick={() => open({ view: 'Networks' })}>Open Network Modal</Button>
+      {/* <Button onClick={() => open()}>Open Connect Modal</Button> */}
+      {/* <Button onClick={() => open({ view: 'Networks' })}>Open Network Modal</Button> */}
+      {/* <w3m-network-button /> */}
+      <w3m-button />
     </LoginContainer>
   );
 };
