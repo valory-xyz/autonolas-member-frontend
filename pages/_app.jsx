@@ -1,6 +1,3 @@
-'use server';
-
-/* eslint-disable jest/require-hook */
 import Head from 'next/head';
 import { createWrapper } from 'next-redux-wrapper';
 import { ConfigProvider } from 'antd';
