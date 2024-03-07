@@ -1,6 +1,5 @@
-/* eslint-disable no-unused-vars */
 import Head from 'next/head';
-import { createWrapper } from 'next-redux-wrapper';
+import { Provider } from 'react-redux';
 import { ConfigProvider } from 'antd';
 import PropTypes from 'prop-types';
 
@@ -13,15 +12,15 @@ import GlobalStyle from 'components/GlobalStyles';
 import Layout from 'components/Layout';
 import { THEME_CONFIG } from '@autonolas/frontend-library';
 import { useRouter } from 'next/router';
-import initStore from '../store';
+import { wrapper } from '../store';
 
 const queryClient = new QueryClient();
 
-const MyApp = ({ Component, pageProps }) => {
+const MyApp = ({ Component, ...rest }) => {
   const router = useRouter();
   const isNotLegal = router.pathname === '/not-legal';
   const initialState = cookieToInitialState(wagmiConfig);
-  // const { store, props } = wrapper.useWrappedStore(rest);
+  const { store, props } = wrapper.useWrappedStore(rest);
 
   return (
     <>
@@ -31,19 +30,21 @@ const MyApp = ({ Component, pageProps }) => {
         <meta name="title" content="Manage your veOLAS and buOLAS" />
       </Head>
 
-      <ConfigProvider theme={THEME_CONFIG}>
-        {isNotLegal ? (
-          <Component {...pageProps} />
-        ) : (
-          <WagmiProvider config={wagmiConfig} initialState={initialState}>
-            <QueryClientProvider client={queryClient}>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </QueryClientProvider>
-          </WagmiProvider>
-        )}
-      </ConfigProvider>
+      <Provider store={store}>
+        <ConfigProvider theme={THEME_CONFIG}>
+          {isNotLegal ? (
+            <Component {...props.pageProps} />
+          ) : (
+            <WagmiProvider config={wagmiConfig} initialState={initialState}>
+              <QueryClientProvider client={queryClient}>
+                <Layout>
+                  <Component {...props.pageProps} />
+                </Layout>
+              </QueryClientProvider>
+            </WagmiProvider>
+          )}
+        </ConfigProvider>
+      </Provider>
     </>
   );
 };
@@ -62,5 +63,4 @@ MyApp.propTypes = {
   pageProps: PropTypes.shape({}).isRequired,
 };
 
-const wrapper = createWrapper(initStore);
 export default wrapper.withRedux(MyApp);

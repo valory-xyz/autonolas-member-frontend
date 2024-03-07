@@ -2,6 +2,7 @@ import {
   combineReducers, createStore, applyMiddleware, compose,
 } from 'redux';
 import thunk from 'redux-thunk';
+import { createWrapper } from 'next-redux-wrapper';
 import setup from './setup';
 
 const rootReducer = combineReducers({ setup });
@@ -20,5 +21,6 @@ const composedEnhancers = composeWithDevTools(
   ...enhancers,
 );
 
-const Store = () => createStore(rootReducer, composedEnhancers);
-export default Store;
+const makeStore = () => createStore(rootReducer, composedEnhancers);
+
+export const wrapper = createWrapper(makeStore, { debug: process.env.NODE_ENV === 'development' });
