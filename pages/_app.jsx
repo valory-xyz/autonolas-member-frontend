@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import Head from 'next/head';
 import { createWrapper } from 'next-redux-wrapper';
 import { ConfigProvider } from 'antd';
@@ -20,6 +21,7 @@ const MyApp = ({ Component, pageProps }) => {
   const router = useRouter();
   const isNotLegal = router.pathname === '/not-legal';
   const initialState = cookieToInitialState(wagmiConfig);
+  // const { store, props } = wrapper.useWrappedStore(rest);
 
   return (
     <>
@@ -33,13 +35,17 @@ const MyApp = ({ Component, pageProps }) => {
         {isNotLegal ? (
           <Component {...pageProps} />
         ) : (
-          <WagmiProvider config={wagmiConfig} initialState={initialState}>
-            <QueryClientProvider client={queryClient}>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </QueryClientProvider>
-          </WagmiProvider>
+          <>
+            <div>Works</div>
+
+            {/* <WagmiProvider config={wagmiConfig} initialState={initialState}>
+<QueryClientProvider client={queryClient}>
+  <Layout>
+    <Component {...pageProps} />
+  </Layout>
+</QueryClientProvider>
+</WagmiProvider> */}
+          </>
         )}
       </ConfigProvider>
     </>
