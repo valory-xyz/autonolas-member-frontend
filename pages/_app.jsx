@@ -16,7 +16,7 @@ import { wrapper } from '../store';
 
 const queryClient = new QueryClient();
 
-const MyApp = ({ Component, ...rest }) => {
+const App = ({ Component, ...rest }) => {
   const router = useRouter();
   const isNotLegal = router.pathname === '/not-legal';
   const initialState = cookieToInitialState(wagmiConfig);
@@ -49,7 +49,7 @@ const MyApp = ({ Component, ...rest }) => {
   );
 };
 
-MyApp.getInitialProps = async ({ Component, ctx }) => {
+App.getInitialProps = async ({ Component, ctx }) => {
   const pageProps = Component.getInitialProps
     ? await Component.getInitialProps(ctx)
     : {};
@@ -57,10 +57,10 @@ MyApp.getInitialProps = async ({ Component, ctx }) => {
   return { pageProps };
 };
 
-MyApp.propTypes = {
+App.propTypes = {
   Component: PropTypes.oneOfType([PropTypes.func, PropTypes.shape({})])
     .isRequired,
   pageProps: PropTypes.shape({}).isRequired,
 };
 
-export default wrapper.withRedux(MyApp);
+export default App;
