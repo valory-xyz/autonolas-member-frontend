@@ -35,17 +35,13 @@ const MyApp = ({ Component, pageProps }) => {
         {isNotLegal ? (
           <Component {...pageProps} />
         ) : (
-          <>
-            <div>Works</div>
-
-            {/* <WagmiProvider config={wagmiConfig} initialState={initialState}>
-<QueryClientProvider client={queryClient}>
-  <Layout>
-    <Component {...pageProps} />
-  </Layout>
-</QueryClientProvider>
-</WagmiProvider> */}
-          </>
+          <WagmiProvider config={wagmiConfig} initialState={initialState}>
+            <QueryClientProvider client={queryClient}>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </QueryClientProvider>
+          </WagmiProvider>
         )}
       </ConfigProvider>
     </>
