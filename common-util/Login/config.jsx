@@ -26,7 +26,7 @@ export const wagmiConfig = defaultWagmiConfig({
   chains: [mainnet, goerli], // required
   projectId,
   metadata,
-  ssr: true,
+  ssr: false,
   storage: createStorage({ storage: cookieStorage }),
 });
 
