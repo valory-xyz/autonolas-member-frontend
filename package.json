@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.22.11",
+    "@babel/preset-react": "^7.23.3",
     "@testing-library/jest-dom": "^6.1.2",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",

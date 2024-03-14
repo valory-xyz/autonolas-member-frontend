@@ -1,10 +1,30 @@
+/* eslint-disable no-param-reassign */
+
+const path = require('path');
+
+/**
+ * @type {import('next').NextConfig}
+ */
 module.exports = {
   reactStrictMode: true,
   compiler: {
     styledComponents: true,
+
   },
+  /**
+   *
+   * @param {import('webpack').Configuration} config
+   */
   webpack: (config) => {
     config.externals.push('pino-pretty', 'lokijs', 'encoding');
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@util': path.resolve(__dirname, 'util'),
+      '@common-util': path.resolve(__dirname, 'common-util'),
+      '@components': path.resolve(__dirname, 'components'),
+      '@images': path.resolve(__dirname, 'public/images'),
+      '@store': path.resolve(__dirname, 'store'),
+    };
     return config;
   },
   async headers() {
