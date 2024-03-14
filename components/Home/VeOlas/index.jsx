@@ -77,5 +77,3 @@ export const VeOlas = () => {
     </div>
   );
 };
-
-export default VeOlas;
