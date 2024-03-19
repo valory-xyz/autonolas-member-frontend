@@ -3,7 +3,7 @@ import {
   getBuolasContract,
   getOlasContract,
 } from 'common-util/Contracts';
-import { MAX_AMOUNT, parseEther, sendTransaction } from 'common-util/functions';
+import { MAX_AMOUNT, sendTransaction } from 'common-util/functions';
 
 const SIGNER_ADDRESS = '0x70997970C51812dc3A010C7d01b50e0d17dc79C8';
 
@@ -21,33 +21,6 @@ export const approveOlasByOwner = ({ account, chainId }) => new Promise((resolve
     })
     .catch((e) => {
       window.console.log('Error occured on approving buOLAS by owner');
-      reject(e);
-    });
-});
-
-/**
- * create lock for buOlas
- * NOTE: this is a internal method and won't be exposed or visible to the user
- */
-export const createBuolasLockRequest = ({ account }) => new Promise((resolve, reject) => {
-  const contract = getBuolasContract();
-
-  // creating lock for the signer with 100 ETH & locked for 4 years.
-  // address is fetched when BE is connected locally
-  const values = {
-    signer: SIGNER_ADDRESS,
-    amount: parseEther('100'),
-    numSteps: 4,
-  };
-
-  const fn = contract.methods
-    .createLockFor(values.signer, values.amount, values.numSteps)
-    .send({ from: account });
-
-  sendTransaction(fn, account)
-    .then((response) => resolve(response?.transactionHash))
-    .catch((e) => {
-      window.console.log('Error occured on creating buOlas lock');
       reject(e);
     });
 });
