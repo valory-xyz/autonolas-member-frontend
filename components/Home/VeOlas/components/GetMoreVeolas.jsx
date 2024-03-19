@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { ethers } from 'ethers';
 import {
   Alert, Button, Form, Modal,
 } from 'antd';
@@ -164,7 +165,16 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
               onClick={async () => {
                 try {
                   setIsLoading(true);
-                  await approveOlasByOwner({ account, chainId });
+
+                  const amountToApprove = ethers.utils.parseUnits(
+                    `${amountInEth}`,
+                    'ether',
+                  );
+                  await approveOlasByOwner({
+                    account,
+                    chainId,
+                    amount: amountToApprove,
+                  });
                   setIsApproveModalVisible(false);
 
                   // once approved, create lock
