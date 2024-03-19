@@ -27,13 +27,6 @@ export const BuolasManage = () => {
 
   const [isWithdrawLoading, setIsWithdrawLoading] = useState(false);
 
-  // uncomment this to revoke all vested OLAS (just for testing)
-  // useEffect(() => {
-  //   if (account && chainId) {
-  //     revokeRequest({ account });
-  //   }
-  // }, [account, chainId]);
-
   const onWithdraw = async () => {
     if (account && chainId) {
       setIsWithdrawLoading(true);
