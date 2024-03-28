@@ -1,11 +1,13 @@
 /* eslint-disable max-len */
 import { ethers } from 'ethers';
+import { notifyError } from '@autonolas/frontend-library';
+
 import {
   getVeolasContract,
   getOlasContract,
   getContractAddress,
 } from 'common-util/Contracts';
-import { MAX_AMOUNT, parseEther, sendTransaction } from 'common-util/functions';
+import { parseEther, sendTransaction } from 'common-util/functions';
 
 const ESTIMATED_GAS_LIMIT = 500_000;
 
@@ -70,9 +72,7 @@ export const updateIncreaseUnlockTime = async ({ time, account }) => {
 };
 
 /**
- * Check if `Approve` button can be clicked; `allowance` returns 0 or
- * MAX_AMOUNT if already approved. Can read more
- * [here](https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#IERC20-allowance-address-address-).
+ * Check if `Approve` button can be clicked; `allowance` should be greater than or equal to the amount
  */
 export const hasSufficientTokensRequest = ({ account, chainId, amount }) => new Promise((resolve, reject) => {
   const contract = getOlasContract();
@@ -104,7 +104,12 @@ export const hasSufficientTokensRequest = ({ account, chainId, amount }) => new 
 /**
  * Approve amount of OLAS to be used
  */
-export const approveOlasByOwner = ({ account, chainId, amount = MAX_AMOUNT }) => new Promise((resolve, reject) => {
+export const approveOlasByOwner = ({ account, chainId, amount }) => new Promise((resolve, reject) => {
+  if (!amount) {
+    notifyError('Amount is required to approve OLAS');
+    return;
+  }
+
   const contract = getOlasContract();
   const spender = getContractAddress('veOlas', chainId);
 

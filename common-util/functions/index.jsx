@@ -80,11 +80,6 @@ export const sendTransaction = (fn, account) => sendTransactionFn(fn, account, {
 });
 
 /**
- * https://docs.ethers.org/v5/api/utils/constants/#constants-MaxUint256
- */
-export const MAX_AMOUNT = ethers.MaxUint256;
-
-/**
  *
  * @param {BigNumebr} value value to be converted to Eth
  * @param {Number} dv Default value to be returned
