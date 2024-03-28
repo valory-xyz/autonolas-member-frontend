@@ -1,49 +1,44 @@
-import {
-  EthereumClient,
-  w3mConnectors,
-  w3mProvider,
-} from '@web3modal/ethereum';
-import { configureChains, createConfig } from 'wagmi';
+/* eslint-disable jest/require-hook */
+import { cookieStorage, createStorage } from 'wagmi';
 import { mainnet, goerli } from 'wagmi/chains';
-import { SafeConnector } from 'wagmi/connectors/safe';
-import { jsonRpcProvider } from 'wagmi/providers/jsonRpc';
-import { RPC_URLS } from 'common-util/Contracts';
+import { defaultWagmiConfig } from '@web3modal/wagmi';
+
+import { createWeb3Modal } from '@web3modal/wagmi/react'; /* eslint-disable-line import/no-unresolved */
+import { COLOR } from '@autonolas/frontend-library';
 
 export const projectId = process.env.NEXT_PUBLIC_WALLET_PROJECT_ID;
 
 export const SUPPORTED_CHAINS = [mainnet, goerli];
 
-const { publicClient, webSocketPublicClient, chains } = configureChains(
-  SUPPORTED_CHAINS,
-  [
-    jsonRpcProvider({
-      rpc: (chain) => ({
-        http: RPC_URLS[chain.id],
-      }),
-    }),
-    w3mProvider({ projectId }),
-  ],
-);
+if (!projectId) throw new Error('Project ID is not defined');
 
-export const wagmiConfig = createConfig({
-  autoConnect: true,
-  logger: { warn: null },
-  connectors: [
-    ...w3mConnectors({
-      projectId,
-      version: 2, // v2 of wallet connect
-      chains,
-    }),
-    new SafeConnector({
-      chains,
-      options: {
-        allowedDomains: [/gnosis-safe.io$/, /app.safe.global$/],
-        debug: false,
-      },
-    }),
-  ],
-  publicClient,
-  webSocketPublicClient,
+const metadata = {
+  name: 'Autonolas Member',
+  description: 'Manage your veOLAS and buOLAS',
+  url: 'https://member.autonolas.network/',
+  icons: ['https://avatars.githubusercontent.com/u/37784886'],
+};
+
+/**
+ * @type {import('@web3modal/wagmi').WagmiOptions}
+ */
+export const wagmiConfig = defaultWagmiConfig({
+  chains: [mainnet, goerli], // required
+  projectId,
+  metadata,
+  ssr: false,
+  storage: createStorage({ storage: cookieStorage }),
 });
 
-export const ethereumClient = new EthereumClient(wagmiConfig, chains);
+if (!projectId) throw new Error('Project ID is not defined');
+
+createWeb3Modal({
+  wagmiConfig,
+  projectId,
+  themeMode: 'light',
+  themeVariables: {
+    '--w3m-border-radius-master': '0.7125px',
+    '--w3m-font-size-master': '11px',
+    '--w3m-accent': COLOR.PRIMARY,
+  },
+});
