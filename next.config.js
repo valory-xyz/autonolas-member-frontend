@@ -19,11 +19,11 @@ module.exports = {
     config.externals.push('pino-pretty', 'lokijs', 'encoding');
     config.resolve.alias = {
       ...config.resolve.alias,
-      '@util': path.resolve(__dirname, 'util'),
-      '@common-util': path.resolve(__dirname, 'common-util'),
-      '@components': path.resolve(__dirname, 'components'),
-      '@images': path.resolve(__dirname, 'public/images'),
-      '@store': path.resolve(__dirname, 'store'),
+      util: path.resolve(__dirname, 'util'),
+      'common-util': path.resolve(__dirname, 'common-util'),
+      components: path.resolve(__dirname, 'components'),
+      images: path.resolve(__dirname, 'public/images'),
+      store: path.resolve(__dirname, 'store'),
     };
     return config;
   },
