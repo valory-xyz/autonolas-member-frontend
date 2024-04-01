@@ -9,8 +9,8 @@ import {
   getFullFormattedDate,
 } from 'common-util/functions';
 import { InfoCard } from 'common-util/InfoCard';
-import { withdrawRequest } from '../contractUtils';
-import { useFetchBuolasBalances } from '../hooks';
+import { withdrawRequest } from './contractUtils';
+import { useFetchBuolasBalances } from './hooks';
 
 export const BuolasManage = () => {
   const {
@@ -26,13 +26,6 @@ export const BuolasManage = () => {
   } = useFetchBuolasBalances();
 
   const [isWithdrawLoading, setIsWithdrawLoading] = useState(false);
-
-  // uncomment this to revoke all vested OLAS (just for testing)
-  // useEffect(() => {
-  //   if (account && chainId) {
-  //     revokeRequest({ account });
-  //   }
-  // }, [account, chainId]);
 
   const onWithdraw = async () => {
     if (account && chainId) {
