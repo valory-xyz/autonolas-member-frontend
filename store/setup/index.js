@@ -1,3 +1,4 @@
+import { HYDRATE } from 'next-redux-wrapper';
 import { apiTypes, syncTypes } from './_types';
 
 /**
@@ -42,6 +43,9 @@ const initialState = {
 
 export default (state = initialState, { data, type } = {}) => {
   switch (type) {
+    case HYDRATE:
+      return { ...state, ...data };
+
     case apiTypes.GET_API: {
       return { ...state, data };
     }

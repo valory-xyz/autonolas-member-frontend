@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "pages/**/*": {
+      "memory": 2000,
+      "maxDuration": 45
+    }
+  }
+}

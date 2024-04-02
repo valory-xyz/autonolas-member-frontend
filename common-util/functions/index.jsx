@@ -7,7 +7,7 @@ import {
 } from '@autonolas/frontend-library';
 
 import { RPC_URLS } from 'common-util/Contracts';
-import { SUPPORTED_CHAINS } from 'common-util/Login';
+import { SUPPORTED_CHAINS } from 'common-util/supportedChains';
 import prohibitedAddresses from '../../data/prohibited-addresses.json';
 
 export const getModalProvider = () => window?.MODAL_PROVIDER;
@@ -68,10 +68,10 @@ export const getEthersProvider = () => {
 
   // if provider is a string, it is a JSON-RPC provider
   if (typeof provider === 'string') {
-    return new ethers.providers.JsonRpcProvider(provider);
+    return new ethers.JsonRpcProvider(provider);
   }
 
-  return new ethers.providers.Web3Provider(provider, 'any');
+  return new ethers.FallbackProvider([provider]);
 };
 
 export const sendTransaction = (fn, account) => sendTransactionFn(fn, account, {
@@ -87,25 +87,25 @@ export const sendTransaction = (fn, account) => sendTransactionFn(fn, account, {
  */
 export const formatToEth = (value, dv = 0) => {
   if (isNil(value)) return dv || 0;
-  return (+ethers.utils.formatEther(value)).toFixed(2);
+  return (+ethers.formatEther(value)).toFixed(2);
 };
 
 /**
  * Same as `formatToEth` but doesn't fixes the decimal to 8
  * @returns {String} eg: 1000000000000000000 => 1
  */
-export const parseToEth = (amount) => (amount ? ethers.utils.formatEther(`${amount}`) : 0);
+export const parseToEth = (amount) => (amount ? ethers.formatEther(`${amount}`) : 0);
 
 /**
  * multiplies the amount by 10^18
  */
-export const parseToWei = (amount) => ethers.utils.parseUnits(`${amount}`, 18).toString();
+export const parseToWei = (amount) => ethers.parseUnits(`${amount}`, 18).toString();
 
 /**
  * parse eth to wei
  * example 1 => 1000000000000000000
  */
-export const parseEther = (n) => ethers.utils.parseEther(`${n}`);
+export const parseEther = (n) => ethers.parseEther(`${n}`);
 
 export const getBlockTimestamp = async (block = 'latest') => {
   const temp = await window?.WEB3_PROVIDER.eth.getBlock(block);
