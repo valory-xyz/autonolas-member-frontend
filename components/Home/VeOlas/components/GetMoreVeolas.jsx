@@ -166,7 +166,7 @@ export const GetMoreVeolas = ({ isModalVisible, setIsModalVisible }) => {
                 try {
                   setIsLoading(true);
 
-                  const amountToApprove = ethers.utils.parseUnits(
+                  const amountToApprove = ethers.parseUnits(
                     `${amountInEth}`,
                     'ether',
                   );
