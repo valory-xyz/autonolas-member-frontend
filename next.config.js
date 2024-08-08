@@ -9,7 +9,6 @@ module.exports = {
   reactStrictMode: true,
   compiler: {
     styledComponents: true,
-
   },
   /**
    *
@@ -27,6 +26,13 @@ module.exports = {
     };
     return config;
   },
+  redirects: async () => [
+    {
+      source: '/veolas',
+      destination: 'https://govern.olas.network/veolas',
+      permanent: false,
+    },
+  ],
   async headers() {
     return [
       {

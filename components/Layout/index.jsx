@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import dynamic from 'next/dynamic';
 import { Layout, Menu } from 'antd';
 import PropTypes from 'prop-types';
+import { ExportOutlined } from '@ant-design/icons';
 import Footer from './Footer';
 import { CustomLayout, Logo } from './styles';
 
@@ -20,13 +21,17 @@ const NavigationBar = ({ children }) => {
   useEffect(() => {
     if (pathname) {
       const name = pathname.split('/')[1];
-      setSelectedMenu(name || 'veolas');
+      setSelectedMenu(name || 'buolas');
     }
   }, [pathname]);
 
   const handleMenuItemClick = ({ key }) => {
-    router.push(`/${key}`);
-    setSelectedMenu(key);
+    if (key === 'veolas') {
+      window.open('https://govern.olas.network/veolas', '_blank');
+    } else {
+      router.push(`/${key}`);
+      setSelectedMenu(key);
+    }
   };
 
   return (
@@ -46,7 +51,12 @@ const NavigationBar = ({ children }) => {
           items={[
             {
               key: 'veolas',
-              label: 'veOLAS',
+              label: (
+                <Flex gap={8}>
+                  veOLAS
+                  <ExportOutlined style={{ fontSize: 14 }} />
+                </Flex>
+              ),
               onClick: handleMenuItemClick,
             },
             {
