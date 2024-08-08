@@ -30,7 +30,7 @@ module.exports = {
     {
       source: '/veolas',
       destination: 'https://govern.olas.network/veolas',
-      permanent: false,
+      permanent: true,
     },
   ],
   async headers() {
