@@ -1,7 +1,3 @@
-import dynamic from 'next/dynamic';
+import { BuOlas } from 'components/Home/BuOlas';
 
-const VeOlas = dynamic(() => import('components/Home/VeOlas'), {
-  ssr: false,
-});
-
-export default VeOlas;
+export default BuOlas;
