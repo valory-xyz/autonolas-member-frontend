@@ -28,6 +28,11 @@ module.exports = {
   },
   redirects: async () => [
     {
+      source: '/',
+      destination: '/buolas',
+      permanent: false,
+    },
+    {
       source: '/veolas',
       destination: 'https://govern.olas.network/veolas',
       permanent: true,
